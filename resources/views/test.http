@@ -1,0 +1,7 @@
+POST http://localhost/api/auth
+Content-Type: application/json
+
+{
+    "id": 999,
+    "value": "content"
+}
