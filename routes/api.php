@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\RegisterController;
+use App\Http\Controllers\Account\ForgotPasswordController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,3 +25,11 @@ Route::controller(RegisterController::class)->prefix("/account/")->group(functio
     Route::post("confirm-registration","confirmRegistration");
 });
 
+## forgot password
+Route::controller(ForgotPasswordController::class)->prefix("/password/")->group(function () {
+    Route::post("email", "sendCode");
+    // Route::post("confirm-registration","confirmRegistration");
+});
+
+
+ 
