@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\ResetPassWordRequest;
 use App\Models\User;
+use App\Services\Interfaces\IAccountService;
 use App\Services\Interfaces\IOTPService;
 use App\Services\Interfaces\IRedisService;
 use Illuminate\Http\JsonResponse;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ForgotPasswordController extends Controller
 {
     public function __construct(
+        private readonly IAccountService $accountService,
         private  readonly  IOTPService $otpService,
         private readonly IRedisService $redisService,
     ) {}
@@ -37,6 +39,7 @@ class ForgotPasswordController extends Controller
             );
 
     }
+
     public function checkCode(Request $request): JsonResponse {
 
         $opt = $request->input('otp');
@@ -66,14 +69,12 @@ class ForgotPasswordController extends Controller
             );
         }
     }
-    public function resetPassWord(ResetPassWordRequest $request): JsonResponse{
-        $userData = $request->validated();
 
-        return $this->responseSuccessWithData(
-            'Change password success!',
-            $userData,
-            Response::HTTP_CREATED
-        );
+    public function resetPassword(ResetPassWordRequest $request): JsonResponse {
+        
+        $userData = $request->validated();
+        $this->accountService->resetPassword($userData);
+        return $this->responseSuccess("Change password success!",Response::HTTP_OK);
     }
 
 }

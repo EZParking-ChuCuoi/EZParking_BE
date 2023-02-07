@@ -41,7 +41,7 @@ class AuthMiddleware
     public function handle(Request $request, Closure $next): Response|RedirectResponse|JsonResponse
     {
         $path = $request->path();
-        if ($this->isRegister($path) || $this->isConfirmRegistration($path)||$this->isConfirmForgotPassword($path)|| $this->isForgotPassWord($path)|| $this->isResetPassword($path)){
+        if ($this->isRegister($path) || $this->isConfirmRegistration($path)||$this->isConfirmForgotPassword($path)|| $this->isForgotPassWord($path)|| $this->isResetPassword($path) || $this->isTest($path)){
             return $next($request);
         }
         if ($this->isLogin($path)) {
@@ -88,6 +88,9 @@ class AuthMiddleware
     }
     private function isResetPassword(string $path): bool {
         return str_contains($path,"password/reset");
+    }
+    private function isTest($path) {
+        return str_contains($path, "test");
     }
     private function checkRefreshToken(Request $request): array|bool
     {

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+
 class ResetPassWordRequest extends FormRequest
 {
     use ApiResponse;
@@ -31,17 +32,16 @@ class ResetPassWordRequest extends FormRequest
     public function rules()
     {
         return [
-            "password" =>"required|min:8",
-            "confirmPassword"=>"required|same:password",
+            'email'=> 'required',
+            'password' => 'required|min:8',
+            'password_confirmation'=>'required|same:password',
         ];
     }
     public function messages(){
-        return[
+        return [
             'password.required' => 'Password is required!',
-            'confirmPassword.required' => 'ConfirmPassword is required!',
             'password.min' => "Password have to more than 8 characters",
-            'confirmPassword.same' => 'Password Confirmation should match the Password',
-
+            'password_confirmation.required' => 'The password confirmation field is required',
         ];
 
     }

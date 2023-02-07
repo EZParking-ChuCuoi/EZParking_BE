@@ -23,6 +23,13 @@ class AccountService implements  IAccountService {
           $this->userRepository->create($data);
           return ["fullName" => $data["fullName"], "email" => $data["email"]];
       }
+      public function resetPassword(array $data):mixed
+      {
+        $data['email'] = $data['email'];
+        $data['password'] = Hash::make($data['password']);
+        $this->userRepository->updateWhere(['email'=>$data['email']],['password'=>$data['password']]);
+        return true;
+      } 
       public function forgotPassword()
       {
           // TODO: Implement forgotPassword() method.
