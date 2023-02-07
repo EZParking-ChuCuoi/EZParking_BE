@@ -196,7 +196,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
         App\Providers\ServiceLayerProvider::class,
-        App\Providers\WebsocketServiceProvider::class
     ],
 
     /*

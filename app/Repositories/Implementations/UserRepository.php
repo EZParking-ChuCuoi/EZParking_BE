@@ -23,11 +23,7 @@ class UserRepository extends BaseRepository implements \App\Repositories\Interfa
         $info = $this->model->find($userId, ["id", "fullName", "email",'avatar']);
         return $info ? : null;
     }
+    
 
-    public function findUser(string $searchText): Collection
-    {
-        return $this->model->select("id", "fullName", "email")
-            ->Where("fullName", "LIKE","%$searchText%")
-            ->orWhere("email", "LIKE","%$searchText%")->get();
-    }
+    
 }

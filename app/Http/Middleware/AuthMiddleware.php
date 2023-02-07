@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use LogicException;
 use UnexpectedValueException;
- 
+
 
 class AuthMiddleware
 {
@@ -41,7 +41,7 @@ class AuthMiddleware
     public function handle(Request $request, Closure $next): Response|RedirectResponse|JsonResponse
     {
         $path = $request->path();
-        if ($this->isRegister($path) || $this->isConfirmRegistration($path)|| $this->isForgotPassWord($path)){
+        if ($this->isRegister($path) || $this->isConfirmRegistration($path)||$this->isConfirmForgotPassword($path)|| $this->isForgotPassWord($path)|| $this->isResetPassword($path)){
             return $next($request);
         }
         if ($this->isLogin($path)) {
@@ -80,8 +80,14 @@ class AuthMiddleware
     private function isConfirmRegistration(string $path): bool {
         return str_contains($path,"account/confirm-registration");
     }
+    private function isConfirmForgotPassword(string $path): bool {
+        return str_contains($path,"password/confirm-reset");
+    }
     private function isForgotPassWord(string $path): bool {
         return str_contains($path, "password/email");
+    }
+    private function isResetPassword(string $path): bool {
+        return str_contains($path,"password/reset");
     }
     private function checkRefreshToken(Request $request): array|bool
     {
