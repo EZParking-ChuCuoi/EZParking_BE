@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b3d0d548b7a446529714f73b774a0a02",
+    "content-hash": "a9b59dacf1da1f9800513917f08a4bad",
     "packages": [
         {
             "name": "brick/math",
@@ -1786,16 +1786,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "2.8.0",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "720488632c590286b88b80e62aa3d3d551ad4a50"
+                "reference": "e1c0ae1528ce313a450e5e1ad782765c4a8dd3cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/720488632c590286b88b80e62aa3d3d551ad4a50",
-                "reference": "720488632c590286b88b80e62aa3d3d551ad4a50",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/e1c0ae1528ce313a450e5e1ad782765c4a8dd3cb",
+                "reference": "e1c0ae1528ce313a450e5e1ad782765c4a8dd3cb",
                 "shasum": ""
             },
             "require": {
@@ -1810,7 +1810,7 @@
                 "doctrine/couchdb": "~1.0@dev",
                 "elasticsearch/elasticsearch": "^7 || ^8",
                 "ext-json": "*",
-                "graylog2/gelf-php": "^1.4.2",
+                "graylog2/gelf-php": "^1.4.2 || ^2@dev",
                 "guzzlehttp/guzzle": "^7.4",
                 "guzzlehttp/psr7": "^2.2",
                 "mongodb/mongodb": "^1.8",
@@ -1872,7 +1872,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/2.8.0"
+                "source": "https://github.com/Seldaek/monolog/tree/2.9.0"
             },
             "funding": [
                 {
@@ -1884,7 +1884,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-24T11:55:47+00:00"
+            "time": "2023-02-05T13:07:32+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -7204,16 +7204,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.2",
+            "version": "9.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1a461cabfbd5b464f5d41c49a9959c63b4ecd2d1"
+                "reference": "e7b1615e3e887d6c719121c6d4a44b0ab9645555"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1a461cabfbd5b464f5d41c49a9959c63b4ecd2d1",
-                "reference": "1a461cabfbd5b464f5d41c49a9959c63b4ecd2d1",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e7b1615e3e887d6c719121c6d4a44b0ab9645555",
+                "reference": "e7b1615e3e887d6c719121c6d4a44b0ab9645555",
                 "shasum": ""
             },
             "require": {
@@ -7286,7 +7286,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.2"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.3"
             },
             "funding": [
                 {
@@ -7302,7 +7302,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-04T06:59:53+00:00"
+            "time": "2023-02-04T13:37:15+00:00"
         },
         {
             "name": "sebastian/cli-parser",

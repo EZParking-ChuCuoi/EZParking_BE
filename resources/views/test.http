@@ -1,7 +1,74 @@
-POST http://localhost/api/auth
+
+### login
+POST http://localhost/api/auth/login
 Content-Type: application/json
 
 {
-    "id": 999,
-    "value": "content"
+    "email": "cong@gmail.com",
+    "password":12345
+}
+### sign up
+POST http://localhost/api/account/register
+Content-Type: application/json
+
+{
+    "fullName" : "Conggu",
+    "email": "cong1@yopmail.com",
+    "password": 12345678 
+}
+### confirm otp create account
+POST http://localhost/api/account/confirm-registration
+Content-Type: application/json
+
+{
+    "otp" :784822,
+    "email": "cong@yopmail.com"
+}
+
+
+### sent otp to reset account
+POST http://localhost/api/password/email
+Content-Type: application/json
+
+{
+   "email": "cong@yopmail.com"
+
+}
+
+### confirm otp to reset account
+POST http://localhost/api/password/confirm-reset
+Content-Type: application/json
+
+{
+   "email": "cong@yopmail.com",
+    "otp" : 376086
+    
+}
+
+### change account
+POST http://localhost/api/password/reset
+Content-Type: application/json
+
+{
+    "email":"congdev@gmail.com",
+    "password": 12345678,
+    "password_confirmation":12345678
+    
+
+}
+###
+POST http://localhost/api/test 
+Content-Type: application/json
+
+{
+    "name": "cong"
+}
+
+### profile
+POST http://localhost/api/user/infor
+Content-Type: application/json
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjA2NDI0OH0.GMCKvjxMWSdRgyoNuGv9gQAzE2zjOCJevBzbLmNfqWqfU8dgFhrusqrozEBl8u71XVpikpxI1AUDcGIZfwuZQw
+
+{
+    "id":1000000
 }
