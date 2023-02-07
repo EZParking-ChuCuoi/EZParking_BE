@@ -1,6 +1,6 @@
 
 ### login
-POST http://localhost/api/auth/login
+POST http://ec2-52-199-39-31.ap-northeast-1.compute.amazonaws.com/api/auth/login
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
     "password":12345
 }
 ### sign up
-POST http://localhost/api/account/register
+POST http://ec2-52-199-39-31.ap-northeast-1.compute.amazonaws.com/api/account/register
 Content-Type: application/json
 
 {
@@ -17,11 +17,11 @@ Content-Type: application/json
     "password": 12345678 
 }
 ### confirm otp create account
-POST http://localhost/api/account/confirm-registration
+POST http://ec2-52-199-39-31.ap-northeast-1.compute.amazonaws.com/api/account/confirm-registration
 Content-Type: application/json
 
 {
-    "otp" :784822,
+    "otp" :431453,
     "email": "cong@yopmail.com"
 }
 
