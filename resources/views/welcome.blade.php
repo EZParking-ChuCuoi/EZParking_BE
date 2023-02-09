@@ -184,6 +184,8 @@ form .form-group input:valid{
                 Forgot Your Password?
             </a>
             </div>
+
+            <img src="" alt="Cinque Terre" width="1000" height="300">   
     </div>
 </body>
 </html>

@@ -12,15 +12,21 @@ class UserController extends Controller
     public function __construct(
         private readonly IProfile $profileService,
     ) {}
-    public function showProfile(Request $request){
-        $id =$request->input('id');
+    public function showProfile($id){
         $userInfo= $this->profileService->show($id);
-        return $userInfo;
-        // return $this->responseSuccessWithData(
-        //     "Infomation of user",
-        //     $userInfo,
-        //     Response::HTTP_ALREADY_REPORTED
-        // );
+        if($userInfo == [null]){
+            return $this->responseError(
+                "User not exit !",
+                Response::HTTP_BAD_REQUEST,
+            );
+        }
+        else{
+            return $this->responseSuccessWithData(
+            "Infomation of user",
+            $userInfo,
+            Response::HTTP_ALREADY_REPORTED
+        );
+        }
     }
     public function updateProfile(){
 

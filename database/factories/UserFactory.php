@@ -22,7 +22,7 @@ class UserFactory extends Factory
         return [
             'email' => fake()->unique()->safeEmail(),
             'fullName' =>fake()->name(),
-            'avatar' => 'avatar.png',
+            'avatar' =>'avatar.png',
             'password' =>Hash::make('12345'),
             'status' =>fake()->boolean()
         ];

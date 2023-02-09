@@ -38,10 +38,7 @@ Route::controller(ForgotPasswordController::class)->prefix("/password/")->group(
 });
 ## Profile
 Route::controller(UserController::class)->prefix("/user/")->group(function () {
-    Route::post("infor", "showProfile");
+    Route::get("{id}", "showProfile");
 });
 
-Route::get('/vinh', function () {
-    return "123";
-});
  

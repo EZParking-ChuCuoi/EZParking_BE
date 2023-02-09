@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Profile\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +16,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+
+    $contents = Storage::disk('public')->get('.gitignore'); 
+    return $contents;
+
+
+
 });
 
- 
+
+Route::get(
+    '/student/{id}',
+    [UserController::class, 'showProfile']
+);

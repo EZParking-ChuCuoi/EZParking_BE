@@ -12,9 +12,9 @@ class Profile implements \App\Services\Interfaces\IProfile
     )
     {}
 
-    public function show(int $id): array
+    public function show(int $id):array
     {
-        return $this->userRepository->getInfo($id);
+        return [$this->userRepository->getInfo($id)];
 
     }
 
