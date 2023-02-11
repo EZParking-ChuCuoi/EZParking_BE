@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OTPRegisterRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Services\Interfaces\IAccountService;
@@ -34,12 +35,10 @@ class RegisterController extends Controller
         $this->redisService->setInfoRegis($userData,$otp);
 
     }
-    public function confirmRegistration(Request $request) {
+    public function confirmRegistration(OTPRegisterRequest $request) {
+            $userData = $request->validated();
 
-            $opt = $request->input('otp');
-            $email = $request->input('email');
-
-            $optConfirm = $this->redisService->getOtp($email);
+            $optConfirm = $this->redisService->getOtp($userData['email']);
 
             if($optConfirm == null){
                 return $this->responseError(
@@ -47,16 +46,16 @@ class RegisterController extends Controller
                     Response::HTTP_BAD_REQUEST,
                 );
             }
-            elseif ($opt == $optConfirm){
-                        $user =  $this->redisService->getInfoRegis($opt);
+            elseif ($userData['otp'] == $optConfirm){
+                        $user =  $this->redisService->getInfoRegis($userData['otp']);
 
                         $accData = $this->accountService->register((array)$user);
 
 
                         $this->redisService->deleteOtp($user->email);
-                        $this->redisService->deleteInfor($opt);
+                        $this->redisService->deleteInfor($userData['otp']);
 
-                        $this->mailService->sendMail(MailType::WELCOME_MAIL,['email'=>$email]);
+                        $this->mailService->sendMail(MailType::WELCOME_MAIL,['email'=>$userData['email']]);
                         return $this->responseSuccessWithData(
                         "Create a new account successfully!",
                         $accData,

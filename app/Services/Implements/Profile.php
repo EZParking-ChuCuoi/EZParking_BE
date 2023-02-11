@@ -12,17 +12,15 @@ class Profile implements \App\Services\Interfaces\IProfile
     )
     {}
 
-    public function show(int $id):array
+    public function show(int $id):mixed
     {
-        return [$this->userRepository->getInfo($id)];
-
+        return $this->userRepository->getInfo($id);
     }
-
     public function editProfile(int $id,array $info)
     {
-        $data['fullName'] = $info['fullName'];
-        $this->userRepository->create($data);
-        return ["fullName" => $data["fullName"], "email" => $data["email"]];
-        return $this->userRepository->update($id,$info);
+        $data['fullName'] = $info[0]['fullName'];
+        $data['avatar'] = $info[0]['avatar'];
+        $this->userRepository->update($id,$data);
+        return ["fullName" => $data["fullName"], "avatar" => $data["avatar"]];
     }
 }

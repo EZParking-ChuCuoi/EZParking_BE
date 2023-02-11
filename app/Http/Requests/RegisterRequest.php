@@ -42,7 +42,7 @@ class RegisterRequest extends FormRequest
             'fullName.required' => 'Name is required',
             'email.required' => 'Email is required',
             'email.unique' => 'Email is duplicate',
-            'email.email'=> "Un format Email",
+            'email.email'=> "Invalid format Email",
             'email.max' => "The length have to less 255 characters",
             'password.required' => 'Password Required',
             'password.min' => "Password have to more than 8 characters",

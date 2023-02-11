@@ -8,14 +8,14 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
-class ProfileRequest extends FormRequest
+class OTPRegisterRequest extends FormRequest
 {
-    use ApiResponse;
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
+    use ApiResponse;
     public function authorize()
     {
         return true;
@@ -25,14 +25,19 @@ class ProfileRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
-     */
+    */
     public function rules()
     {
         return [
-            
-            'fullName' => 'required',
-            'avatar' => 'required|image|max:2048',
+            'otp' => 'required|integer',
+            'email'=>'required',
         ];
+    }
+    public function messages(){
+        return[
+            'otp.required' => 'OTP is required',
+        ];
+
     }
     protected function failedValidation(Validator $validator)
     {
@@ -43,4 +48,5 @@ class ProfileRequest extends FormRequest
             Response::HTTP_UNPROCESSABLE_ENTITY
         ));
     }
+
 }
