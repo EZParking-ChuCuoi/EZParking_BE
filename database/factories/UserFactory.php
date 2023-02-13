@@ -22,7 +22,7 @@ class UserFactory extends Factory
         return [
             'email' => fake()->unique()->safeEmail(),
             'fullName' =>fake()->name(),
-            'avatar' =>'avatar.png',
+            'avatar' =>'https://asset.cloudinary.com/di9pzz9af/25dc36a357534bb21254266ea4ecda42',
             'password' =>Hash::make('12345'),
             'status' =>fake()->boolean()
         ];

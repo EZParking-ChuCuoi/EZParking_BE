@@ -23,4 +23,8 @@ class Profile implements \App\Services\Interfaces\IProfile
         $this->userRepository->update($id,$data);
         return ["fullName" => $data["fullName"], "avatar" => $data["avatar"]];
     }
+    public function getAllUser(): mixed
+    {
+        return $this->userRepository->all();
+    }
 }

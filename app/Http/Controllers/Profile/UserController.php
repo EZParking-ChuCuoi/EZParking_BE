@@ -16,6 +16,10 @@ class UserController extends Controller
     public function __construct(
         private readonly IProfile $profileService,
     ) {}
+    public function getAllUser(){
+        $userData=$this->profileService->getAllUser();
+        return $userData;
+    }
     public function showProfile($id){
         $userInfo= $this->profileService->show($id);
         if($userInfo == [null]){
@@ -33,10 +37,10 @@ class UserController extends Controller
         }
     }
     public function updateProfile(ProfileRequest $request,$id){
-        $userData = $request->validated();
-         
+
+
         $user= User::find($id);
-       
+
         $user->fullName=$request->fullName;
         try {
             if (!$request->hasFile('avatar')) {
@@ -44,13 +48,15 @@ class UserController extends Controller
             }
             $response = Cloudinary::upload($request->file('avatar')->getRealPath())->getSecurePath();
             $user->avatar=$response;
-           
+
 
         } catch (\Exception $e) {
             return '$this->returnError(201, $e->getMessage())';
         }
         $user->save();
-        return $user;
+        return $this->responseSuccessWithData("update success",$user,Response::HTTP_OK);
 
     }
+
+
 }
