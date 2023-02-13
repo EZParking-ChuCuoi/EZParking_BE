@@ -3,9 +3,10 @@
 namespace App\Repositories\Implementations;
 
 use App\Models\User;
+use App\Repositories\Interfaces\IUserRepository;
 use Illuminate\Database\Eloquent\Collection;
 
-class UserRepository extends BaseRepository implements \App\Repositories\Interfaces\IUserRepository
+class UserRepository extends BaseRepository implements IUserRepository
 {
 
     public function getModel(): string
@@ -23,7 +24,7 @@ class UserRepository extends BaseRepository implements \App\Repositories\Interfa
         $info = $this->model->find($userId, ["id", "fullName", "email",'avatar']);
         return $info ? : null;
     }
-    
 
-    
+
+
 }
