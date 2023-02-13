@@ -16,6 +16,26 @@ class DatabaseSeeder extends Seeder
     {
         // import database user
         \App\Models\User::factory(10)->create();
-        // import database friendrelationship
+        // import database role
+        \App\Models\Role::factory(3)->create();
+        
+        // import database RoleDFUser
+        \App\Models\RoleDFUser::factory(10)->create();
+        
+        // import database ParkingLot
+        \App\Models\ParkingLot::factory(10)->create();
+        
+        // import database UserParkingLot
+        \App\Models\UserParkingLot::factory(10)->create();
+        
+        // import database block
+        \App\Models\Block::factory(10)->create();
+        
+        // import database ParkingSlot
+        \App\Models\ParkingSlot::factory(10)->create();
+
+        \App\Models\Booking::factory(10)->create();
+        
+
     }
 }

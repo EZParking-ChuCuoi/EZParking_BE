@@ -4,6 +4,7 @@ use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\RegisterController;
 use App\Http\Controllers\Account\ForgotPasswordController;
 use App\Http\Controllers\OptimizePhotoController;
+use App\Http\Controllers\ParKingLot\ParKingLotController;
 use App\Http\Controllers\Profile\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,11 +41,16 @@ Route::controller(ForgotPasswordController::class)->prefix("/password/")->group(
 ## Profile
 Route::controller(UserController::class)->prefix("/user/")->group(function () {
     Route::get("{id}", "showProfile");
+    Route::get("", "getAllUser");
     Route::post("update/{id}","updateProfile");
-    
+
 
 
 });
-Route::post('upload-image/{id}',[OptimizePhotoController::class,'submit']);
+Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(function () {
+    Route::get("{id}", "showProfile");  
+    
 
- 
+
+
+});

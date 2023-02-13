@@ -10,4 +10,10 @@
 5. ```cp .env.example .env ```
 6. accept link : http://localhost/
 # Set up database
+1. comandline: ```php artisan migrate:fresh --seed```
+2. Connect database:
+- localhost
+- port: 3307
+- Database name: laravel
+- password: password
 
