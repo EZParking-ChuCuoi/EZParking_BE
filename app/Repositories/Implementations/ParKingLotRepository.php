@@ -17,4 +17,9 @@ class ParKingLotRepository extends BaseRepository implements IParKingLotReposito
                 'endTime','desc','status']);
         return $info ? : null;
     }
+    public function showInforOfParking(int $id): mixed
+    {
+        
+    }
+
 }

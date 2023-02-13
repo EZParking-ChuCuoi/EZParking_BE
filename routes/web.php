@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\OptimizePhotoController;
-use App\Http\Controllers\Profile\UserController;
+use App\Http\Controllers\ParKingLot\ParKingLotController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +19,4 @@ Route::get('/', function () {
 });
 
 
-Route::get('/edit/{id}',
-    [UserController::class, 'updateProfile']
-);
-Route::post('/update/{id}',  [OptimizePhotoController::class, 'submit']);
+Route::get('/show/',[ParKingLotController::class,'index']);
