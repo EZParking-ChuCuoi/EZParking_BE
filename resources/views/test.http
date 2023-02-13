@@ -1,12 +1,12 @@
 
 
 ### login
-POST http://13.231.114.148/api/auth/login
+POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "cong@gmail.com",
-    "password":12345
+    "email": "cong1@yopmail.com",
+    "password":123456789
 }
 ### sign up
 POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/account/register
@@ -14,59 +14,65 @@ Content-Type: application/json
 
 {
     "fullName" : "Conggu",
-    "email": "cong2@yopmail.com",
+    "email": "cong1@yopmail.com",
     "password": 12345678,
     "password_confirmation":12345678
 }
 ### confirm otp create account
-POST http://localhost/api/account/confirm-registration
+POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/account/confirm-registration
 Content-Type: application/json
 
 {
-    "otp" :998226,
+    "otp" :290027,
     "email": "cong1@yopmail.com"
 }
 
 
 ### sent otp to reset account
-POST http://localhost/api/password/email
+POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/password/email
 Content-Type: application/json
 
 {
-   "email": "cong@yopmail.com"
+   "email": "cong1@yopmail.com"
 
 }
 
 ### confirm otp to reset account
-POST http://localhost/api/password/confirm-reset
+POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/password/confirm-reset
 Content-Type: application/json
 
 {
-   "email": "cong@yopmail.com",
-    "otp" : 376086
+   "email": "cong1@yopmail.com",
+    "otp" : 751323
     
 }
 
 ### change account
-POST http://localhost/api/password/reset
+POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/password/reset
 Content-Type: application/json
 
 {
-    "email":"congdev@gmail.com",
-    "password": 12345678,
-    "password_confirmation":12345678
+    "email":"cong1@yopmail.com",
+    "password": 123456789,
+    "password_confirmation":123456789
     
 
 }
-###
-POST http://localhost/api/test 
-Content-Type: application/json
 
-{
-    "name": "cong"
-}
 
 ### profile
-GET http://localhost/api/user/1000000
+GET http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/user/1000000
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMTAsImV4cCI6MTY3NjU1MjUxMX0.auGyT7Z68wsiKuwC842oE-U3ZLy_F5nhQ2DuoXH4lv67Buje6fUaCBhT3HythsDJpnVQEZBTr-RVmsAk9Pge1w
+
+### update profile
+POST http://localhost/api/user/update/1000000
+Accept: multipart/form-data
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMTAsImV4cCI6MTY3NjU1MjUxMX0.auGyT7Z68wsiKuwC842oE-U3ZLy_F5nhQ2DuoXH4lv67Buje6fUaCBhT3HythsDJpnVQEZBTr-RVmsAk9Pge1w
+
+
+### get all user
+
+GET http://localhost/api/user
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjExODE5OH0.hZZZbUoSdFruyNkC6fwASDNUs3waRAAeR9Vc8hhhdLLtmhGG5d2L0-vJD4bvhpE96YN41cC4-nJQ8J9KFALWLw
