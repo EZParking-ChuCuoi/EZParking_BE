@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OptimizePhotoController;
 use App\Http\Controllers\Profile\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -16,16 +17,11 @@ use Illuminate\Support\Facades\Storage;
 */
 
 Route::get('/', function () {
-
-    $contents = Storage::disk('public')->get('.gitignore'); 
-    return $contents;
-
-
-
+    return view('welcome');
 });
 
 
-Route::get(
-    '/student/{id}',
-    [UserController::class, 'showProfile']
+Route::get('/edit/{id}',
+    [UserController::class, 'updateProfile']
 );
+Route::post('/update/{id}',  [OptimizePhotoController::class, 'submit']);
