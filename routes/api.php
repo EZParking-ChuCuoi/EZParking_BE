@@ -46,6 +46,7 @@ Route::controller(UserController::class)->prefix("/user/")->group(function () {
 
 
 });
+
 Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(function () {
     Route::get("", "index");  
 });

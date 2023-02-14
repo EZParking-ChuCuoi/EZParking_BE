@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
     "fullName" : "Conggu",
-    "email": "cong1@yopmail.com",
+    "email": "cong2@yopmail.com",
     "password": 12345678,
     "password_confirmation":12345678
 }

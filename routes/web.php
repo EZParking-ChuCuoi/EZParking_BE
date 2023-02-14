@@ -20,3 +20,5 @@ Route::get('/', function () {
 
 
 Route::get('/show/',[ParKingLotController::class,'index']);
+Route::get('/parkinglot/{id}',[ParKingLotController::class,'showComentOfParking']);
+Route::get('/map',[ParKingLotController::class,'showParkingLotnearLocation']);

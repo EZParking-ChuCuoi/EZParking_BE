@@ -50,7 +50,7 @@ class Handler extends ExceptionHandler
     {
         $this->renderable(function (QueryException $e, $req) {
             return $this->responseError(
-                "exception.common.query"
+                "exception.common.query",
             );
         });
 //        $this->renderable(function (ExpiredException $e, $req) {
