@@ -3,6 +3,7 @@
 namespace App\Services\Implements;
 
 use App\Repositories\Interfaces\IParKingLotRepository;
+use Predis\Response\Status;
 
 class ParKingLotService implements \App\Services\Interfaces\IParKingLotService
 {
@@ -12,13 +13,14 @@ class ParKingLotService implements \App\Services\Interfaces\IParKingLotService
     {
     }
 
-    public function getAllParkingLot(): array|null
+    public function getAllParkingLot(bool $status): array|null
     {
-        return $this->parKingLotRepository->all();
+        return $this->parKingLotRepository->all($status);
     }
 
     public function getParkingLotById(int $id): array|null
     {
+        
         return $this->parKingLotRepository->showInfo($id);
     }
 

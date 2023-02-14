@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Http\Controllers\FriendController;
 use App\Services\Implements\AccountService;
 use App\Services\Implements\AuthService;
 use App\Services\Implements\JWTService;
 use App\Services\Implements\MailService;
 use App\Services\Implements\OTPService;
+use App\Services\Implements\ParKingLotService;
 use App\Services\Implements\Profile;
 use App\Services\Implements\RedisService;
 use App\Services\Interfaces\IAccountService;
@@ -15,6 +15,7 @@ use App\Services\Interfaces\IAuthService;
 use App\Services\Interfaces\IJWTService;
 use App\Services\Interfaces\IMailService;
 use App\Services\Interfaces\IOTPService;
+use App\Services\Interfaces\IParKingLotService;
 use App\Services\Interfaces\IProfile;
 use App\Services\Interfaces\IRedisService;
 use Illuminate\Support\ServiceProvider;
@@ -55,6 +56,10 @@ class ServiceLayerProvider extends ServiceProvider
         $this->app->singleton(
             IProfile::class,
             Profile::class,
+        );
+        $this->app->singleton(
+            IParKingLotService::class,
+            ParKingLotService::class,
         );
          
     }

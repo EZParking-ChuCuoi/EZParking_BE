@@ -1,12 +1,12 @@
 
 
 ### login
-POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/auth/login
+POST http://localhost/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "cong1@yopmail.com",
-    "password":123456789
+    "email": "cong@gmail.com",
+    "password":12345
 }
 ### sign up
 POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/account/register
@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
     "fullName" : "Conggu",
-    "email": "cong1@yopmail.com",
+    "email": "cong2@yopmail.com",
     "password": 12345678,
     "password_confirmation":12345678
 }
@@ -61,7 +61,7 @@ Content-Type: application/json
 
 
 ### profile
-GET http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/user/1000000
+GET http://localhost/api/user/1000000
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMTAsImV4cCI6MTY3NjU1MjUxMX0.auGyT7Z68wsiKuwC842oE-U3ZLy_F5nhQ2DuoXH4lv67Buje6fUaCBhT3HythsDJpnVQEZBTr-RVmsAk9Pge1w
 
@@ -73,6 +73,6 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMTAsI
 
 ### get all user
 
-GET http://localhost/api/user
+GET http://localhost/api/parking-lot
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjExODE5OH0.hZZZbUoSdFruyNkC6fwASDNUs3waRAAeR9Vc8hhhdLLtmhGG5d2L0-vJD4bvhpE96YN41cC4-nJQ8J9KFALWLw
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjU1OTIxOX0.ww_5zEEw9rrbxYxcUEcSNCsFjBYV3ta53gh3WVxqZp3be4V6UL5u_-jXqqgfv4-QE-C5TY-cAfzUOU0XgLRrRQ

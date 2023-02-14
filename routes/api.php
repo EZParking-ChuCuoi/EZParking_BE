@@ -3,7 +3,6 @@
 use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\RegisterController;
 use App\Http\Controllers\Account\ForgotPasswordController;
-use App\Http\Controllers\OptimizePhotoController;
 use App\Http\Controllers\ParKingLot\ParKingLotController;
 use App\Http\Controllers\Profile\UserController;
 use Illuminate\Http\Request;
@@ -47,10 +46,7 @@ Route::controller(UserController::class)->prefix("/user/")->group(function () {
 
 
 });
+
 Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(function () {
-    Route::get("{id}", "showProfile");  
-    
-
-
-
+    Route::get("", "index");  
 });

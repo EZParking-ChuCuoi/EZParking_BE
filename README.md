@@ -7,6 +7,7 @@
 2. install docker composer:  ```sudo apt  install docker-compose```
 3. ```docker-compose up -d```
 4. ```docker exec -it php bash```
+4. ```composer install```
 5. ```cp .env.example .env ```
 6. accept link : http://localhost/
 # Set up database
@@ -16,4 +17,4 @@
 - port: 3307
 - Database name: laravel
 - password: password
-
+3. Debug for eloquen query database : https://laravel.com/docs/9.x/telescope#main-content
