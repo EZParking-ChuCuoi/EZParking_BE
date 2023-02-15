@@ -30,16 +30,18 @@ class ParKingLotController extends Controller
         return $data;
 
     }
-     public function showParkingLotnearLocation()
+     public function showParkingLotnearLocation(Request $request)
     {
+        $validatedData = $request->validate([
+            'latitude' => 'required',
+            'longitude' => 'required',
+        ]);
+        $lat = $request->latitude;
+        $lon = $request->longitude;
 
-        $lat = 16.060575;
-        $lon = 108.240783;
-        $data =
-        DB::table("parking_lots")
 
-        ->select("parking_lots.*"
-    
+        $data =DB::table("parking_lots")->select("parking_lots.*"
+
             ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
     
             * cos(radians(parking_lots.address_latitude)) 

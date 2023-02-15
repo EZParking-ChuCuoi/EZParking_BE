@@ -24,5 +24,6 @@ class ParKingLotRepository extends BaseRepository implements IParKingLotReposito
         ->get(['comments.*', 'users.fullName','users.avatar','parking_lots.*']);
         return $parkingData ? : null;
     }
+    
 
 }
