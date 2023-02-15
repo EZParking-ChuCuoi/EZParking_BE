@@ -9,22 +9,22 @@ Content-Type: application/json
     "password":12345
 }
 ### sign up
-POST http://localhost/api/account/register
+POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/account/register
 Content-Type: application/json
 
 {
     "fullName" : "Conggu",
-    "email": "cong2@yopmail.com",
+    "email": "cong1@yopmail.com",
     "password": 12345678,
     "password_confirmation":12345678
 }
 ### confirm otp create account
-POST http://localhost/api/account/confirm-registration
+POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/account/confirm-registration
 Content-Type: application/json
 
 {
-    "otp" :729332,
-    "email": "cong2@yopmail.com"
+    "otp" :671730,
+    "email": "cong1@yopmail.com"
 }
 
 
