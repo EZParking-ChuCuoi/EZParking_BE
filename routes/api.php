@@ -3,6 +3,7 @@
 use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\RegisterController;
 use App\Http\Controllers\Account\ForgotPasswordController;
+use App\Http\Controllers\ParKingLot\BlockParkingCarController;
 use App\Http\Controllers\ParKingLot\ParKingLotController;
 use App\Http\Controllers\Profile\UserController;
 use Illuminate\Http\Request;
@@ -39,16 +40,22 @@ Route::controller(ForgotPasswordController::class)->prefix("/password/")->group(
 });
 ## Profile
 Route::controller(UserController::class)->prefix("/user/")->group(function () {
-    Route::get("{id}", "showProfile");
+    Route::get("{id}/info", "showProfile");
     Route::get("", "getAllUser");
-    Route::post("update/{id}","updateProfile");
-
-
+    Route::put("update/{id}","updateProfile");
 
 });
 
 Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(function () {
     Route::get("", "index");  
-    Route::get("location", "showParkingLotnearLocation");  
-    Route::post("", "index");  
+    Route::get("{id}/info/comment","showCommentOfParking");
+    Route::get("location", "showParkingLotNearLocation");  
+
+});
+Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
+    
+    Route::get("{id}/block/categories", "showBlockCategory");  
+    Route::get("{id}/block/category", "showBlockDetail");  
+   
+
 });

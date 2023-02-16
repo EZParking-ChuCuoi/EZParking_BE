@@ -23,7 +23,7 @@ POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/account/
 Content-Type: application/json
 
 {
-    "otp" :671730,
+    "otp" :636619,
     "email": "cong1@yopmail.com"
 }
 
@@ -61,24 +61,60 @@ Content-Type: application/json
 
 
 ### profile
-GET http://localhost/api/user/1000000
+GET http://localhost/api/user/1000000/infor
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMTAsImV4cCI6MTY3NjU1MjUxMX0.auGyT7Z68wsiKuwC842oE-U3ZLy_F5nhQ2DuoXH4lv67Buje6fUaCBhT3HythsDJpnVQEZBTr-RVmsAk9Pge1w
 
 ### update profile
-POST http://localhost/api/user/update/1000000
+put http://localhost/api/user/update/1000000
 Accept: multipart/form-data
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMTAsImV4cCI6MTY3NjU1MjUxMX0.auGyT7Z68wsiKuwC842oE-U3ZLy_F5nhQ2DuoXH4lv67Buje6fUaCBhT3HythsDJpnVQEZBTr-RVmsAk9Pge1w
+{
+    "fullName":"dkfjkdlfj",
+    "avatar":
+}
 
 
-### get all user
+
+
+
+
+
+### Parking lot=================================
+
+
+### get all parking lot
 
 GET http://localhost/api/parking-lot
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjcyNzUwM30.DBsaiLINNbTsKhWw9erY-TfZF6SYzs0nk3sLb5iqiFLrqNE3vFAOsx-i7XFC4QQBN4_yQtd7Ac944CZbzF18sg
 
-### get all user
+### get comment of parking lot
 
-GET http://localhost/api/parking-lot/location
+GET http://localhost/api/parking-lot/1000000/info/comment
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjcyNzUwM30.DBsaiLINNbTsKhWw9erY-TfZF6SYzs0nk3sLb5iqiFLrqNE3vFAOsx-i7XFC4QQBN4_yQtd7Ac944CZbzF18sg
+
+### location near you 
+
+GET http://localhost/api/parking-lot/location
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Njc0NDE2Nn0.-PFdWp2-PA8aW4YzcnJqlocirVoN4M6G07OuBkJH85aQdNE49VcU20HISP5Y1fYwVrDZPMrAgGTi8pcrV8mTyg
+
+{
+    "latitude":16.060832,
+    "longitude":108.241491
+}
+### show categories
+GET http://localhost/api/parking-lot/1000000/block/categories
+Accept: : application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Njc0NDE2Nn0.-PFdWp2-PA8aW4YzcnJqlocirVoN4M6G07OuBkJH85aQdNE49VcU20HISP5Y1fYwVrDZPMrAgGTi8pcrV8mTyg
+
+### Block
+GET http://localhost/api/parking-lot/1000000/block/category
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Njc0NDE2Nn0.-PFdWp2-PA8aW4YzcnJqlocirVoN4M6G07OuBkJH85aQdNE49VcU20HISP5Y1fYwVrDZPMrAgGTi8pcrV8mTyg
+
+{
+    "category":"4slot",
+}

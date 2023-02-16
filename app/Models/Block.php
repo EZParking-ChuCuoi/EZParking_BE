@@ -14,8 +14,8 @@ class Block extends Model
     {
         return $this->belongsTo(\App\Models\ParkingLot::class);
     }
-    public function parkingSlot()
+    public function parkingSlots()
     {
-        return $this->hasMany(\App\Models\ParkingSlot::class);
+        return $this->hasMany(\App\Models\ParkingSlot::class,'blockId');
     }
 }

@@ -16,16 +16,16 @@ class ParkingLotFactory extends Factory
      */
     public function definition()
     {
-        $lang = 16.06;
-        $long = 108.24;
+        $lang = 16.09;
+        $long = 108.27;
     
        
         return [
             'nameParkingLot'=>$this->faker->name(),
             'vehicle'=>$this->faker->name(),
             'capacity'=>rand(111111,999999),
-            'address_latitude'=>$lang.rand(0000,9999),
-            'address_longitude'=>$long.rand(0000,9999),
+            'address_latitude'=>$lang.rand(00000,99999),
+            'address_longitude'=>$long.rand(00000,99999),
             'address'=>$this->faker->address(),
             'image'=>'https://m.media-amazon.com/images/I/510kGCsWt7L._SL1000_.jpg',
             'openTime'=>$this->faker->time(),
