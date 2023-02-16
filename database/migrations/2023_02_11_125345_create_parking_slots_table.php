@@ -17,7 +17,6 @@ return new class extends Migration
             $table->increments("id")->from(1000000);
             $table->unsignedInteger("blockId");
             $table->string("slotCode");
-            $table->double("price");
             $table->boolean("status");
             $table->string("desc");
             $table->foreign('blockId')->references('id')->on('blocks')->onDelete('cascade');
