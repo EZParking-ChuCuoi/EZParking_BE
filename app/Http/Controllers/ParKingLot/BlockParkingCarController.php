@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class BlockParkingCarController extends Controller
 {
     public function showBlockCategory($id){
-        $data = Block::Where('parkingLotId',$id)->groupBy('carType')->get("carType");
+        $data = Block::Where('parkingLotId',$id)->groupBy('carType')->get();
         return $data;
     }
 
@@ -24,4 +24,5 @@ class BlockParkingCarController extends Controller
         $data = Block::where('carType',$category)->parkingSlots;
         return $data;
     }
+
 }

@@ -18,10 +18,10 @@ class BookingFactory extends Factory
     {
         return [
             'userId'=>rand(1000000,1000009),
-            'slotId'=>rand(1000000,1000009),
+            'slotId'=>rand(100000000,100000020),
             'bookDate'=>$this->faker->dateTime(),
             'returnDate'=>$this->faker->dateTime(),
-            'payment'=>15.000,
+            'payment'=>$this->faker->numberBetween($min = 1500, $max = 6000),
             'bookingStatus'=>$this->faker->boolean(),
             'rating'=>rand(1,5),
             'comment'=>$this->faker->sentence($nbWords = 6, $variableNbWords = true),
