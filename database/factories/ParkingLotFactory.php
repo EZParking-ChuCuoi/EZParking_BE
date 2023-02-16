@@ -22,8 +22,6 @@ class ParkingLotFactory extends Factory
        
         return [
             'nameParkingLot'=>$this->faker->name(),
-            'vehicle'=>$this->faker->name(),
-            'capacity'=>rand(111111,999999),
             'address_latitude'=>$lang.rand(00000,99999),
             'address_longitude'=>$long.rand(00000,99999),
             'address'=>$this->faker->address(),

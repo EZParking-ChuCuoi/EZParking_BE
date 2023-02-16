@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ParKingLot;
 
 use App\Http\Controllers\Controller;
+use App\Models\Block;
 use App\Models\ParkingLot;
 use App\Models\User;
 use App\Services\Interfaces\IParKingLotService;
@@ -19,6 +20,12 @@ class ParKingLotController extends Controller
     {
         return $this->parKingLot->getAllParkingLot(true);
     }
+
+    public function getPriceOfParkingLot($id){
+        $data =Block::where('parkingLotId',$id)->orderBy('price')->get('price');
+        return ['priceFrom'=>$data[0]['price'],'priceTo'=>$data[sizeof($data)-1]['price']];
+    }
+
     public function showCommentOfParking($id)
     {
         $data = ParkingLot::join('comments', 'parking_lots.id', '=', 'comments.parkingId')

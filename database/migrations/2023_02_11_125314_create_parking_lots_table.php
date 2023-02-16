@@ -16,8 +16,6 @@ return new class extends Migration
     {
         Schema::create('parking_lots', function (Blueprint $table) {
             $table->increments("id")->from(1000000);
-            $table-> string("vehicle");
-            $table-> integer("capacity");
             $table-> string("image");
             $table-> time("openTime");
             $table-> time("endTime");

@@ -20,12 +20,12 @@ class BlockFactory extends Factory
         $arr =['4slot','5-7slot','16slot','29-30slot','35-47slot'];
 
         return [
-            
+            'capacity'=>rand(111111,999999),
             'parkingLotId'=>rand(1000000,1000009),
             'nameBlock'=>$this->faker->name(),
             'blockCode'=>Str::random(10),
             'carType'=>$arr[rand(0,4)],
-            'price'=>15.000,
+            'price'=>$this->faker->numberBetween($min = 1500, $max = 6000),
             'desc'=>$this->faker->sentence($nbWords = 6, $variableNbWords = true),
 
         ];

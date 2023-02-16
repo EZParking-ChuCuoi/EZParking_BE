@@ -89,11 +89,7 @@ GET http://localhost/api/parking-lot
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjcyNzUwM30.DBsaiLINNbTsKhWw9erY-TfZF6SYzs0nk3sLb5iqiFLrqNE3vFAOsx-i7XFC4QQBN4_yQtd7Ac944CZbzF18sg
 
-### get comment of parking lot
 
-GET http://localhost/api/parking-lot/1000000/info/comment
-Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjcyNzUwM30.DBsaiLINNbTsKhWw9erY-TfZF6SYzs0nk3sLb5iqiFLrqNE3vFAOsx-i7XFC4QQBN4_yQtd7Ac944CZbzF18sg
 
 ### location near you 
 
@@ -105,6 +101,19 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
     "latitude":16.060832,
     "longitude":108.241491
 }
+### get price of parking
+
+GET http://localhost/api/parking-lot/1000000/info/price
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjcyNzUwM30.DBsaiLINNbTsKhWw9erY-TfZF6SYzs0nk3sLb5iqiFLrqNE3vFAOsx-i7XFC4QQBN4_yQtd7Ac944CZbzF18sg
+
+
+### get comment of parking lot
+
+GET http://localhost/api/parking-lot/1000000/info/comment
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjcyNzUwM30.DBsaiLINNbTsKhWw9erY-TfZF6SYzs0nk3sLb5iqiFLrqNE3vFAOsx-i7XFC4QQBN4_yQtd7Ac944CZbzF18sg
+
 ### show categories
 GET http://localhost/api/parking-lot/1000000/block/categories
 Accept: : application/json

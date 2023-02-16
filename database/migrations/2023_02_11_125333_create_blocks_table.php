@@ -17,6 +17,7 @@ return new class extends Migration
             $table->increments("id")->from(1000000);
             $table->unsignedInteger("parkingLotId");
             $table-> string("nameBlock",50);
+            $table-> integer("capacity");
             $table->enum('carType',['4slot','5-7slot','16slot','29-30slot','35-47slot']);
             $table->string("blockCode")->unique();
             $table->string("desc");
