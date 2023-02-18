@@ -20,6 +20,10 @@ class UserController extends Controller
         $userData=$this->profileService->getAllUser();
         return $userData;
     }
+    public function getRole($id){
+        $role['role'] = User::find($id)->role;
+        return $role;
+    }
     public function showProfile($id){
         $userInfo= $this->profileService->show($id);
         if($userInfo == [null]){
