@@ -18,6 +18,7 @@ return new class extends Migration
             $table-> string("email",100)->unique();
             $table-> string("fullName",100);
             $table-> string("avatar",500);
+            $table->enum('role',['admin','user','owner']);
             $table-> string("password");
             $table-> boolean('status');
             $table->timestamps();

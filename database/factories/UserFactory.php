@@ -18,13 +18,15 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $arr=['admin','user','owner'];
 
         return [
             'email' => fake()->unique()->safeEmail(),
+            'role'=>$arr[rand(0,2)],
             'fullName' =>fake()->name(),
             'avatar' =>'https://asset.cloudinary.com/di9pzz9af/25dc36a357534bb21254266ea4ecda42',
             'password' =>Hash::make('12345'),
-            'status' =>fake()->boolean()
+            'status' =>1
         ];
     }
 

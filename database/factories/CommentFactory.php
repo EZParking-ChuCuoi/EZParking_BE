@@ -17,7 +17,7 @@ class CommentFactory extends Factory
     public function definition()
     {
         return [
-            'userId'=>rand(1000000,1000009),
+            'userId'=>rand(1000000,1000019),
             'parkingId'=>rand(1000000,1000009),
             'content'=>$this->faker->sentence(9,true),
             'ranting'=>rand(1,5),

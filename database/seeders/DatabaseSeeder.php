@@ -15,12 +15,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // import database user
-        \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(20)->create();
         // import database role
         \App\Models\Role::factory(3)->create();
         
         // import database RoleDFUser
-        \App\Models\RoleDFUser::factory(10)->create();
+        \App\Models\RoleDFUser::factory(20)->create();
         
         // import database ParkingLot
         \App\Models\ParkingLot::factory(50)->create();

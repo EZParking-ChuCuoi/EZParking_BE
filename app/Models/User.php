@@ -10,7 +10,7 @@ class User extends Model
     
     use HasFactory, SoftDeletes;
     protected $table = 'users';
-    protected $fillable = ['email','fullName', 'avatar','password', 'status'];
+    protected $fillable = ['email','fullName','role', 'avatar','password', 'status'];
     public function roleDFUser()
     {
         return $this->hasMany(\App\Models\RoleDFUser::class,"roleId");

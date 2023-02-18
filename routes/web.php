@@ -19,6 +19,6 @@ Route::get('/', function () {
 });
 
 
-Route::get('/show/',[ParKingLotController::class,'index']);
+Route::get('/show/{id}',[ParKingLotController::class,'showCommentOfParking']);
 Route::get('/parkinglot/{id}',[ParKingLotController::class,'showComentOfParking']);
 Route::get('/map',[ParKingLotController::class,'showParkingLotnearLocation']);
