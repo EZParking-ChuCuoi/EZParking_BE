@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
     "email": "cong@gmail.com",
-    "password":2345
+    "password":12345
 }
 ### sign up
 POST http://localhost/api/account/register
@@ -108,3 +108,8 @@ GET http://localhost/api/parking-lot/1000000/info/comment
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NjcyNzUwM30.DBsaiLINNbTsKhWw9erY-TfZF6SYzs0nk3sLb5iqiFLrqNE3vFAOsx-i7XFC4QQBN4_yQtd7Ac944CZbzF18sg
 
+
+# check space owver input id user
+# profile show
+# parking lot show: gio mo cua dong cua,
+# 

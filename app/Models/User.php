@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class User extends Model
+use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
+class User extends Model  implements Authenticatable
 {
     
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, AuthenticatableTrait;
     protected $table = 'users';
     protected $fillable = ['email','fullName','role', 'avatar','password', 'status'];
     public function roleDFUser()
@@ -27,7 +28,9 @@ class User extends Model
     {
         return $this->hasMany(\App\Models\Comment::class,'userId');
     }
-
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
 
 
 
