@@ -25,6 +25,11 @@ class ParKingLotController extends Controller
         $data =Block::where('parkingLotId',$id)->orderBy('price')->get('price');
         return ['priceFrom'=>$data[0]['price'],'priceTo'=>$data[sizeof($data)-1]['price']];
     }
+    public function getInfoParkingLot($id){
+        $parData = ParkingLot::where('id',$id)->get(['image','openTime','endTime','nameParkingLot','address','desc',])->toArray();
+        return $parData;
+    }
+
 
     public function showCommentOfParking($id)
     {
