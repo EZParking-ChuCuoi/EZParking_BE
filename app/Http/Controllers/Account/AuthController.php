@@ -18,6 +18,13 @@ class AuthController extends Controller
         $password = $request->input("password");
         $loginData = $this->authService->login($email, $password);
         if ($loginData) {
+            if(!$loginData['status']){
+                return $this->responseErrorWithDetails(
+                    "login.failed",
+                    ["error" => "Your account can not login"],
+                    Response::HTTP_UNAUTHORIZED
+                );
+            };
             ["accessToken" => $accessToken, "refreshToken" => $refreshToken, "uid" => $uid, "fullName" => $fullName] = $loginData;
             $response = $this->responseSuccessWithData(
                 "login.successful",

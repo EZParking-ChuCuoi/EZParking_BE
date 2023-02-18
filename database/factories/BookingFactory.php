@@ -17,7 +17,7 @@ class BookingFactory extends Factory
     public function definition()
     {
         return [
-            'userId'=>rand(1000000,1000009),
+            'userId'=>rand(1000000,1000019),
             'slotId'=>rand(100000000,100000020),
             'bookDate'=>$this->faker->dateTime(),
             'returnDate'=>$this->faker->dateTime(),

@@ -17,8 +17,8 @@ class UserParkingLotFactory extends Factory
     public function definition()
     {
         return [
-            'userId' => rand(1000000,1000009),
-            'parkingId' => rand(1000001,1000009),
+            'userId' => rand(1000000,1000019),
+            'parkingId' => rand(1000001,1000019),
         ];
     }
 }
