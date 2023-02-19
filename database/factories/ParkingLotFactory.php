@@ -16,8 +16,8 @@ class ParkingLotFactory extends Factory
      */
     public function definition()
     {
-        $lang = 16.09;
-        $long = 108.27;
+        $lang = 16.05;
+        $long = 108.25;
     
        
         return [

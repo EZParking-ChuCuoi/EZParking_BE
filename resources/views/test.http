@@ -107,7 +107,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 
 GET http://localhost/api/parking-lot/location
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Njc0NDE2Nn0.-PFdWp2-PA8aW4YzcnJqlocirVoN4M6G07OuBkJH85aQdNE49VcU20HISP5Y1fYwVrDZPMrAgGTi8pcrV8mTyg
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzA3Mzc5Mn0.zPs_C2kMFzaZ1xmm-nmVG-uCit7Zc9rMLw-4DV_Ku6EOJubP72efshgOmJQaNY0imIuUAr_Pg9xVtJmpEcmKqg
 
 {
     "latitude":16.060832,
