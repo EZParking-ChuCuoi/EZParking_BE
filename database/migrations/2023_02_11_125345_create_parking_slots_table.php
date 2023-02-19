@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedInteger("blockId");
             $table->string("slotCode");
             $table->boolean("status");
-            $table->enum('carType',['4slot','5-7slot','16slot','29-30slot','35-47slot']);
+            $table->enum('carType',['4-7SLOT','16-29SLOT','30-47SLOT']);
             $table->string("desc");
             $table->double("price");
             $table->foreign('blockId')->references('id')->on('blocks')->onDelete('cascade');

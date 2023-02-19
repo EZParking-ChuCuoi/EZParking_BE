@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ParKingLot;
 use App\Http\Controllers\Controller;
 use App\Models\Block;
 use App\Models\ParkingLot;
+use App\Models\ParkingSlot;
 use App\Models\User;
 use App\Services\Interfaces\IParKingLotService;
 use Illuminate\Http\Request;
@@ -21,9 +22,19 @@ class ParKingLotController extends Controller
         return $this->parKingLot->getAllParkingLot(true);
     }
 
-    public function getPriceOfParkingLot($id){
-        $data =Block::where('parkingLotId',$id)->orderBy('price')->get('price');
-        return ['priceFrom'=>$data[0]['price'],'priceTo'=>$data[sizeof($data)-1]['price']];
+    public function getPriceOfParkingLot(Request $request,$id){
+        $this->validate($request, [
+            'carType'           => 'required',
+        ]);
+        $carType = $request->carType;
+        $price = ParkingSlot::join('blocks','blocks.id', '=', 'parking_slots.blockId')
+                            ->join('parking_lots','parking_lots.id', '=', 'blocks.parkingLotId')
+                            ->where('parking_lots.id',$id)
+                            ->where('parking_slots.carType',$carType)
+                            ->orderBy('parking_slots.price')
+                            ->get(['parking_slots.price']);
+                            return ['priceFrom'=>$price[0]['price'],'priceTo'=>$price[sizeof($price)-1]['price']];
+        
     }
     public function getInfoParkingLot($id){
         $parData = ParkingLot::where('id',$id)->get(['image','openTime','endTime','nameParkingLot','address','desc',])->toArray();
@@ -59,7 +70,7 @@ class ParKingLotController extends Controller
     
             * sin(radians(parking_lots.address_latitude))) AS distance"))->having('distance','<',1.5)
 
-            ->get()->toArray();
+            ->get();
         return $data;
     }
 }

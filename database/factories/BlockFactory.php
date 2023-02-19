@@ -20,7 +20,7 @@ class BlockFactory extends Factory
 
         return [
             'capacity'=>rand(111111,999999),
-            'parkingLotId'=>rand(1000000,1000019),
+            'parkingLotId'=>rand(1000000,1000003),
             'nameBlock'=>$this->faker->name(),
             'blockCode'=>Str::random(10),
             'desc'=>$this->faker->sentence($nbWords = 6, $variableNbWords = true),
