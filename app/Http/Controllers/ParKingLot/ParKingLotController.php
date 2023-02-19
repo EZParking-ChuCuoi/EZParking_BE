@@ -35,6 +35,7 @@ class ParKingLotController extends Controller
     {
         $data = ParkingLot::join('comments', 'parking_lots.id', '=', 'comments.parkingId')
               ->join('users', 'users.id', '=', 'comments.userId')->where('parking_lots.id',$id)
+              ->orderBy('created_at','DESC')
               ->get(['comments.*', 'users.fullName','users.avatar']);
         return $data;
     }
