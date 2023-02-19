@@ -56,7 +56,7 @@ class ParKingLotController extends Controller
     
             + sin(radians(" .$lat. ")) 
     
-            * sin(radians(parking_lots.address_latitude))) AS distance"))->having('distance','<',5)
+            * sin(radians(parking_lots.address_latitude))) AS distance"))->having('distance','<',1.5)
 
             ->get()->toArray();
         return $data;
