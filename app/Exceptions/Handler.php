@@ -49,8 +49,9 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->renderable(function (QueryException $e, $req) {
-            return $this->responseError(
+            return $this->responseErrorWithDetails(
                 "exception.common.query",
+                [$e]
             );
         });
 //        $this->renderable(function (ExpiredException $e, $req) {

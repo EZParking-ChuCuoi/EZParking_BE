@@ -17,13 +17,10 @@ class ParkingSlotFactory extends Factory
      */
     public function definition()
     {
-        $arr =['4-7SLOT','16-29SLOT','30-47SLOT'];
 
         return [
             'blockId'=> rand(1000000,1000019),
             'slotCode'=>Str::random(10),
-            'carType'=>$arr[rand(0,2)],
-            'price'=>$this->faker->numberBetween($min = 1500, $max = 6000),
             'status'=>$this->faker->boolean(),
             'desc'=>$this->faker->sentence($nbWords = 6, $variableNbWords = true),
             

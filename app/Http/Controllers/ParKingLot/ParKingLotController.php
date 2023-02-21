@@ -22,19 +22,11 @@ class ParKingLotController extends Controller
         return $this->parKingLot->getAllParkingLot(true);
     }
 
-    public function getPriceOfParkingLot(Request $request,$id){
-        $this->validate($request, [
-            'carType'           => 'required',
-        ]);
-        $carType = $request->carType;
-        $price = ParkingSlot::join('blocks','blocks.id', '=', 'parking_slots.blockId')
-                            ->join('parking_lots','parking_lots.id', '=', 'blocks.parkingLotId')
-                            ->where('parking_lots.id',$id)
-                            ->where('parking_slots.carType',$carType)
-                            ->orderBy('parking_slots.price')
-                            ->get(['parking_slots.price']);
-                            return ['priceFrom'=>$price[0]['price'],'priceTo'=>$price[sizeof($price)-1]['price']];
-        
+    public function getPriceOfParkingLot($id){
+        $price = ParkingLot::find($id)->blocks()->orderBy('price')->get('price');
+        $priceData['priceFrom'] = $price[0]['price'];
+        $priceData['priceTo'] = $price[sizeof($price)-1]['price'];
+        return $priceData ? : null;
     }
     public function getInfoParkingLot($id){
         $parData = ParkingLot::where('id',$id)->get(['image','openTime','endTime','nameParkingLot','address','desc',])->toArray();

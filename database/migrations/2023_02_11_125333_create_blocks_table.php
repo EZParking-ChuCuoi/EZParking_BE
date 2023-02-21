@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unsignedInteger("parkingLotId");
             $table-> string("nameBlock",50);
             $table-> integer("capacity");
+            $table->enum('carType',['4-16SLOT','16-34SLOT']);
+            $table->double("price");
             $table->string("blockCode")->unique();
             $table->string("desc");
             $table->foreign('parkingLotId')->references('id')->on('parking_lots')->onDelete('cascade');

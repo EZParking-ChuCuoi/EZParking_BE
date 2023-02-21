@@ -18,4 +18,7 @@ class Block extends Model
     {
         return $this->hasMany(\App\Models\ParkingSlot::class,'blockId');
     }
+    protected $hidden = [
+        'created_at', 'updated_at','deleted_at',
+    ];
 }

@@ -57,6 +57,6 @@ Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(f
 Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
     
     Route::get("{id}/blocks","getBlock");
-    Route::get("{id}/slots","getSlot");
+    Route::get("parking-blocks/{id}/slots","getSlotStatusByBookingDateTime");
    
 });

@@ -9,7 +9,7 @@ class Comment extends Model
 {
     use HasFactory;
     protected $table = 'comments';
-    protected $fillable = ['nameParkingLot','address','image','openTime','endTime','desc','status'];
+    protected $fillable = ['userId','parkingId','content','ranting','created_at','update_at'];
     public function userParkingLot()
     {
         return $this->belongsTo(\App\Models\ParkingLot::class);

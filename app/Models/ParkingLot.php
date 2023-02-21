@@ -23,4 +23,5 @@ class ParkingLot extends Model
     {
         return $this->hasMany(\App\Models\Comment::class,  'parkingId');
     }
+  
 }
