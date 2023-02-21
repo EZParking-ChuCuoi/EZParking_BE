@@ -53,12 +53,10 @@ Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(f
     Route::get("{id}/info/price","getPriceOfParkingLot");
     Route::get("{id}/info/comment","showCommentOfParking");
     Route::get("location", "showParkingLotNearLocation");  
-
 });
 Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
     
-    Route::get("{id}/block/categories", "showBlockCategory");  
-    Route::get("{id}/block/category", "showBlockDetail");  
+    Route::get("{id}/blocks","getBlock");
+    Route::get("parking-blocks/{id}/slots","getSlotStatusByBookingDateTime");
    
-
 });

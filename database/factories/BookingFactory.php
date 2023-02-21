@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,12 +17,18 @@ class BookingFactory extends Factory
      */
     public function definition()
     {
+        $fromDate = "2023-01-01";
+        $toDate = "2023-01-3";
+        $from = "2023-02-4";
+        $to = "2023-02-8";
+
+
         return [
             'userId'=>rand(1000000,1000019),
             'slotId'=>rand(100000000,100000020),
-            'bookDate'=>$this->faker->dateTime(),
-            'returnDate'=>$this->faker->dateTime(),
-            'payment'=>$this->faker->numberBetween($min = 1500, $max = 6000),
+            'bookDate'=>$this->faker->dateTimeBetween($fromDate, $toDate)->format("Y-m-d H:i:s"),
+            'returnDate'=>$this->faker->dateTimeBetween($from, $to)->format("Y-m-d H:i:s"),
+            'payment'=>$this->faker->numberBetween($min = 1500.000, $max = 6000.000),
             'bookingStatus'=>$this->faker->boolean(),
             'rating'=>rand(1,5),
             'comment'=>$this->faker->sentence($nbWords = 6, $variableNbWords = true),

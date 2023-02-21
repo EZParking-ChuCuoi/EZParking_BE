@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ParKingLot;
 use App\Http\Controllers\Controller;
 use App\Models\Block;
 use App\Models\ParkingLot;
+use App\Models\ParkingSlot;
 use App\Models\User;
 use App\Services\Interfaces\IParKingLotService;
 use Illuminate\Http\Request;
@@ -22,8 +23,10 @@ class ParKingLotController extends Controller
     }
 
     public function getPriceOfParkingLot($id){
-        $data =Block::where('parkingLotId',$id)->orderBy('price')->get('price');
-        return ['priceFrom'=>$data[0]['price'],'priceTo'=>$data[sizeof($data)-1]['price']];
+        $price = ParkingLot::find($id)->blocks()->orderBy('price')->get('price');
+        $priceData['priceFrom'] = $price[0]['price'];
+        $priceData['priceTo'] = $price[sizeof($price)-1]['price'];
+        return $priceData ? : null;
     }
     public function getInfoParkingLot($id){
         $parData = ParkingLot::where('id',$id)->get(['image','openTime','endTime','nameParkingLot','address','desc',])->toArray();
@@ -35,6 +38,7 @@ class ParKingLotController extends Controller
     {
         $data = ParkingLot::join('comments', 'parking_lots.id', '=', 'comments.parkingId')
               ->join('users', 'users.id', '=', 'comments.userId')->where('parking_lots.id',$id)
+              ->orderBy('created_at','DESC')
               ->get(['comments.*', 'users.fullName','users.avatar']);
         return $data;
     }
@@ -58,7 +62,7 @@ class ParKingLotController extends Controller
     
             * sin(radians(parking_lots.address_latitude))) AS distance"))->having('distance','<',1.5)
 
-            ->get()->toArray();
+            ->get();
         return $data;
     }
 }

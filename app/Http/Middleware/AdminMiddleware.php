@@ -16,11 +16,11 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user() && auth()->user()->role == 'admin') {
-            return $next($request);
-        }
+        // if (auth()->user() && auth()->user()->role == 'admin') {
+        //     return $next($request);
+        // }
         
-        return redirect()->route('login')->withErrors(['message' => 'Bạn không có quyền truy cập trang này.']);
+        // return redirect()->route('login')->withErrors(['message' => 'Bạn không có quyền truy cập trang này.']);
     
     }
 }

@@ -18,3 +18,4 @@
 - Database name: laravel
 - password: password
 3. Debug for eloquen query database : https://laravel.com/docs/9.x/telescope#main-content
+# Query database
