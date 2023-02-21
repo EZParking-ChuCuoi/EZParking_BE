@@ -58,5 +58,6 @@ Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->gr
     
     Route::get("{id}/blocks","getBlock");
     Route::get("parking-blocks/{id}/slots","getSlotStatusByBookingDateTime");
+    Route::get("{id}/slots","getSlotStatusByBookingDateTime2");
    
 });
