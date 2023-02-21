@@ -19,8 +19,8 @@ class BookingFactory extends Factory
     {
         $fromDate = "2023-01-01";
         $toDate = "2023-01-3";
-        $from = "2023-02-4";
-        $to = "2023-02-8";
+        $from = "2023-01-4";
+        $to = "2023-01-8";
 
 
         return [
