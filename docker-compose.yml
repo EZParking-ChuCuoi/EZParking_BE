@@ -37,6 +37,8 @@ services:
       MYSQL_PASSWORD: password
     ports:
       - "3307:3306"
+    volumes:
+      - mysql:/var/lib/mysql
     networks:
       - laravel-net
   redis:
@@ -52,9 +54,22 @@ services:
       - laravel-net
     volumes:
       - cache:/data
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: db
+    networks:
+      - laravel-net
 networks:
   laravel-net:
     driver: bridge
 volumes:
   cache:
+    driver: local
+  mysql:
     driver: local
