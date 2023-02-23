@@ -17,7 +17,10 @@ return new class extends Migration
             $table->increments("id")->from(1000000);
             $table-> string("email",100)->unique();
             $table-> string("fullName",100);
-            $table-> string("avatar",500);
+            $table-> string("avatar");
+            $table-> string("phone")->nullable();
+            $table-> string("imageCardId")->nullable();
+            $table->enum('areaType',['small','medium','large'])->nullable();
             $table->enum('role',['admin','user','owner']);
             $table-> string("password");
             $table-> boolean('status');
