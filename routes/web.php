@@ -31,3 +31,4 @@ use Illuminate\Support\Facades\Route;
 //     });
 // });
 Route::get("/parking-lot/{id}/slots",[BlockParkingCarController::class,"getSlotStatusByBookingDateTime2"]);
+Route::get("/test", fn() => view("welcome"));
