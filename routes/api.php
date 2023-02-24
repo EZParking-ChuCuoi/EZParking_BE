@@ -4,6 +4,7 @@ use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\RegisterController;
 use App\Http\Controllers\Account\ForgotPasswordController;
 use App\Http\Controllers\ParKingLot\BlockParkingCarController;
+use App\Http\Controllers\ParKingLot\BookingController;
 use App\Http\Controllers\ParKingLot\ParKingLotController;
 use App\Http\Controllers\Profile\OwnerController;
 use App\Http\Controllers\Profile\UserController;
@@ -61,6 +62,10 @@ Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->gr
     Route::get("{id}/blocks", "getBlock");
     Route::get("parking-blocks/{id}/slots", "getSlotStatusByBookingDateTime");
     Route::get("{id}/slots", "getSlotStatusByBookingDateTime2");
+});
+
+Route::controller(BookingController::class)->prefix("/booking/")->group(function () {
+    Route::get("slots/{ids}", "getSlotsByIdWithBlockName");
 });
 
 Route::controller(OwnerController::class)->prefix("/owner/")->group(function () {

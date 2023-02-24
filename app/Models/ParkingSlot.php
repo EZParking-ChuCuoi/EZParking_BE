@@ -12,10 +12,13 @@ class ParkingSlot extends Model
     protected $fillable = ['blockId','slotCode','price','status','desc'];
     public function block()
     {
-        return $this->belongsTo(\App\Models\Block::class);
+        return $this->belongsTo(\App\Models\Block::class,'blockId');
     }
     public function booking()
     {
         return $this->hasMany(\App\Models\Booking::class);
     }
+    protected $hidden = [
+        'created_at', 'updated_at','deleted_at',
+    ];
 }
