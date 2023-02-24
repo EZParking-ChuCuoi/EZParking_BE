@@ -16,20 +16,25 @@ class BookingController extends Controller
         $slots = ParkingSlot::whereIn('id', $ids)->with('block')->get();
         // create an array to store the output slots
         $output = [];
+        $total=0;
         // loop through the input slot IDs
         foreach ($ids as $slotId) {
             // find the slot object with the current ID in the $slots array
             $slot = $slots->firstWhere('id', $slotId);
             // if a matching slot object was found, add it to the output array
+            
             if ($slot) {
-                $output[] = [
+                $output['slots'][] = [
                     'slotId' => $slot->id,
                     'blockName' => $slot->block->nameBlock,
+                    'blockDesc' => $slot->block->desc,
                     'carType' => $slot->block->carType,
                     'price' => $slot->block->price,
                 ];
+                $total += $slot->block->price;
             }
         }
+        $output['total']=$total;
         return $output;
     }
 }
