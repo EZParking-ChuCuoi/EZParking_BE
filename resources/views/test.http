@@ -63,7 +63,7 @@ Content-Type: application/json
 ### get infor of user
 GET http://localhost/api/user/1000000/info
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzAzODIzMH0.y4IPaN3XVT6eBHfu27buo6mI9tV95wcuB4hap9R4vwVsQnPhuP4C1N6exQiY_RWogUXqJziwuwmvmBXUkHu_BA
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzUyMzQyNn0._3OhelZv-we7dN6s_z0c6aILhmbPA4g99gY6wrf-n_g1W6-0vFd7geF2tY-SzsaBxDaNa_ALE7FKJlvZHVceAw
 
 ### get role of user
 GET http://localhost/api/user/1000000/role
@@ -150,10 +150,9 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 #input la id cua parkinglot start_datetime end_datetime
 GET http://localhost/api/parking-lot/1000000/slots?start_datetime=2023-02-23 14:30:00&end_datetime=2023-03-01 14:30:00
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzA3Mzc5Mn0.zPs_C2kMFzaZ1xmm-nmVG-uCit7Zc9rMLw-4DV_Ku6EOJubP72efshgOmJQaNY0imIuUAr_Pg9xVtJmpEcmKqg
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
 
-
-# check space owver input id user
-# profile show
-# parking lot show: gio mo cua dong cua,
-# 
+### Booking----------------------------------------------------
+GET http://localhost/api/booking/slots/100000000,100000002,100000003
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
