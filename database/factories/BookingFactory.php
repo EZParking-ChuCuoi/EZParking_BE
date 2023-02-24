@@ -29,10 +29,6 @@ class BookingFactory extends Factory
             'bookDate'=>$this->faker->dateTimeBetween($fromDate, $toDate)->format("Y-m-d H:i:s"),
             'returnDate'=>$this->faker->dateTimeBetween($from, $to)->format("Y-m-d H:i:s"),
             'payment'=>$this->faker->numberBetween($min = 1500.000, $max = 6000.000),
-            'bookingStatus'=>$this->faker->boolean(),
-            'rating'=>rand(1,5),
-            'comment'=>$this->faker->sentence($nbWords = 6, $variableNbWords = true),
-            'rating'=>rand(1,5),
         ];
     }
 }
