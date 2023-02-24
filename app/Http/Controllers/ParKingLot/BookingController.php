@@ -4,12 +4,26 @@ namespace App\Http\Controllers\ParKingLot;
 
 use App\Http\Controllers\Controller;
 use App\Models\ParkingSlot;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
 {
-    public function getSlotsByIdWithBlockName($ids) {
+    public function getSlotsByIdWithBlockName(Request $request) {
+
+
         // get all slots with the specified IDs
         // Convert $slotIds to an array if it's a string
+        $validator = Validator::make($request->all(), [
+            'ids' => 'required|array',
+            'start_datetime' => 'required|date_format:Y-m-d H:i:s',
+            'end_datetime' => 'required|date_format:Y-m-d H:i:s|after:start_datetime',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors()->toArray();
+        }
+        $dateData = $validator->validated();
+        $ids = $dateData['ids'];
         if (is_string($ids)) {
             $ids = explode(',', $ids);
         }
@@ -35,6 +49,11 @@ class BookingController extends Controller
             }
         }
         $output['total']=$total;
+        $output['date']=[
+            "start_datetime"=>$dateData['start_datetime'],
+            "end_datetime"=>$dateData['end_datetime'],
+
+        ];
         return $output;
     }
 }
