@@ -75,11 +75,17 @@ class ParKingLotController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'idUser' => 'required',
+            'idUser' => 'required',
+            'idUser' => 'required',
+            'idUser' => 'required',
         ]);
+        if ($validator->fails()) {
+            return $validator->errors()->toArray();
+        }
+        $dateData = $validator->validated();
+
+
     }
 
-    public function create(Request $request)
-    {
-        Storage::disk('local')->put("test.png", $request->file('file'));
-    }
+    
 }

@@ -54,6 +54,7 @@ Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(f
     Route::get("{id}/info/price", "getPriceOfParkingLot");
     Route::get("{id}/info/comment", "showCommentOfParking");
     Route::get("location", "showParkingLotNearLocation");
+    Route::post("create/{id}", "createParkingLot");
 });
 Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
 
@@ -64,5 +65,4 @@ Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->gr
 
 Route::controller(OwnerController::class)->prefix("/owner/")->group(function () {
     Route::put("create/{id}", "becomeSpaceOwner");
-
 });

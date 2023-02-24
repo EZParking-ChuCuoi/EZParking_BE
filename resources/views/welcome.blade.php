@@ -160,7 +160,6 @@ form .form-group input:valid{
 	cursor: pointer;
   transition: all 200ms linear;}
     </style>
-      <img src="{{ asset('storage/public/images/profile/avatar.png') }}" alt="" title=""></a>
     <div class="login-box">
         <h2>Welcome back</h2>
         <p>Enter your details</p>
@@ -185,8 +184,8 @@ form .form-group input:valid{
                 Forgot Your Password?
             </a>
             </div>
-            <img src="{{asset('/storage/test.png/dgFtYoj05lLemeRGqslNUvGHzkrhwUnEDVhxxkK7.png')}}" alt="" title=""></a>
-            <img src="{{asset('/storage/test.png/dgFtYoj05lLemeRGqslNUvGHzkrhwUnEDVhxxkK7.png')}}" alt="Cinque Terre" width="1000" height="300">   
+      <img src="{{ asset('storage/images/1677159221_Screenshotfrom2023-02-2121-30-15.png') }}" alt="anhr cong" title=""></a>
+
     </div>
 </body>
 </html>
