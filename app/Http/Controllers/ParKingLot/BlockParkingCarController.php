@@ -59,7 +59,8 @@ class BlockParkingCarController extends Controller
             return $validator->errors()->toArray();
         }
         $dateData = $validator->validated();
-        
+        $startDate=$dateData["start_datetime"];
+        $endDate=$dateData["end_datetime"];
         // Lấy ra tất cả các block trong parking lot với $parkingLotId được chỉ định.
         $blocks = Block::where('parkingLotId', $id)->get();
 
@@ -81,8 +82,8 @@ class BlockParkingCarController extends Controller
                 // Lấy ra tất cả các booking trong slot đó, với điều kiện thời gian bắt đầu và kết thúc của booking
                 // phải nằm trong khoảng thời gian được chỉ định.
                 $bookings = Booking::where('slotId', $slot->id)
-                    ->where('bookDate', '>=', $dateData["start_datetime"])
-                    ->where('returnDate', '<=', $dateData["end_datetime"])
+                    ->where('bookDate', '<=', $endDate)
+                    ->where('returnDate', '>=', $startDate)
                     ->get();
 
                 // Nếu số lượng booking lớn hơn 0, có nghĩa là slot đã được đặt trong khoảng thời gian được chỉ định.
@@ -97,7 +98,6 @@ class BlockParkingCarController extends Controller
                     $blockStatus[] = array(
                         'idSlot' => $slot->id,
                         'slotCode' => $slot->slotCode,
-                        
                         'status' => 'available'
                     );
                 }
@@ -114,7 +114,6 @@ class BlockParkingCarController extends Controller
         }
 
         return 
-        //  view('welcome')->with('data',$status);
         response()->json([
             'data' => $status,
         ]);
