@@ -148,7 +148,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 # Cach 2=============================
 ### get info detail slot of block cach 2
 #input la id cua parkinglot start_datetime end_datetime
-GET http://localhost/api/parking-lot/1000000/slots?start_datetime=2023-02-23 14:30:00&end_datetime=2023-03-01 14:30:00
+GET http://ec2-54-250-192-139.ap-northeast-1.compute.amazonaws.com/api/parking-lot/1000000/slots?start_datetime=2023-02-23 14:30:00&end_datetime=2023-03-01 14:30:00
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
 
@@ -163,15 +163,15 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
     "end_datetime":"2023-03-23 14:30:00"
 }
 ### booking now--
-POST  http://localhost/api/booking
+POST  http://ec2-54-250-192-139.ap-northeast-1.compute.amazonaws.com/api/booking
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
 
 {
-    "slot_ids":[100000016],
+    "slot_ids":[100000011,100000020,100000003],
     "user_id":1000000,
     "price":100000,
-    "start_datetime":"2023-05-23 14:30:00",
-    "end_datetime":"2023-07-23 14:30:00"
+    "start_datetime":"2023-02-23 14:30:00",
+    "end_datetime":"2023-03-23 14:30:00"
    
 }

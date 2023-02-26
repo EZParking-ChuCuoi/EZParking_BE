@@ -19,3 +19,6 @@
 - password: password
 3. Debug for eloquen query database : https://laravel.com/docs/9.x/telescope#main-content
 # Query database
+
+## Connect AWS
+1. Comanlne :ssh -i "keyforapi.pem" ubuntu@ec2-54-250-192-139.ap-northeast-1.compute.amazonaws.com

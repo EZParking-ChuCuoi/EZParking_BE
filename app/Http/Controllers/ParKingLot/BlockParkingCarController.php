@@ -92,17 +92,16 @@ class BlockParkingCarController extends Controller
                     $blockStatus[] = array(
                         'idSlot' => $slot->id,
                         'slotCode' => $slot->slotCode,
-                        'status' => 'booked'
+                        'status' => 0
                     );
                 } else {
                     $blockStatus[] = array(
                         'idSlot' => $slot->id,
                         'slotCode' => $slot->slotCode,
-                        'status' => 'available'
+                        'status' => 1
                     );
                 }
             }
-
             // Lưu trạng thái của từng slot trong block đó vào mảng chung.
             $status[] = array(
                 'block_id' => $block->id,
