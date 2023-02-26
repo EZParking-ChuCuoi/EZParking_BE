@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         // import database ParkingSlot
         \App\Models\ParkingSlot::factory(1000)->create();
 
-        \App\Models\Booking::factory(10000)->create();
+        // \App\Models\Booking::factory(10000)->create();
         
 
     }

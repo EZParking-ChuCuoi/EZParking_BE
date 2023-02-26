@@ -1,11 +1,11 @@
 
 
 ### login
-POST http://localhost/api/auth/login
+POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "cong@gmail.com",
+    "email": "ymann@example.net",
     "password":12345
 }
 ### sign up
@@ -168,10 +168,10 @@ Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
 
 {
-    "slot_ids":[100000005,100000002,100000003],
+    "slot_ids":[100000016],
     "user_id":1000000,
     "price":100000,
-    "start_datetime":"2023-02-23 14:30:00",
-    "end_datetime":"2023-03-23 14:30:00"
+    "start_datetime":"2023-05-23 14:30:00",
+    "end_datetime":"2023-07-23 14:30:00"
    
 }
