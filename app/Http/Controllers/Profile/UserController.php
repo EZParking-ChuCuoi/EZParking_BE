@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Profile;
 
+use App\Http\Controllers\Clound\CloudinaryStorage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileRequest;
 use App\Models\User;
 use App\Services\Interfaces\IProfile;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,25 +40,27 @@ class UserController extends Controller
         );
         }
     }
-    public function updateProfile(ProfileRequest $request,$id){
-
+    public function updateProfile(Request $request,$id){
+        $validator = Validator::make($request->all(), [
+            'fullName' => 'required',
+            'avatar' => 'required|image|max:2048',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors()->toArray();
+        }
+        $dateData = $validator->validated();
 
         $user= User::find($id);
 
-        $user->fullName=$request->fullName;
-        try {
-            if (!$request->hasFile('avatar')) {
-                return "Avatar require!";
-            }
-            $response = Cloudinary::upload($request->file('avatar')->getRealPath())->getSecurePath();
-            $user->avatar=$response;
 
-
-        } catch (\Exception $e) {
-            return '$this->returnError(201, $e->getMessage())';
+        $user->fullName=$dateData["fullName"];
+        if ($request->hasFile('avatar')) {
+            $file   = $request->file('avatar');
+            $linkImage =CloudinaryStorage::upload($file->getRealPath(), $file->getClientOriginalName(),'account/profile'); 
+            $user->avatar = $linkImage;
         }
         $user->save();
-        return $this->responseSuccessWithData("update success",$user,Response::HTTP_OK);
+        return $this->responseSuccessWithData("update success",[$user],Response::HTTP_OK);
 
     }
    

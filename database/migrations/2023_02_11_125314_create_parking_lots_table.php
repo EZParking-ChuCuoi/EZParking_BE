@@ -24,7 +24,7 @@ return new class extends Migration
             $table->double('address_longitude')->nullable();
             $table-> string("address",200);
             $table-> string("desc");
-            $table-> boolean('status');
+            $table-> boolean('status')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

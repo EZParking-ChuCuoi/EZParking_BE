@@ -55,7 +55,7 @@ Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(f
     Route::get("{id}/info/price", "getPriceOfParkingLot");
     Route::get("{id}/info/comment", "showCommentOfParking");
     Route::get("location", "showParkingLotNearLocation");
-    Route::post("create/{id}", "createParkingLot");
+    Route::post("create", "createParkingLot");
 });
 Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
 
