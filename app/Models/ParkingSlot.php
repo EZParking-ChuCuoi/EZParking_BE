@@ -9,7 +9,7 @@ class ParkingSlot extends Model
 {
     use HasFactory;
     protected $table = 'parking_slots';
-    protected $fillable = ['blockId','slotCode','price','status','desc'];
+    protected $fillable = ['blockId','slotName'];
     public function block()
     {
         return $this->belongsTo(\App\Models\Block::class,'blockId');

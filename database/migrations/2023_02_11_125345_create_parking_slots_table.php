@@ -16,9 +16,7 @@ return new class extends Migration
         Schema::create('parking_slots', function (Blueprint $table) {
             $table->increments("id")->from(100000000);
             $table->unsignedInteger("blockId");
-            $table->string("slotCode");
-            $table->boolean("status");
-            $table->string("desc");
+            $table->string("slotName");
             $table->foreign('blockId')->references('id')->on('blocks')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
