@@ -107,13 +107,11 @@ class ParKingLotController extends Controller
         $parkingLot->address = $dateData['address'];
         $parkingLot->desc = $dateData['desc'];
         $image= $request->file('image');
-
         if ($request->hasFile('image')) {
             $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(),'parkingLot/images'); 
             $parkingLot->image = $linkImage;
         }
         $parkingLot->save();
-
         $user_parkingLot = new UserParkingLot([
             'userId' => $dateData['userId'],
             'parkingId' => $parkingLot->id,
@@ -123,11 +121,23 @@ class ParKingLotController extends Controller
             'message' => 'Parking lot created successfully.',
             'data' => $parkingLot
         ], 201);
+    }
 
+    public function createBlockSlot(Request $request){
 
+        $validator = Validator::make($request->all(),[
+                "parkingLotId" =>'required',
+                "nameBlock" =>'required',
+                "carType" =>'required',
+                "price" =>'required|digits_between:1,99999999999999',
+                "blockName" =>'required',
+                ""
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors()->toArray();
+        }
+        $dateData = $validator->validated();
 
 
     }
-
-    
-}
+} 

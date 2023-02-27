@@ -63,6 +63,7 @@ class BookingController extends Controller
         $validator = Validator::make($request->all(), [
             'slot_ids' => 'required|array',
             'user_id' =>   'required',
+            'licensePlate' => 'required|array',
             'price' =>'required',
             'start_datetime' => 'required|date',
             'end_datetime' => 'required|date|after:start_datetime',
@@ -73,6 +74,7 @@ class BookingController extends Controller
         $dateData = $validator->validated();
         $slotIds = $dateData['slot_ids'];
         $userId = $dateData['user_id'];
+        $licensePlate = $dateData['licensePlate'];
         $price = $dateData['price'];
         $startDatetime = $dateData['start_datetime'];
         $endDatetime = $dateData['end_datetime'];
@@ -89,15 +91,17 @@ class BookingController extends Controller
 
     // If all requested slots are empty, create a new booking
     if (count($emptySlots) === count($slotIds)) {
-
+        $number =0;
         foreach ($emptySlots as $slot) {
             $booking = new Booking();
+            $booking->licensePlate = $licensePlate[$number];
             $booking->userId = $userId;
             $booking->slotId = $slot;
             $booking->payment = $price;
             $booking->bookDate = $startDatetime;
             $booking->returnDate = $endDatetime;
             $booking->save();
+            $number +=1;
         }
         
 
