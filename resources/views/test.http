@@ -1,11 +1,11 @@
 
 
 ### login
-POST http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/auth/login
+POST http://localhost/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "ymann@example.net",
+    "email": "cong@gmail.com",
     "password":12345
 }
 ### sign up
@@ -130,48 +130,54 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 
 
 ### block===========================================
-# Cachs 1====================
-
-### get all block of parking
-# input la Id cua parking lot
-GET http://localhost/api/parking-lot/1000000/blocks 
-Accept: : : application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzA3Mzc5Mn0.zPs_C2kMFzaZ1xmm-nmVG-uCit7Zc9rMLw-4DV_Ku6EOJubP72efshgOmJQaNY0imIuUAr_Pg9xVtJmpEcmKqg
  
-
-### get info detail slot of block cachs 1
-#input la id cua block 
-GET http://ec2-13-231-114-148.ap-northeast-1.compute.amazonaws.com/api/parking-lot/parking-blocks/1000010/slots?start_datetime=2022-01-02 14:30:00&end_datetime=2022-01-03 14:30:00
-Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzA3Mzc5Mn0.zPs_C2kMFzaZ1xmm-nmVG-uCit7Zc9rMLw-4DV_Ku6EOJubP72efshgOmJQaNY0imIuUAr_Pg9xVtJmpEcmKqg
-
-# Cach 2=============================
+ 
 ### get info detail slot of block cach 2
 #input la id cua parkinglot start_datetime end_datetime
-GET http://ec2-54-250-192-139.ap-northeast-1.compute.amazonaws.com/api/parking-lot/1000000/slots?start_datetime=2023-02-23 14:30:00&end_datetime=2023-03-01 14:30:00
+GET http://localhost/api/parking-lot/1000000/slots?start_datetime=2023-02-23 14:30:00&end_datetime=2023-03-01 14:30:00
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
 
-### Booking----------------------------------------------------
+### get detail booking----------------------------------------------------
 GET http://localhost/api/booking/slots
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
 
+
 {
-    "ids":[100000005,100000002,100000003],
+    "ids":[100000022],
     "start_datetime":"2023-02-23 14:30:00",
     "end_datetime":"2023-03-23 14:30:00"
 }
 ### booking now--
-POST  http://ec2-54-250-192-139.ap-northeast-1.compute.amazonaws.com/api/booking
+POST  http://localhost/api/booking
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
 
 {
-    "slot_ids":[100000011,100000020,100000003],
+    "slot_ids":[100000025,100000028,100000054],
     "user_id":1000000,
     "price":100000,
-    "start_datetime":"2023-02-23 14:30:00",
-    "end_datetime":"2023-03-23 14:30:00"
-   
+    "start_datetime":"2023-02-27 14:30:00",
+    "end_datetime":"2023-03-23 14:30:00",
+    "licensePlate":["congkdfkd","fdkjfdkfjk","dkfdkfjkd"]
 }
+
+### create parking lot
+POST  http://localhost/api/parking-lot/create
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
+# test ben post man cos truongwf anh
+
+{
+"userId":"1000001",
+"image"
+"openTime":"20:08",
+"endTime":"20:09",
+"nameParkingLot":"cong aaaaaaaaaa",
+"address_latitude":"16.060832",
+"address_longitude":"16.060832",
+"address":"fdfdf",
+"desc":"dfdf"
+}
+

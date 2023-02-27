@@ -24,7 +24,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'role'=>$arr[rand(0,2)],
             'fullName' =>fake()->name(),
-            'avatar' =>'https://asset.cloudinary.com/di9pzz9af/25dc36a357534bb21254266ea4ecda42',
+            'avatar' =>'https://res.cloudinary.com/di9pzz9af/image/upload/v1677472834/account/profile/icon-256x256_o1oxjl.png',
             'password' =>Hash::make('12345'),
             'status' =>1
         ];

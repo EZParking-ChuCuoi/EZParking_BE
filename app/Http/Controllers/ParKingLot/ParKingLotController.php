@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\ParKingLot;
 
+use App\Http\Controllers\Clound\CloudinaryStorage;
 use App\Http\Controllers\Controller;
 use App\Models\Block;
 use App\Models\ParkingLot;
 use App\Models\ParkingSlot;
 use App\Models\User;
+use App\Models\UserParkingLot;
 use App\Services\Interfaces\IParKingLotService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -71,13 +73,65 @@ class ParKingLotController extends Controller
         return $data;
     }
 
-    public function createParkingLot(Request $request, $idUser)
+    public function createParkingLot(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'idUser' => 'required',
-            'idUser' => 'required',
-            'idUser' => 'required',
-            'idUser' => 'required',
+            'userId' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'openTime' => [
+            'required',
+            'date_format:H:i',
+            'before:endTime',
+        ],
+        'endTime' => [
+            'required',
+            'date_format:H:i',
+            'after:openTime',
+        ],
+            'nameParkingLot' => 'required',
+            'address_latitude' => 'required',
+            'address_longitude' => 'required',
+            'address' => 'required',
+            'desc' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors()->toArray();
+        }
+        $dateData = $validator->validated();
+        $parkingLot = new ParkingLot();
+        $parkingLot->openTime = $dateData['openTime'];
+        $parkingLot->endTime = $dateData['endTime'];
+        $parkingLot->nameParkingLot = $dateData['nameParkingLot'];
+        $parkingLot->address_latitude = $dateData['address_latitude'];
+        $parkingLot->address_longitude = $dateData['address_longitude'];
+        $parkingLot->address = $dateData['address'];
+        $parkingLot->desc = $dateData['desc'];
+        $image= $request->file('image');
+        if ($request->hasFile('image')) {
+            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(),'parkingLot/images'); 
+            $parkingLot->image = $linkImage;
+        }
+        $parkingLot->save();
+        $user_parkingLot = new UserParkingLot([
+            'userId' => $dateData['userId'],
+            'parkingId' => $parkingLot->id,
+        ]);
+        $user_parkingLot->save();
+        return response()->json([
+            'message' => 'Parking lot created successfully.',
+            'data' => $parkingLot
+        ], 201);
+    }
+
+    public function createBlockSlot(Request $request){
+
+        $validator = Validator::make($request->all(),[
+                "parkingLotId" =>'required',
+                "nameBlock" =>'required',
+                "carType" =>'required',
+                "price" =>'required|digits_between:1,99999999999999',
+                "blockName" =>'required',
+                ""
         ]);
         if ($validator->fails()) {
             return $validator->errors()->toArray();
@@ -86,6 +140,4 @@ class ParKingLotController extends Controller
 
 
     }
-
-    
-}
+} 

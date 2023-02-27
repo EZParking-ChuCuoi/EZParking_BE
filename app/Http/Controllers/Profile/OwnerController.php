@@ -28,7 +28,7 @@ class OwnerController extends Controller
         $user->areaType = $request->input('areaType');
         $image= $request->file('imageCardId');
         if ($request->hasFile('imageCardId')) {
-            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName()); 
+            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(),'account/cardId'); 
             $user->imageCardId = $linkImage;
         }
         $user->save();
@@ -37,4 +37,5 @@ class OwnerController extends Controller
             'data' => $user
         ]);
     }
+
 }
