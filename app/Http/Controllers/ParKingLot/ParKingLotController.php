@@ -88,10 +88,10 @@ class ParKingLotController extends Controller
             'date_format:H:i',
             'after:openTime',
         ],
-            'nameParkingLot' => 'required',
+            'nameParkingLot' => 'required|string|max:255',
             'address_latitude' => 'required',
             'address_longitude' => 'required',
-            'address' => 'required',
+            'address' => 'required|string|max:255',
             'desc' => 'required',
         ]);
         if ($validator->fails()) {
@@ -123,21 +123,5 @@ class ParKingLotController extends Controller
         ], 201);
     }
 
-    public function createBlockSlot(Request $request){
-
-        $validator = Validator::make($request->all(),[
-                "parkingLotId" =>'required',
-                "nameBlock" =>'required',
-                "carType" =>'required',
-                "price" =>'required|digits_between:1,99999999999999',
-                "blockName" =>'required',
-                ""
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors()->toArray();
-        }
-        $dateData = $validator->validated();
-
-
-    }
+   
 } 

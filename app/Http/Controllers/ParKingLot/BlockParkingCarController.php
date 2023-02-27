@@ -59,8 +59,8 @@ class BlockParkingCarController extends Controller
             return $validator->errors()->toArray();
         }
         $dateData = $validator->validated();
-        $startDate=$dateData["start_datetime"];
-        $endDate=$dateData["end_datetime"];
+        $startDate = $dateData["start_datetime"];
+        $endDate = $dateData["end_datetime"];
         // Lấy ra tất cả các block trong parking lot với $parkingLotId được chỉ định.
         $blocks = Block::where('parkingLotId', $id)->get();
 
@@ -91,13 +91,13 @@ class BlockParkingCarController extends Controller
                 if (count($bookings) > 0) {
                     $blockStatus[] = array(
                         'idSlot' => $slot->id,
-                        'slotCode' => $slot->slotCode,
+                        'slotName' => $slot->slotName,
                         'status' => 0
                     );
                 } else {
                     $blockStatus[] = array(
                         'idSlot' => $slot->id,
-                        'slotCode' => $slot->slotCode,
+                        'slotName' => $slot->slotName,
                         'status' => 1
                     );
                 }
@@ -112,9 +112,45 @@ class BlockParkingCarController extends Controller
             );
         }
 
-        return 
-        response()->json([
-            'data' => $status,
+        return
+            response()->json([
+                'data' => $status,
+            ]);
+    }
+    public function createBlockSlot(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            "parkingLotId" => 'required',
+            "nameBlock" => 'required|string|max:255',
+            "carType" => 'required|in:4-16SLOT,16-34SLOT',
+            "desc" => 'required|string',
+            "price" => 'required|digits_between:1,99999999999999',
+            "numberOfSlot" => 'required|integer|min:1|max:100',
         ]);
+        if ($validator->fails()) {
+            return $validator->errors()->toArray();
+        }
+        $dateData = $validator->validated();
+        $block = new Block();
+        $block->parkingLotId = $dateData["parkingLotId"];
+        $block->nameBlock = $dateData["nameBlock"];
+        $block->desc = $dateData["desc"];
+        $block->carType = $dateData["carType"];
+        $block->price = $dateData["price"];
+        $block->save();
+
+        $numberOfSlot = $dateData["numberOfSlot"];
+        $blockNameLastChar = strtoupper(substr($block->nameBlock, -1));
+
+        for ($i = 1; $i <= $numberOfSlot; $i++) {
+            $slot = new ParkingSlot();
+            $slot->slotName = $blockNameLastChar.$i;
+            $block->slots()->save($slot);
+        }
+        return response()->json([
+            'message' => 'Block created successfully',
+            'block' => $block,
+        ], 201);
     }
 }

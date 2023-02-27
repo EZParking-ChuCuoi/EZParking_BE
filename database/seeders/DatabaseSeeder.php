@@ -32,10 +32,10 @@ class DatabaseSeeder extends Seeder
         \App\Models\UserParkingLot::factory(20)->create();
         
         // import database block
-        \App\Models\Block::factory(60)->create();
+        // \App\Models\Block::factory(60)->create();
         
         // import database ParkingSlot
-        \App\Models\ParkingSlot::factory(1000)->create();
+        // \App\Models\ParkingSlot::factory(1000)->create();
 
         // \App\Models\Booking::factory(10000)->create();
         

@@ -58,10 +58,10 @@ Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(f
     Route::post("create", "createParkingLot");
 });
 Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
-
     Route::get("{id}/blocks", "getBlock");
     Route::get("parking-blocks/{id}/slots", "getSlotStatusByBookingDateTime");
     Route::get("{id}/slots", "getSlotStatusByBookingDateTime2");
+    Route::post("block/create", "createBlockSlot");
 });
 
 Route::controller(BookingController::class)->prefix("/booking/")->group(function () {
