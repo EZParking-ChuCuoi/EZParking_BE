@@ -14,8 +14,9 @@ class OwnerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'phone' => 'required',
-            'areaType' => 'required',
-            'imageCardId' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'businessScale' => 'required|in:local,business',
+            'imageCardIdBef' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imageCardIdAft' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -26,10 +27,15 @@ class OwnerController extends Controller
         $user = User::findOrFail($id);
         $user->phone = $request->input('phone');    
         $user->areaType = $request->input('areaType');
-        $image= $request->file('imageCardId');
-        if ($request->hasFile('imageCardId')) {
-            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(),'account/cardId'); 
-            $user->imageCardId = $linkImage;
+        $image= $request->file('imageCardIdBef');
+        if ($request->hasFile('imageCardIdBef')) {
+            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(),'account/cardId/Bef'); 
+            $user->imageCardIdBef = $linkImage;
+        }
+        $image= $request->file('imageCardIdAft');
+        if ($request->hasFile('imageCardIdAft')) {
+            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(),'account/cardId/Aft'); 
+            $user->imageCardIdAft = $linkImage;
         }
         $user->save();
         return response()->json([

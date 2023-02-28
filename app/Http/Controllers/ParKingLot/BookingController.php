@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\ParkingSlot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class BookingController extends Controller
 {
@@ -64,7 +65,7 @@ class BookingController extends Controller
             'slot_ids' => 'required|array',
             'user_id' =>   'required',
             'licensePlate' => 'required|array',
-            'price' =>'required',
+            'price' => 'required',
             'start_datetime' => 'required|date',
             'end_datetime' => 'required|date|after:start_datetime',
         ]);
@@ -81,43 +82,44 @@ class BookingController extends Controller
 
         $bookedSlots = Booking::where(function ($query) use ($startDatetime, $endDatetime) {
             $query->where('bookDate', '<', $endDatetime)
-                  ->where('returnDate', '>', $startDatetime);
+                ->where('returnDate', '>', $startDatetime);
         })
-        ->whereIn('slotId', $slotIds)
-        ->pluck('slotId')
-        ->toArray();
+            ->whereIn('slotId', $slotIds)
+            ->pluck('slotId')
+            ->toArray();
 
-    $emptySlots = array_diff($slotIds, $bookedSlots);
+        $emptySlots = array_diff($slotIds, $bookedSlots);
 
-    // If all requested slots are empty, create a new booking
-    if (count($emptySlots) === count($slotIds)) {
-        $number =0;
-        foreach ($emptySlots as $slot) {
-            $booking = new Booking();
-            $booking->licensePlate = $licensePlate[$number];
-            $booking->userId = $userId;
-            $booking->slotId = $slot;
-            $booking->payment = $price;
-            $booking->bookDate = $startDatetime;
-            $booking->returnDate = $endDatetime;
-            $booking->save();
-            $number +=1;
+        // If all requested slots are empty, create a new booking
+        if (count($emptySlots) === count($slotIds)) {
+            $number = 0;
+            foreach ($emptySlots as $slot) {
+                $booking = new Booking();
+                $booking->licensePlate = $licensePlate[$number];
+                $booking->userId = $userId;
+                $booking->slotId = $slot;
+                $booking->payment = $price;
+                $booking->bookDate = $startDatetime;
+                $booking->returnDate = $endDatetime;
+                $booking->save();
+                $number += 1;
+            }
+
+
+            // $booking->slots()->attach($emptySlots);
+            $qrCode = QrCode::size(250)->generate($booking);
+//            ->qr_code = base64_encode($qrCode);
+            return response()->json([
+                'success' => true,
+                'message' => 'Booking created successfully',
+                'data' => $booking
+            ]);
         }
-        
-
-        // $booking->slots()->attach($emptySlots);
 
         return response()->json([
-            'success' => true,
-            'message' => 'Booking created successfully',
-            'data' => $booking
+            'success' => false,
+            'message' => 'One or more slots are already booked during the requested time period',
+            'data' => $bookedSlots
         ]);
-    }
-
-    return response()->json([
-        'success' => false,
-        'message' => 'One or more slots are already booked during the requested time period',
-        'data' => $bookedSlots
-    ]);
     }
 }
