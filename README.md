@@ -22,3 +22,4 @@
 
 ## Connect AWS
 1. Comanlne :ssh -i "keyforapi.pem" ubuntu@ec2-54-250-192-139.ap-northeast-1.compute.amazonaws.com
+or: ```https://ap-northeast-1.console.aws.amazon.com/ec2/home?region=ap-northeast-1#ConnectToInstance:instanceId=i-0ea53592da06e81b1```
