@@ -1,4 +1,4 @@
-<?php
+1<?php
 
 namespace App\Http\Controllers\Profile;
 
@@ -14,7 +14,7 @@ class OwnerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'phone' => 'required',
-            'areaType' => 'required|in:small,medium,large',
+            'businessScale' => 'required|in:local,business',
             'imageCardIdBef' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'imageCardIdAft' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);

@@ -18,4 +18,7 @@ class Booking extends Model
     {
         return $this->hasMany(\App\Models\User::class);
     }
+    public function qrCodes(){
+        return $this->hasMany(QRCode::class,"bookingId");
+    }
 }
