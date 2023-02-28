@@ -26,7 +26,7 @@ class OwnerController extends Controller
         }
         $user = User::findOrFail($id);
         $user->phone = $request->input('phone');    
-        $user->areaType = $request->input('areaType');
+        $user->areaType = $request->input('businessScale');
         $image= $request->file('imageCardIdBef');
         if ($request->hasFile('imageCardIdBef')) {
             $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(),'account/cardId/Bef'); 
