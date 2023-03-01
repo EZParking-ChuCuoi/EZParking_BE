@@ -67,6 +67,7 @@ Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->gr
 Route::controller(BookingController::class)->prefix("/booking/")->group(function () {
     Route::get("slots", "getSlotsByIdWithBlockName");
     Route::post("", "bookParkingLot");
+    Route::get("show", "getDetailQRcode");
 });
 
 Route::controller(OwnerController::class)->prefix("/owner/")->group(function () {

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->dateTime('bookDate');
             $table->dateTime('returnDate');
             $table->string('licensePlate');
-            $table->string('qrCode');
             $table->double('payment');
             $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('slotId')->references('id')->on('parking_slots')->onDelete('cascade');

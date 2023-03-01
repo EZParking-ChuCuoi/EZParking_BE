@@ -7,14 +7,11 @@ use App\Models\Booking;
 use App\Models\ParkingSlot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class BookingController extends Controller
 {
     public function getSlotsByIdWithBlockName(Request $request)
     {
-
-
         // get all slots with the specified IDs
         // Convert $slotIds to an array if it's a string
         $validator = Validator::make($request->all(), [
@@ -93,6 +90,7 @@ class BookingController extends Controller
         // If all requested slots are empty, create a new booking
         if (count($emptySlots) === count($slotIds)) {
             $number = 0;
+            $output = ['dfdfdd'];
             foreach ($emptySlots as $slot) {
                 $booking = new Booking();
                 $booking->licensePlate = $licensePlate[$number];
@@ -103,16 +101,14 @@ class BookingController extends Controller
                 $booking->returnDate = $endDatetime;
                 $booking->save();
                 $number += 1;
+                $output[] = $booking;
             }
 
 
-            // $booking->slots()->attach($emptySlots);
-            $qrCode = QrCode::size(250)->generate($booking);
-//            ->qr_code = base64_encode($qrCode);
             return response()->json([
                 'success' => true,
                 'message' => 'Booking created successfully',
-                'data' => $booking
+                'data' => $output,
             ]);
         }
 
@@ -121,5 +117,28 @@ class BookingController extends Controller
             'message' => 'One or more slots are already booked during the requested time period',
             'data' => $bookedSlots
         ]);
+    }
+    public function getDetailQRcode(Request $request)
+    {
+        
+        $validator = validator::make($request->all(), [
+            'userId' => 'required|integer',
+            'startDateTime' => 'required|date_format:Y-m-d H:i:s',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors()->toArray();
+        }
+        $dateData = $validator->validated();
+        $userId = $dateData['userId'];
+        $startDateTime = $dateData['startDateTime'];
+        $outPut = Booking::join('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
+            ->join('blocks', 'blocks.id', '=', 'parking_slots.blockId')
+            ->where('bookings.userId', $userId)
+            ->where('bookings.bookDate', $startDateTime)
+            ->get();
+        return response()->json([
+            'message' => 'Detail booking',
+            'data' => $outPut,
+        ], 200);
     }
 }
