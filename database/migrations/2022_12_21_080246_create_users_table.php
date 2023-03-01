@@ -21,7 +21,7 @@ return new class extends Migration
             $table-> string("phone")->nullable();
             $table-> string("imageCardIdBef")->nullable();
             $table-> string("imageCardIdAft")->nullable();
-            $table->enum('areaType',['small','medium','large'])->nullable();
+            $table->enum('areaType',['local','business'])->nullable();
             $table->enum('role',['admin','user','owner']);
             $table-> string("password");
             $table-> boolean('status');
