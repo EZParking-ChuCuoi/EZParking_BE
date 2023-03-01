@@ -239,4 +239,18 @@ class ParKingLotController extends Controller
             'data' => $parkingLot
         ], 201);
     }
+    public function uploadImage(Request $request){
+        $validatedData = $request->validate([
+            'image' => 'required',
+        ]);
+        $image = $request->image;
+        if ($request->hasFile('image')) {
+            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(), 'parkingLot/images');
+            return response()->json([
+                'message' => 'Parking lot created successfully.',
+                'data' => $linkImage
+            ], 201);
+        }
+        return 'not found';
+    }
 }
