@@ -10,6 +10,30 @@ use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
 {
+    /**
+     * @OA\Get(
+     ** path="/api/booking/slots", tags={"Booking"}, 
+     *  summary="show detail booking", operationId="getSlotsByIdWithBlockName",
+     *     @OA\Parameter(
+     *         name="ids",
+     *         in="query",
+     *         example="[100000000,100000001]",
+     *         description="An array of integers.",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="integer",
+     *              
+     *              )
+     *         )
+     *     ),
+     *  @OA\Parameter(name="start_datetime",in="query",required=true,example="2023-03-01 14:30:00", @OA\Schema( type="string" )),
+     *  @OA\Parameter(name="end_datetime",in="query",required=true,example="2023-04-01 14:30:00", @OA\Schema( type="string" )),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
     public function getSlotsByIdWithBlockName(Request $request)
     {
         // get all slots with the specified IDs
@@ -118,9 +142,19 @@ class BookingController extends Controller
             'data' => $bookedSlots
         ]);
     }
+    /**
+     * @OA\Get(
+     ** path="/api/booking/show", tags={"Booking"}, 
+     *  summary="Scan QRcode to get detail booking", operationId="getDetailQRcode",
+     *  @OA\Parameter(name="userId",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
+     *  @OA\Parameter(name="startDateTime",in="query",required=true,example="2023-02-27 14:30:00", @OA\Schema( type="string" )),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
     public function getDetailQRcode(Request $request)
     {
-        
+
         $validator = validator::make($request->all(), [
             'userId' => 'required|integer',
             'startDateTime' => 'required|date_format:Y-m-d H:i:s',

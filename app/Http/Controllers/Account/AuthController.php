@@ -12,6 +12,50 @@ use Symfony\Component\HttpFoundation\Response;
 class AuthController extends Controller
 {
     public function __construct(private readonly IAuthService $authService) {}
+    /**
+         * @OA\Post(
+         ** path="/api/auth/login",
+         *   tags={"Account"},
+         *   summary="Login",
+         *   operationId="login",
+         *   @OA\Parameter(
+         *      name="email",
+         *      in="query",
+         *      required=true,
+         *      @OA\Schema(
+         *           type="string"
+         *      )
+         *   ),
+         *   @OA\Parameter(
+         *      name="password",
+         *      in="query",
+         *      required=true,
+         *      @OA\Schema(
+         *          type="string"
+         *      )
+         *   ),
+         *   @OA\Response(
+         *      response=200,
+         *       description="Success",
+         *   ),
+         *   @OA\Response(
+         *      response=401,
+         *       description="Unauthenticated"
+         *   ),
+         *   @OA\Response(
+         *      response=400,
+         *      description="Bad Request"
+         *   ),
+         *   @OA\Response(
+         *      response=404,
+         *      description="not found"
+         *   ),
+         *      @OA\Response(
+         *          response=403,
+         *          description="Forbidden"
+         *      )
+         *)
+         **/
     public function login(AuthRequest $request): JsonResponse
     {
         $email = $request->input("email");
