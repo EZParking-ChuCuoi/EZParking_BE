@@ -292,6 +292,252 @@
                 }
             }
         },
+        "/api/parking-lot/{id}/blocks": {
+            "get": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "get all slot in this block",
+                "operationId": "getBlock",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the parking lot to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/{id}/slots": {
+            "get": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "get all slot in this block with detail status",
+                "operationId": "getSlotStatusByBookingDateTime2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the parking lot to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    },
+                    {
+                        "name": "start_datetime",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "2023-03-01 14:30:00"
+                    },
+                    {
+                        "name": "end_datetime",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "2023-04-01 14:30:00"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/block/create": {
+            "post": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "create block ,slot",
+                "operationId": "createBlockSlot",
+                "parameters": [
+                    {
+                        "name": "parkingLotId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1000000"
+                    },
+                    {
+                        "name": "nameBlock",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Khu a"
+                    },
+                    {
+                        "name": "carType",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "4-16SLOT"
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "an toan cao"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 14000
+                    },
+                    {
+                        "name": "numberOfSlot",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 50
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/booking/slots": {
+            "get": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "show detail booking",
+                "operationId": "getSlotsByIdWithBlockName",
+                "parameters": [
+                    {
+                        "name": "ids",
+                        "in": "query",
+                        "description": "An array of integers.",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        "example": "[100000000,100000001]"
+                    },
+                    {
+                        "name": "start_datetime",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "2023-03-01 14:30:00"
+                    },
+                    {
+                        "name": "end_datetime",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "2023-04-01 14:30:00"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/booking/show": {
+            "get": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Scan QRcode to get detail booking",
+                "operationId": "getDetailQRcode",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    },
+                    {
+                        "name": "startDateTime",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "2023-02-27 14:30:00"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/parking-lot": {
             "get": {
                 "tags": [

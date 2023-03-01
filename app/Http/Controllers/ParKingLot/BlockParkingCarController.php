@@ -13,11 +13,28 @@ use Illuminate\Support\Facades\Validator;
 
 class BlockParkingCarController extends Controller
 {
+    /**
+     * @OA\Get(
+     ** path="/api/parking-lot/{id}/blocks", tags={"Block"}, 
+     *  summary="get all slot in this block", operationId="getBlock",
+     *   @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *          example=1000000,
+     *         description="ID of the parking lot to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
     public function getBlock($id)
     {
         $blockData = ParkingLot::find($id)->blocks()->orderBy('carType', 'asc')->get();
         return $blockData ?: null;
     }
+   
     public function getSlotStatusByBookingDateTime(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -49,6 +66,25 @@ class BlockParkingCarController extends Controller
             'data' => $slots,
         ]);
     }
+     /**
+     * @OA\Get(
+     ** path="/api/parking-lot/{id}/slots", tags={"Block"}, 
+     *  summary="get all slot in this block with detail status", operationId="getSlotStatusByBookingDateTime2",
+     *   @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *          example=1000000,
+     *         description="ID of the parking lot to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *      @OA\Parameter(name="start_datetime",in="query",required=true,example="2023-03-01 14:30:00", @OA\Schema( type="string" )),
+     *      @OA\Parameter(name="end_datetime",in="query",required=true,example="2023-04-01 14:30:00", @OA\Schema( type="string" )),
+     * 
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
     public function getSlotStatusByBookingDateTime2(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -117,6 +153,21 @@ class BlockParkingCarController extends Controller
                 'data' => $status,
             ]);
     }
+    /**
+     * @OA\Post(
+     ** path="/api/parking-lot/block/create", tags={"Block"}, 
+     *  summary="create block ,slot", operationId="createBlockSlot",
+     *      @OA\Parameter(name="parkingLotId",in="query",required=true,example="1000000", @OA\Schema( type="integer" )),
+     *      @OA\Parameter(name="nameBlock",in="query",required=true,example="Khu a", @OA\Schema( type="string" )),
+     *      @OA\Parameter(name="carType",in="query",required=true,example="4-16SLOT", @OA\Schema( type="string" )),
+     *      @OA\Parameter(name="desc",in="query",required=true,example="an toan cao", @OA\Schema( type="string" )),
+     *      @OA\Parameter(name="price",in="query",required=true,example=14000, @OA\Schema( type="integer" )),
+     *      @OA\Parameter(name="numberOfSlot",in="query",required=true,example=50, @OA\Schema( type="integer" )),
+     * 
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
     public function createBlockSlot(Request $request)
     {
 
@@ -145,7 +196,7 @@ class BlockParkingCarController extends Controller
 
         for ($i = 1; $i <= $numberOfSlot; $i++) {
             $slot = new ParkingSlot();
-            $slot->slotName = $blockNameLastChar.$i;
+            $slot->slotName = $blockNameLastChar . $i;
             $block->slots()->save($slot);
         }
         return response()->json([
