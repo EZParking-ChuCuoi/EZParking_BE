@@ -755,6 +755,40 @@
                 ]
             }
         },
+        "/api/parking-lot/upload": {
+            "post": {
+                "tags": [
+                    "Upload image"
+                ],
+                "summary": "create parking lot ",
+                "operationId": "uploadImage",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "image": {
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/user/": {
             "get": {
                 "tags": [
