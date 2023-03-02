@@ -5,6 +5,7 @@ use App\Http\Controllers\Account\RegisterController;
 use App\Http\Controllers\Account\ForgotPasswordController;
 use App\Http\Controllers\ParKingLot\BlockParkingCarController;
 use App\Http\Controllers\ParKingLot\BookingController;
+use App\Http\Controllers\ParKingLot\Owner\BlockController;
 use App\Http\Controllers\ParKingLot\ParKingLotController;
 use App\Http\Controllers\Profile\OwnerController;
 use App\Http\Controllers\Profile\UserController;
@@ -58,8 +59,6 @@ Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(f
     Route::post("create", "createParkingLot");
 });
 Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
-    Route::get("{id}/blocks", "getBlock");
-    Route::get("parking-blocks/{id}/slots", "getSlotStatusByBookingDateTime");
     Route::get("{id}/slots", "getSlotStatusByBookingDateTime2");
     Route::post("block/create", "createBlockSlot");
 });
@@ -70,6 +69,17 @@ Route::controller(BookingController::class)->prefix("/booking/")->group(function
     Route::get("show", "getDetailQRcode");
 });
 
+// Space owner
+
+
 Route::controller(OwnerController::class)->prefix("/owner/")->group(function () {
     Route::put("create/{id}", "becomeSpaceOwner");
+});
+
+Route::controller(BlockController::class)->prefix("/parking-lot/")->group(function () {
+    Route::post("block/create", "createBlockSlot");
+    Route::get("block/{id}", "showDetailBlock");
+    Route::get("{idParking}/blocks", "getAllBlock");
+    Route::put("block/{id}/update", "updateBlock");
+    Route::delete("block/{id}/delete", "deleteBlock");
 });
