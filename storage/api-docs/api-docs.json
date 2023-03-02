@@ -292,37 +292,6 @@
                 }
             }
         },
-        "/api/parking-lot/{id}/blocks": {
-            "get": {
-                "tags": [
-                    "Block"
-                ],
-                "summary": "get all slot in this block",
-                "operationId": "getBlock",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the parking lot to retrieve",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": 1000000
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
-            }
-        },
         "/api/parking-lot/{id}/slots": {
             "get": {
                 "tags": [
@@ -358,81 +327,6 @@
                             "type": "string"
                         },
                         "example": "2023-04-01 14:30:00"
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
-            }
-        },
-        "/api/parking-lot/block/create": {
-            "post": {
-                "tags": [
-                    "Block"
-                ],
-                "summary": "create block ,slot",
-                "operationId": "createBlockSlot",
-                "parameters": [
-                    {
-                        "name": "parkingLotId",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1000000"
-                    },
-                    {
-                        "name": "nameBlock",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "Khu a"
-                    },
-                    {
-                        "name": "carType",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "4-16SLOT"
-                    },
-                    {
-                        "name": "desc",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "an toan cao"
-                    },
-                    {
-                        "name": "price",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": 14000
-                    },
-                    {
-                        "name": "numberOfSlot",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": 50
                     }
                 ],
                 "responses": {
@@ -529,6 +423,238 @@
                 "responses": {
                     "403": {
                         "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/{idParking}/blocks": {
+            "get": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "get all block with id parking lot",
+                "operationId": "getAllBlock",
+                "parameters": [
+                    {
+                        "name": "idParking",
+                        "in": "path",
+                        "description": "ID of parking lot",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/block/create": {
+            "post": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "create block ,slot",
+                "operationId": "createBlockSlot",
+                "parameters": [
+                    {
+                        "name": "parkingLotId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1000000"
+                    },
+                    {
+                        "name": "nameBlock",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Khu a"
+                    },
+                    {
+                        "name": "carType",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "4-16SLOT"
+                    },
+                    {
+                        "name": "desc",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "an toan cao"
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 14000
+                    },
+                    {
+                        "name": "numberOfSlot",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 50
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/block/{id}": {
+            "get": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "show detail info of block",
+                "operationId": "showDetailBlock",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of parking lot",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/block/{id}/update": {
+            "put": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "Update block",
+                "description": "Update the user's profile.",
+                "operationId": "updateBlock",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of block parking lot",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "requestBody": {
+                    "description": "block object that needs to be updated.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nameBlock": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 2000000
+                                    },
+                                    "desc": {
+                                        "type": "string",
+                                        "example": "16-34SLOT"
+                                    },
+                                    "carType": {
+                                        "type": "string",
+                                        "example": "16-34SLOT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/block/{id}/delete": {
+            "delete": {
+                "tags": [
+                    "Block"
+                ],
+                "summary": "Delete block",
+                "description": "Update the user's profile.",
+                "operationId": "deleteBlock",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of block parking lot",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": 1000041
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully"
                     }
                 },
                 "security": [
@@ -736,40 +862,6 @@
                                     "desc": {
                                         "type": "string",
                                         "example": "gia ra dat an ninh coa"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
-            }
-        },
-        "/api/parking-lot/upload": {
-            "post": {
-                "tags": [
-                    "Upload image"
-                ],
-                "summary": "create parking lot ",
-                "operationId": "uploadImage",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "image": {
-                                        "type": "file"
                                     }
                                 },
                                 "type": "object"
