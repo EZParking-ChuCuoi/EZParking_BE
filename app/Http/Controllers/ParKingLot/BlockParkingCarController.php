@@ -34,7 +34,6 @@ class BlockParkingCarController extends Controller
         $blockData = ParkingLot::find($id)->blocks()->orderBy('carType', 'asc')->get();
         return $blockData ?: null;
     }
-   
     public function getSlotStatusByBookingDateTime(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -66,7 +65,7 @@ class BlockParkingCarController extends Controller
             'data' => $slots,
         ]);
     }
-     /**
+    /**
      * @OA\Get(
      ** path="/api/parking-lot/{id}/slots", tags={"Block"}, 
      *  summary="get all slot in this block with detail status", operationId="getSlotStatusByBookingDateTime2",
@@ -204,4 +203,6 @@ class BlockParkingCarController extends Controller
             'block' => $block,
         ], 201);
     }
+
+
 }

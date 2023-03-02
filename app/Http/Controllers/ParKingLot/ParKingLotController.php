@@ -239,40 +239,5 @@ class ParKingLotController extends Controller
             'data' => $parkingLot
         ], 201);
     }
-    /**
-     * @OA\Post(
-     ** path="/api/parking-lot/upload", tags={"Upload image"}, 
-     *  summary="create parking lot ", operationId="uploadImage",
-     *   @OA\RequestBody(
-     *         required=true,
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 @OA\Property(
-     *                     property="image",
-     *                     type="file",
-     *                   
-     *                 )
-     *                 
-     *             )
-     *         )
-     *     ),
-     *@OA\Response( response=403, description="Forbidden"),
-     * security={ {"passport":{}}}
-     *)
-     **/
-    public function uploadImage(Request $request){
-        $validatedData = $request->validate([
-            'image' => 'required',
-        ]);
-        $image = $request->image;
-        if ($request->hasFile('image')) {
-            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(), 'parkingLot/images');
-            return response()->json([
-                'message' => 'Upload image success!',
-                'data' => $linkImage
-            ], 201);
-        }
-        return 'not found';
-    }
+     
 }
