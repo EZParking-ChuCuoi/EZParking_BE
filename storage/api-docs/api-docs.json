@@ -789,6 +789,67 @@
                 ]
             }
         },
+        "/api/owner/create/{id}": {
+            "post": {
+                "tags": [
+                    "Space owner"
+                ],
+                "summary": "become owner parking lot",
+                "description": "Update the user's profile.",
+                "operationId": "becomeSpaceOwner",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "phone": {
+                                        "type": "integer"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "example": "PUT"
+                                    },
+                                    "businessScale": {
+                                        "type": "string",
+                                        "example": "local"
+                                    },
+                                    "imageCardIdBef": {
+                                        "type": "file"
+                                    },
+                                    "imageCardIdAft": {
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/user/": {
             "get": {
                 "tags": [
