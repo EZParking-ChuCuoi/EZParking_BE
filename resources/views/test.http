@@ -193,13 +193,40 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 ### create blocks with slot
 POST  http://localhost/api/parking-lot/block/create
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Nzg0OTMwMH0.9TB50I8ZFSm6dLnXgZoSJJM1GCLPxbtw-0NmwZNhzhB83tXni4FF0juKcNMrWcaof-nT9ObEFOl7hhAWD34OPQ
 
 {
  "parkingLotId":1000000,
- "nameBlock":"Khu a",
+ "nameBlock":"Khu B",
  "carType":"16-34SLOT",
  "desc":"moo ta cua block",
  "price":40000,
  "numberOfSlot":50
 }
+
+### getall block parking lot id
+get  http://localhost/api/parking-lot/1000000/blocks
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Nzg0OTMwMH0.9TB50I8ZFSm6dLnXgZoSJJM1GCLPxbtw-0NmwZNhzhB83tXni4FF0juKcNMrWcaof-nT9ObEFOl7hhAWD34OPQ
+
+
+### get detail block
+get  http://localhost/api/parking-lot/block/1000000
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Nzg0OTMwMH0.9TB50I8ZFSm6dLnXgZoSJJM1GCLPxbtw-0NmwZNhzhB83tXni4FF0juKcNMrWcaof-nT9ObEFOl7hhAWD34OPQ
+
+### update block
+PUT  http://localhost/api/parking-lot/block/1000000/update
+Content-Type: application/json;
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Nzg0OTMwMH0.9TB50I8ZFSm6dLnXgZoSJJM1GCLPxbtw-0NmwZNhzhB83tXni4FF0juKcNMrWcaof-nT9ObEFOl7hhAWD34OPQ
+
+{
+ "nameBlock":"Khu a",
+ "carType":"16-34SLOT",
+ "desc":"moo ta cua block",
+ "price":40000
+}
+### delete block
+DELETE   http://localhost/api/parking-lot/block/1000041/delete
+Content-Type: application/json;
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Nzg0OTMwMH0.9TB50I8ZFSm6dLnXgZoSJJM1GCLPxbtw-0NmwZNhzhB83tXni4FF0juKcNMrWcaof-nT9ObEFOl7hhAWD34OPQ
