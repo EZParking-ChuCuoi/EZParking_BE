@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\ParkingSlot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
@@ -86,7 +87,6 @@ class BookingController extends Controller
             'slot_ids' => 'required|array',
             'user_id' =>   'required',
             'licensePlate' => 'required|array',
-            'price' => 'required',
             'start_datetime' => 'required|date',
             'end_datetime' => 'required|date|after:start_datetime',
         ]);
@@ -97,7 +97,6 @@ class BookingController extends Controller
         $slotIds = $dateData['slot_ids'];
         $userId = $dateData['user_id'];
         $licensePlate = $dateData['licensePlate'];
-        $price = $dateData['price'];
         $startDatetime = $dateData['start_datetime'];
         $endDatetime = $dateData['end_datetime'];
 
@@ -108,34 +107,35 @@ class BookingController extends Controller
             ->whereIn('slotId', $slotIds)
             ->pluck('slotId')
             ->toArray();
-
         $emptySlots = array_diff($slotIds, $bookedSlots);
-
         // If all requested slots are empty, create a new booking
         if (count($emptySlots) === count($slotIds)) {
             $number = 0;
             $output = [];
+            $price= ParkingSlot::whereIn('parking_slots.id', $emptySlots)
+            ->select('blocks.price')
+            ->join('blocks', 'blocks.id', '=', 'parking_slots.blockId')
+            ->get()
+            ->pluck('price')
+            ->toArray();
             foreach ($emptySlots as $slot) {
                 $booking = new Booking();
                 $booking->licensePlate = $licensePlate[$number];
                 $booking->userId = $userId;
                 $booking->slotId = $slot;
-                $booking->payment = $price;
+                $booking->payment = $price[$number];
                 $booking->bookDate = $startDatetime;
                 $booking->returnDate = $endDatetime;
                 $booking->save();
                 $number += 1;
                 $output[] = $booking;
             }
-
-
             return response()->json([
                 'success' => true,
                 'message' => 'Booking created successfully',
                 'data' => $output,
             ]);
         }
-
         return response()->json([
             'success' => false,
             'message' => 'One or more slots are already booked during the requested time period',
@@ -173,6 +173,19 @@ class BookingController extends Controller
         return response()->json([
             'message' => 'Detail booking',
             'data' => $outPut,
+        ], 200);
+    }
+    
+    public function historyBooking($userId)
+    {
+        $bookings = Booking::select(DB::raw('bookDate as date'), DB::raw('COUNT(*) as totalSlot'))
+            ->where('userId', '=', $userId)
+            ->groupBy('date')
+            ->orderBy('date', 'desc')
+            ->get();
+        return response()->json([
+            'message' => 'History booking',
+            'data' => $bookings,
         ], 200);
     }
 }

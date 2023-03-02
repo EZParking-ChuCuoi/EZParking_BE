@@ -67,6 +67,7 @@ Route::controller(BookingController::class)->prefix("/booking/")->group(function
     Route::get("slots", "getSlotsByIdWithBlockName");
     Route::post("", "bookParkingLot");
     Route::get("show", "getDetailQRcode");
+    Route::get("{userId}/history", "historyBooking");
 });
 
 // Space owner
