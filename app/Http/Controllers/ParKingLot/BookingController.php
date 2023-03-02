@@ -114,7 +114,7 @@ class BookingController extends Controller
         // If all requested slots are empty, create a new booking
         if (count($emptySlots) === count($slotIds)) {
             $number = 0;
-            $output = ['dfdfdd'];
+            $output = [];
             foreach ($emptySlots as $slot) {
                 $booking = new Booking();
                 $booking->licensePlate = $licensePlate[$number];

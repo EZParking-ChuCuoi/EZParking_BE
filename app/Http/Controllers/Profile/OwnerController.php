@@ -80,16 +80,16 @@ class OwnerController extends Controller
             ], 422);
         }
         $user = User::findOrFail($id);
-        $user->phone = $request->input('phone');    
+        $user->phone = $request->input('phone');
         $user->areaType = $request->input('businessScale');
-        $image= $request->file('imageCardIdBef');
+        $image = $request->file('imageCardIdBef');
         if ($request->hasFile('imageCardIdBef')) {
-            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(),'account/cardId/Bef'); 
+            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(), 'account/cardId/Bef');
             $user->imageCardIdBef = $linkImage;
         }
-        $image= $request->file('imageCardIdAft');
+        $image = $request->file('imageCardIdAft');
         if ($request->hasFile('imageCardIdAft')) {
-            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(),'account/cardId/Aft'); 
+            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(), 'account/cardId/Aft');
             $user->imageCardIdAft = $linkImage;
         }
         $user->role = 'owner';
@@ -97,7 +97,6 @@ class OwnerController extends Controller
         return response()->json([
             'message' => 'User updated successfully',
             'data' => $user
-        ],200);
+        ], 200);
     }
-
 }
