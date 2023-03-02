@@ -112,12 +112,12 @@ class BookingController extends Controller
         if (count($emptySlots) === count($slotIds)) {
             $number = 0;
             $output = [];
-            $price= ParkingSlot::whereIn('parking_slots.id', $emptySlots)
-            ->select('blocks.price')
-            ->join('blocks', 'blocks.id', '=', 'parking_slots.blockId')
-            ->get()
-            ->pluck('price')
-            ->toArray();
+            $price = ParkingSlot::whereIn('parking_slots.id', $emptySlots)
+                ->select('blocks.price')
+                ->join('blocks', 'blocks.id', '=', 'parking_slots.blockId')
+                ->get()
+                ->pluck('price')
+                ->toArray();
             foreach ($emptySlots as $slot) {
                 $booking = new Booking();
                 $booking->licensePlate = $licensePlate[$number];
@@ -175,17 +175,41 @@ class BookingController extends Controller
             'data' => $outPut,
         ], 200);
     }
-    
+
     public function historyBooking($userId)
     {
-        $bookings = Booking::select(DB::raw('bookDate as date'), DB::raw('COUNT(*) as totalSlot'))
-            ->where('userId', '=', $userId)
-            ->groupBy('date')
-            ->orderBy('date', 'desc')
-            ->get();
+        $bookings = Booking::select(
+            'bookings.id as booking_id',
+            'bookings.bookDate',
+            'parking_slots.slotName',
+            'blocks.nameBlock',
+            'blocks.price',
+            'blocks.carType',
+            'parking_lots.nameParkingLot as parking_lot_name'
+            )
+            ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
+            ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
+            ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
+            ->where('bookings.userId', '=', $userId)
+            ->orderBy('bookings.bookDate', 'desc')
+            ->get()
+            ->groupBy('bookDate');
+
+        $response = [];
+        foreach ($bookings as $date => $bookingsByDate) {
+            $totalPayment = $bookingsByDate->sum('payment');
+            $parkingLotName = $bookingsByDate->isNotEmpty() ? $bookingsByDate->first()->parking_lot_name : null;
+            $response[] = [
+                'date' => $date,
+                'total_payment' => $totalPayment,
+                'parking_lot_name' => $parkingLotName,
+                'bookings' => $bookingsByDate->toArray(),
+            ];
+        }
+
         return response()->json([
-            'message' => 'History booking',
-            'data' => $bookings,
+            'message' => 'Booking history',
+            'data' => $response,
         ], 200);
     }
 }

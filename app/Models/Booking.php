@@ -10,7 +10,7 @@ class Booking extends Model
     use HasFactory;
     protected $table = 'bookings';
     protected $fillable = ['userId','slotId','bookDate','returnDate','payment','licensePlate'];
-    public function slots()
+    public function slot()
     {
         return $this->belongsTo(\App\Models\ParkingSlot::class,'slotId');
     }
