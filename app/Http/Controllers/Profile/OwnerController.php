@@ -4,8 +4,14 @@ namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Clound\CloudinaryStorage;
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\ParkingLot;
+use App\Models\ParkingSlot;
 use App\Models\User;
+use App\Models\UserParkingLot;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OwnerController extends Controller
@@ -97,6 +103,18 @@ class OwnerController extends Controller
         return response()->json([
             'message' => 'User updated successfully',
             'data' => $user
+        ], 200);
+    }
+
+  
+
+
+    public function parkingLotDashboard($parkingLotId)
+    {
+        
+
+        return response()->json([
+            'revenue' => $revenue,
         ], 200);
     }
 }

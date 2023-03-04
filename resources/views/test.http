@@ -141,24 +141,25 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 ### get detail booking----------------------------------------------------
 GET http://localhost/api/booking/slots
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzU0ODU1NX0.lHCM0VBtXbkhQ9sEJdTaX-TSx9wEAIAO98G4hNBSbtefOBZPM7pUQ1hF9Am2_my_UEKDSTcoLU0exZZ9FYiBWw
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODE1MDI3MX0.N-BMLe3QTKOcudqbz__yt3U9s5hSMPxaWYLA2bhybOljHbyLJRjwIHw0pRp-J-dC0eASUto7B4R6k4I3arlfQA
 
 
 {
-    "ids":[100000022],
-    "start_datetime":"2023-02-23 14:30:00",
-    "end_datetime":"2023-03-23 14:30:00"
+    "ids":[100000051,100000052],
+   "start_datetime":"2023-02-27 14:50:00",
+    "end_datetime":"2023-03-23 14:50:00"
 }
 ### booking now--
 POST  http://localhost/api/booking
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Nzg0OTMwMH0.9TB50I8ZFSm6dLnXgZoSJJM1GCLPxbtw-0NmwZNhzhB83tXni4FF0juKcNMrWcaof-nT9ObEFOl7hhAWD34OPQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODE1MDI3MX0.N-BMLe3QTKOcudqbz__yt3U9s5hSMPxaWYLA2bhybOljHbyLJRjwIHw0pRp-J-dC0eASUto7B4R6k4I3arlfQA
+
 
 {
-    "slot_ids":[100000034,100000035,100000036],
-    "user_id":1000000,
-    "start_datetime":"2023-02-27 14:50:00",
-    "end_datetime":"2023-03-23 14:50:00",
+    "slot_ids":[100000028],
+    "user_id":1000001,
+    "start_datetime":"2023-01-27 14:50:00",
+    "end_datetime":"2023-02-01 14:50:00",
     "licensePlate":["congkdfkd","fdkjfdkfjk","dkfdkfjkd"]
 }
 ### get qrcode
@@ -171,6 +172,8 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
     "startDateTime":"2023-02-27 14:30:00"
     
 }
+
+# owwner quanr ly///////////////////////////////
 ### create parking lot
 POST  http://localhost/api/parking-lot/create
 Content-Type: application/json
@@ -230,7 +233,37 @@ DELETE   http://localhost/api/parking-lot/block/1000041/delete
 Content-Type: application/json;
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Nzg0OTMwMH0.9TB50I8ZFSm6dLnXgZoSJJM1GCLPxbtw-0NmwZNhzhB83tXni4FF0juKcNMrWcaof-nT9ObEFOl7hhAWD34OPQ
 
-### history
+
+
+
+### history---------------------------------------------
 GET http://localhost/api/booking/1000000/history
 Content-Type: application/json;
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Nzg0OTMwMH0.9TB50I8ZFSm6dLnXgZoSJJM1GCLPxbtw-0NmwZNhzhB83tXni4FF0juKcNMrWcaof-nT9ObEFOl7hhAWD34OPQ
+
+
+
+
+# Dashboard/////////////////////////////
+
+# Screen 1
+### get all parkinglot by user management
+GET http://localhost/api/dashboard/parkingLots/1000000
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODE1MDI3MX0.N-BMLe3QTKOcudqbz__yt3U9s5hSMPxaWYLA2bhybOljHbyLJRjwIHw0pRp-J-dC0eASUto7B4R6k4I3arlfQA
+
+#screen 2
+### Statistics parking lot block, revenue,userbooking
+GET http://localhost/api/dashboard/1000000
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODE1MDI3MX0.N-BMLe3QTKOcudqbz__yt3U9s5hSMPxaWYLA2bhybOljHbyLJRjwIHw0pRp-J-dC0eASUto7B4R6k4I3arlfQA
+
+
+#screen revenue
+### revenue by day, week, month, year
+GET http://localhost/api/dashboard/1000000/revenue/month
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODE1MDI3MX0.N-BMLe3QTKOcudqbz__yt3U9s5hSMPxaWYLA2bhybOljHbyLJRjwIHw0pRp-J-dC0eASUto7B4R6k4I3arlfQA
+
+
+ 

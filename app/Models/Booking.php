@@ -14,9 +14,9 @@ class Booking extends Model
     {
         return $this->belongsTo(\App\Models\ParkingSlot::class,'slotId');
     }
-    public function users()
+    public function user()
     {
-        return $this->hasMany(\App\Models\User::class);
+        return $this->belongsTo(\App\Models\User::class,'userId');
     }
      
 }
