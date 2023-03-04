@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ParKingLot;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\ParkingSlot;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -61,16 +62,46 @@ class BookingController extends Controller
             // find the slot object with the current ID in the $slots array
             $slot = $slots->firstWhere('id', $slotId);
             // if a matching slot object was found, add it to the output array
-
             if ($slot) {
+                $block = $slot->block;
+                $price = $block->price;
+                $startDatetime = Carbon::parse($dateData['start_datetime']);
+                $endDatetime = Carbon::parse($dateData['end_datetime']);
+                $durationHours = $endDatetime->diffInHours($startDatetime);
+                $total_price=0;
+                $total_price= $durationHours * $price;
+                // Get difference in hours
+                switch (true) {
+                    case ($durationHours < 24):
+                        $total_price -=  $durationHours * $price*5/100;
+                        break;
+                    case ($durationHours >= 24 && $durationHours < 24 * 7):
+                        $total_price -=  $durationHours * $price*10/100;
+                        break;
+                    case ($durationHours >= 24 * 7 && $durationHours < 24 * 30):
+                        $total_price -=  $durationHours * $price*20/100;
+                        break;
+
+                    case ($durationHours >= 24 * 30 && $durationHours < 24 * 365):
+                        $total_price -=  $durationHours * $price*30/100;
+                        break;
+
+                    case ($durationHours >= 24 * 365):
+                        $total_price -=  $durationHours * $price*40/100;
+                        break;
+
+                }
+
                 $output['slots'][] = [
                     'slotId' => $slot->id,
-                    'blockName' => $slot->block->nameBlock,
-                    'blockDesc' => $slot->block->desc,
-                    'carType' => $slot->block->carType,
-                    'price' => $slot->block->price,
+                    'blockName' => $block->nameBlock,
+                    'blockDesc' => $block->desc,
+                    'carType' => $block->carType,
+                    'price' => $price,
+                    'durationHours' => $durationHours,
+                    'total_price' => $total_price,
                 ];
-                $total += $slot->block->price;
+                $total += $total_price;
             }
         }
         $output['total'] = $total;
@@ -112,24 +143,58 @@ class BookingController extends Controller
         if (count($emptySlots) === count($slotIds)) {
             $number = 0;
             $output = [];
-            $price= ParkingSlot::whereIn('parking_slots.id', $emptySlots)
-            ->select('blocks.price')
-            ->join('blocks', 'blocks.id', '=', 'parking_slots.blockId')
-            ->get()
-            ->pluck('price')
-            ->toArray();
+            $total =0;
+            $prices = ParkingSlot::whereIn('parking_slots.id', $emptySlots)
+                ->select('blocks.price')
+                ->join('blocks', 'blocks.id', '=', 'parking_slots.blockId')
+                ->get()
+                ->pluck('price')
+                ->toArray();
+
+                $startDatetime = Carbon::parse($dateData['start_datetime']);
+                $endDatetime = Carbon::parse($dateData['end_datetime']);
+                $durationHours = $endDatetime->diffInHours($startDatetime);
+                // Get difference in hours
+                
             foreach ($emptySlots as $slot) {
+                $total_price = $prices[$number]*$durationHours;
+                $discount=0;
+                switch (true) {
+                    case ($durationHours < 24):
+                        $discount = 5;
+                        break;
+                    case ($durationHours >= 24 && $durationHours < 24 * 7):
+                        $discount = 10;
+                        break;
+                    case ($durationHours >= 24 * 7 && $durationHours < 24 * 30):
+                        $discount = 20;
+                        break;
+                    case ($durationHours >= 24 * 30 && $durationHours < 24 * 365):
+                        $discount = 30;
+                        break;
+                    case ($durationHours >= 24 * 365):
+                        $discount = 40;
+                        break;
+                    default:
+                        $discount = 0;
+                        break;
+                }
+            
+                $total_price -= $durationHours * $prices[$number] * $discount / 100;
+            
                 $booking = new Booking();
                 $booking->licensePlate = $licensePlate[$number];
                 $booking->userId = $userId;
                 $booking->slotId = $slot;
-                $booking->payment = $price[$number];
+                $booking->payment = $total_price;
                 $booking->bookDate = $startDatetime;
                 $booking->returnDate = $endDatetime;
                 $booking->save();
                 $number += 1;
-                $output[] = $booking;
+                $output['booking'][] = $booking;
+                $total += $total_price;
             }
+            $output["total"] =$total;
             return response()->json([
                 'success' => true,
                 'message' => 'Booking created successfully',
@@ -152,6 +217,7 @@ class BookingController extends Controller
      * security={ {"passport":{}}}
      *)
      **/
+    
     public function getDetailQRcode(Request $request)
     {
 
@@ -175,17 +241,41 @@ class BookingController extends Controller
             'data' => $outPut,
         ], 200);
     }
-    
+
     public function historyBooking($userId)
     {
-        $bookings = Booking::select(DB::raw('bookDate as date'), DB::raw('COUNT(*) as totalSlot'))
-            ->where('userId', '=', $userId)
-            ->groupBy('date')
-            ->orderBy('date', 'desc')
-            ->get();
+        $bookings = Booking::select(
+            'bookings.id as booking_id',
+            'bookings.bookDate',
+            'parking_slots.slotName',
+            'blocks.nameBlock',
+            'blocks.price',
+            'blocks.carType',
+            'parking_lots.nameParkingLot as parking_lot_name'
+        )
+            ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
+            ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
+            ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
+            ->where('bookings.userId', '=', $userId)
+            ->orderBy('bookings.bookDate', 'desc')
+            ->get()
+            ->groupBy('bookDate');
+
+        $response = [];
+        foreach ($bookings as $date => $bookingsByDate) {
+            $totalPayment = $bookingsByDate->sum('payment');
+            $parkingLotName = $bookingsByDate->isNotEmpty() ? $bookingsByDate->first()->parking_lot_name : null;
+            $response[] = [
+                'date' => $date,
+                'total_payment' => $totalPayment,
+                'parking_lot_name' => $parkingLotName,
+                'bookings' => $bookingsByDate->toArray(),
+            ];
+        }
+
         return response()->json([
-            'message' => 'History booking',
-            'data' => $bookings,
+            'message' => 'Booking history',
+            'data' => $response,
         ], 200);
     }
 }

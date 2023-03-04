@@ -19,7 +19,7 @@ class ParkingSlotFactory extends Factory
     {
 
         return [
-            'blockId'=> rand(1000000,1000019),
+            'blockId'=> rand(1000000,1000003),
             'slotName'=>Str::random(10),
             
         ];
