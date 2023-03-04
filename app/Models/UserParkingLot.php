@@ -17,6 +17,6 @@ class UserParkingLot extends Model
     }
     public function parkingLot()
     {
-        return $this->belongsTo(\App\Models\ParkingLot::class);
+        return $this->belongsTo(\App\Models\ParkingLot::class,'parkingId');
     }
 }

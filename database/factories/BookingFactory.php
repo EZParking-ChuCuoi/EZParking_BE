@@ -25,7 +25,7 @@ class BookingFactory extends Factory
 
         return [
             'userId'=>rand(1000000,1000019),
-            'slotId'=>rand(100000000,100000020),
+            'slotId'=>rand(100000000,100000099),
             'licensePlate'=>$this->faker->name(),
             'bookDate'=>$this->faker->dateTimeBetween($fromDate, $toDate)->format("Y-m-d H:i:s"),
             'returnDate'=>$this->faker->dateTimeBetween($from, $to)->format("Y-m-d H:i:s"),

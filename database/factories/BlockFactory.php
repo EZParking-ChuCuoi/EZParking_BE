@@ -21,7 +21,7 @@ class BlockFactory extends Factory
         $arr =['4-16SLOT','16-34SLOT'];
 
         return [
-            'parkingLotId'=>rand(1000000,1000003),
+            'parkingLotId'=>rand(1000000,1000002),
             'carType'=>$arr[rand(0,1)],
             'price'=>$this->faker->numberBetween($min = 1500, $max = 6000),
             'nameBlock'=>$this->faker->name(),

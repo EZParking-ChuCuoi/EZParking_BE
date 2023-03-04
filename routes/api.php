@@ -3,6 +3,7 @@
 use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\RegisterController;
 use App\Http\Controllers\Account\ForgotPasswordController;
+use App\Http\Controllers\DashBoard\ManagerController;
 use App\Http\Controllers\ParKingLot\BlockParkingCarController;
 use App\Http\Controllers\ParKingLot\BookingController;
 use App\Http\Controllers\ParKingLot\Owner\BlockController;
@@ -75,7 +76,16 @@ Route::controller(BookingController::class)->prefix("/booking/")->group(function
 
 Route::controller(OwnerController::class)->prefix("/owner/")->group(function () {
     Route::put("create/{id}", "becomeSpaceOwner");
+
 });
+
+Route::controller(ManagerController::class)->prefix("/dashboard/")->group(function () {
+ 
+    Route::get("parkingLots/{userId}", "getParkingUserManage");
+    Route::get("{parkingLotId}", "parkingLotBookingStats");
+    Route::get("{parkingLotId}/revenue/{period}", "getRevenueDetails");
+});
+
 
 Route::controller(BlockController::class)->prefix("/parking-lot/")->group(function () {
     Route::post("block/create", "createBlockSlot");

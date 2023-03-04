@@ -18,7 +18,7 @@ class CommentFactory extends Factory
     {
         return [
             'userId'=>rand(1000000,1000019),
-            'parkingId'=>rand(1000000,1000009),
+            'parkingId'=>rand(1000000,1000002),
             'content'=>$this->faker->sentence(9,true),
             'ranting'=>rand(1,5),
             'created_at'=>$this->faker->dateTime()->format('d-m-Y H:i:s'),

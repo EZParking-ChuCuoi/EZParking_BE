@@ -18,7 +18,7 @@ class UserParkingLotFactory extends Factory
     {
         return [
             'userId' => rand(1000000,1000019),
-            'parkingId' => rand(1000001,1000019),
+            'parkingId' => rand(1000000,1000003),
         ];
     }
 }
