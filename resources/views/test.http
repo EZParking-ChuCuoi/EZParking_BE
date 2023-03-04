@@ -260,8 +260,8 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 
 
 #screen revenue
-### revenue by day, week, month, year
-GET http://localhost/api/dashboard/1000000/revenue/month
+### revenue by day, month, year
+GET http://localhost/api/dashboard/1000000/revenue/day
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODE1MDI3MX0.N-BMLe3QTKOcudqbz__yt3U9s5hSMPxaWYLA2bhybOljHbyLJRjwIHw0pRp-J-dC0eASUto7B4R6k4I3arlfQA
 

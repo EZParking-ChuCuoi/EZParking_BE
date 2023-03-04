@@ -354,6 +354,47 @@
                 ]
             }
         },
+        "/api/dashboard/{parkingLotId}/revenue/{period}": {
+            "get": {
+                "tags": [
+                    "DashBoard"
+                ],
+                "summary": "Statistics parking lot block, revenue,userBooking by number",
+                "operationId": "getRevenueDetails",
+                "parameters": [
+                    {
+                        "name": "parkingLotId",
+                        "in": "path",
+                        "description": "id Parking lot",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    },
+                    {
+                        "name": "period",
+                        "in": "path",
+                        "description": "period day or week or month or year",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "day"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/parking-lot/{id}/slots": {
             "get": {
                 "tags": [

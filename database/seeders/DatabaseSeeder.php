@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\RoleDFUser::factory(20)->create();
         
         // import database ParkingLot
-        \App\Models\ParkingLot::factory(20)->create();
+        \App\Models\ParkingLot::factory(4)->create();
 
         //import database comments
         \App\Models\Comment::factory(200)->create();
@@ -32,12 +32,12 @@ class DatabaseSeeder extends Seeder
         \App\Models\UserParkingLot::factory(20)->create();
         
         // import database block
-        \App\Models\Block::factory(40)->create();
+        \App\Models\Block::factory(20)->create();
         
         // import database ParkingSlot
         \App\Models\ParkingSlot::factory(900)->create();
 
-        // \App\Models\Booking::factory(10000)->create();
+        \App\Models\Booking::factory(10000)->create();
         
 
     }
