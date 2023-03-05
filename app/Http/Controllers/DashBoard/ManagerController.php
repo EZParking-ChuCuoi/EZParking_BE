@@ -156,7 +156,7 @@ class ManagerController extends Controller
 
         // Get the sales data from the database
         $sales = DB::table('bookings')
-            ->select(DB::raw("{$groupBy} as period"), DB::raw('SUM(bookings.payment) as total_sales'))
+            ->select(DB::raw("{$groupBy} as period"), DB::raw('SUM(bookings.payment) as total_sales'), DB::raw('COUNT(DISTINCT bookings.userId) as total_users'))
             ->join('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
             ->join('blocks', 'parking_slots.blockId', '=', 'blocks.id')
             ->join('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
@@ -170,9 +170,16 @@ class ManagerController extends Controller
         $end = Carbon::parse($sales->last()->period)->endOf($period); // Get the end time of the last period
         $periods = $this->getPeriods($start, $end, $format); // Get an array of all periods within the specified time frame
         $sales = $this->fillMissingPeriods($periods, $sales, $groupBy->getValue()); // Add any missing periods with zero sales
+        $periodArray = $sales->pluck('period')->toArray();
+        $totalSalesArray = $sales->pluck('total_sales')->toArray();
+        $totalUsersArray = $sales->pluck('total_users')->toArray();
         return response()->json([
             'message' => "Success!",
-            'data' => $sales
+            'data' => [
+                'periodArray'=>$periodArray,
+                'totalSalesArray'=>$totalSalesArray,
+                'totalUsersArray'=>$totalUsersArray,
+            ]
         ], 200); // Return a JSON response with the sales data
     }
 
@@ -187,7 +194,6 @@ class ManagerController extends Controller
             $periods[] = $period->format($format); // Format the period according to the specified format and add it to the array
             $period = $period->addDays(1)->startOf('day'); // Move to the next day and start from the beginning of the day
         }
-    
         return $periods; // Return the array of periods
     }
     
@@ -201,4 +207,5 @@ class ManagerController extends Controller
     
         return $sales->sortBy('period'); // Sort the sales array by period and return it
     }
+    
 }

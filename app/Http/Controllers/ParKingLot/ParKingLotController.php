@@ -74,8 +74,28 @@ class ParKingLotController extends Controller
      **/
     public function getInfoParkingLot($id)
     {
-        $parData = ParkingLot::where('id', $id)->get(['id', 'image', 'openTime', 'endTime', 'nameParkingLot', 'address', 'desc',])->toArray();
-        return $parData;
+        // Check if the parking lot exists
+    $parkingLot = ParkingLot::find($id);
+    if (!$parkingLot) {
+        return response()->json(['error' => 'Parking lot not found'], 404);
+    }
+    
+    // Retrieve the parking lot information
+    $data = [
+        'id' => $parkingLot->id,
+        'nameParkingLot' => $parkingLot->nameParkingLot,
+        'address' => $parkingLot->address,
+        'address_latitude' => $parkingLot->address_latitude,
+        'address_longitude' => $parkingLot->address_longitude,
+        'openTime' => $parkingLot->openTime,
+        'endTime' => $parkingLot->endTime,
+        'desc' => $parkingLot->desc,
+        'images' =>json_decode($parkingLot->images)
+
+    ];
+    
+    return response()->json([$data], 200);
+
     }
 
     /**
@@ -136,11 +156,15 @@ class ParKingLotController extends Controller
             ->get();
         return $data;
     }
+
     /**
      * @OA\Post(
-     ** path="/api/parking-lot/create", tags={"Parking Lot"}, 
-     *  summary="create parking lot ", operationId="createParkingLot",
-     *   @OA\RequestBody(
+     *     path="/api/parking-lot/create",
+     *     tags={"Parking Lot"},
+     *     summary="Create a new parking lot",
+     *     description="Create a new parking lot with the specified details",
+     *     operationId="createParkingLot",
+     *     @OA\RequestBody(
      *         required=true,
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
@@ -148,53 +172,74 @@ class ParKingLotController extends Controller
      *                 @OA\Property(
      *                     property="userId",
      *                     type="integer",
-     *                      example=1000000,
+     *                     example=1000000
      *                 ),
-     *                  @OA\Property(
-     *                     property="image",
-     *                     type="file"
-     *                 ),@OA\Property(
+     *                 @OA\Property(
+     *                     property="images[]",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="file"
+     *                     ),
+     *                     description="Array of images"
+     *                 ),
+     *                 @OA\Property(
      *                     property="openTime",
-     *                     type="date-time",
-     *                      example="20:08"
-     *                 ),@OA\Property(
+     *                     type="string",
+     *                     format="time",
+     *                     example="20:08"
+     *                 ),
+     *                 @OA\Property(
      *                     property="endTime",
-     *                     type="date-time",
-     *                      example="21:08"
-     *                 ),@OA\Property(
+     *                     type="string",
+     *                     format="time",
+     *                     example="21:08"
+     *                 ),
+     *                 @OA\Property(
      *                     property="nameParkingLot",
      *                     type="string",
-     *                      example="Parking Lot Cong"
-     *                 ),@OA\Property(
+     *                     example="Parking Lot Cong"
+     *                 ),
+     *                 @OA\Property(
      *                     property="address_latitude",
      *                     type="string",
      *                     example="16.060832"
-     *                 ),@OA\Property(
+     *                 ),
+     *                 @OA\Property(
      *                     property="address_longitude",
      *                     type="string",
      *                     example="108.241491"
-     *                 ),@OA\Property(
+     *                 ),
+     *                 @OA\Property(
      *                     property="address",
      *                     type="string",
-     *                      example="101B Le Huu Tra"
-     *                 ),@OA\Property(
+     *                     example="101B Le Huu Tra"
+     *                 ),
+     *                 @OA\Property(
      *                     property="desc",
      *                     type="string",
-     *                      example="gia ra dat an ninh coa"
+     *                     example="gia ra dat an ninh coa"
      *                 )
-     *                 
      *             )
      *         )
      *     ),
-     *@OA\Response( response=403, description="Forbidden"),
-     * security={ {"passport":{}}}
-     *)
-     **/
+     *     @OA\Response(
+     *         response="201",
+     *         description="Parking lot created successfully",
+     *     ),
+     *     @OA\Response(
+     *         response="422",
+     *         description="Validation error",
+     *     ),
+     *     security={ {"passport":{}}}
+     * )
+     */
+
     public function createParkingLot(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'userId' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'userId' => 'required|integer',
+            'images' => 'required|array|min:1',
+            'images.*' => 'required|image',
             'openTime' => [
                 'required',
                 'date_format:H:i',
@@ -211,33 +256,46 @@ class ParKingLotController extends Controller
             'address' => 'required|string|max:255',
             'desc' => 'required',
         ]);
+
         if ($validator->fails()) {
-            return $validator->errors()->toArray();
+            return response()->json([
+                'error' => $validator->errors()
+            ], 422);
         }
-        $dateData = $validator->validated();
-        $parkingLot = new ParkingLot();
-        $parkingLot->openTime = $dateData['openTime'];
-        $parkingLot->endTime = $dateData['endTime'];
-        $parkingLot->nameParkingLot = $dateData['nameParkingLot'];
-        $parkingLot->address_latitude = $dateData['address_latitude'];
-        $parkingLot->address_longitude = $dateData['address_longitude'];
-        $parkingLot->address = $dateData['address'];
-        $parkingLot->desc = $dateData['desc'];
-        $image = $request->file('image');
-        if ($request->hasFile('image')) {
+
+        $data = $validator->validated();
+
+        $parkingLot = new ParkingLot([
+            'openTime' => $data['openTime'],
+            'endTime' => $data['endTime'],
+            'nameParkingLot' => $data['nameParkingLot'],
+            'address_latitude' => $data['address_latitude'],
+            'address_longitude' => $data['address_longitude'],
+            'address' => $data['address'],
+            'desc' => $data['desc'],
+        ]);
+
+        $imageLinks = [];
+
+        foreach ($request->file('images') as $image) {
             $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(), 'parkingLot/images');
-            $parkingLot->image = $linkImage;
+            $imageLinks[] = $linkImage;
         }
+
+        $parkingLot->images = json_encode($imageLinks);
+
         $parkingLot->save();
-        $user_parkingLot = new UserParkingLot([
-            'userId' => $dateData['userId'],
+
+        $userParkingLot = new UserParkingLot([
+            'userId' => $data['userId'],
             'parkingId' => $parkingLot->id,
         ]);
-        $user_parkingLot->save();
+
+        $userParkingLot->save();
+
         return response()->json([
             'message' => 'Parking lot created successfully.',
             'data' => $parkingLot
         ], 201);
     }
-     
 }
