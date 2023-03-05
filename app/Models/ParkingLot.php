@@ -10,7 +10,7 @@ class ParkingLot extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'parking_lots';
-    protected $fillable = ['nameParkingLot', 'address', 'image', 'openTime','address_latitude','address_longitude', 'endTime', 'desc'];
+    protected $fillable = ['nameParkingLot', 'address', 'images', 'openTime','address_latitude','address_longitude', 'endTime', 'desc'];
     public function userParkingLot()
     {
         return $this->hasMany(\App\Models\UserParkingLot::class);

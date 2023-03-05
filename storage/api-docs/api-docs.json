@@ -923,7 +923,8 @@
                 "tags": [
                     "Parking Lot"
                 ],
-                "summary": "create parking lot ",
+                "summary": "Create a new parking lot",
+                "description": "Create a new parking lot with the specified details",
                 "operationId": "createParkingLot",
                 "requestBody": {
                     "required": true,
@@ -935,15 +936,21 @@
                                         "type": "integer",
                                         "example": 1000000
                                     },
-                                    "image": {
-                                        "type": "file"
+                                    "images[]": {
+                                        "description": "Array of images",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "file"
+                                        }
                                     },
                                     "openTime": {
-                                        "type": "date-time",
+                                        "type": "string",
+                                        "format": "time",
                                         "example": "20:08"
                                     },
                                     "endTime": {
-                                        "type": "date-time",
+                                        "type": "string",
+                                        "format": "time",
                                         "example": "21:08"
                                     },
                                     "nameParkingLot": {
@@ -973,8 +980,11 @@
                     }
                 },
                 "responses": {
-                    "403": {
-                        "description": "Forbidden"
+                    "201": {
+                        "description": "Parking lot created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 },
                 "security": [

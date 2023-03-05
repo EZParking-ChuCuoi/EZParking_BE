@@ -99,7 +99,8 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 
 GET http://localhost/api/parking-lot/1000000/info
 Accept: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3NzAzODIzMH0.y4IPaN3XVT6eBHfu27buo6mI9tV95wcuB4hap9R4vwVsQnPhuP4C1N6exQiY_RWogUXqJziwuwmvmBXUkHu_BA
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODE1MDI3MX0.N-BMLe3QTKOcudqbz__yt3U9s5hSMPxaWYLA2bhybOljHbyLJRjwIHw0pRp-J-dC0eASUto7B4R6k4I3arlfQA
+
 
 
 
