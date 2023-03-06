@@ -270,17 +270,17 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 #  ?===========Chat============
  
 ### getcontent chat
-GET http://localhost/api/chat/history/1000000/1000001
+GET http://ec2-18-183-20-31.ap-northeast-1.compute.amazonaws.com/api/chat/history/1000000/1000001
 Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODE1MDI3MX0.N-BMLe3QTKOcudqbz__yt3U9s5hSMPxaWYLA2bhybOljHbyLJRjwIHw0pRp-J-dC0eASUto7B4R6k4I3arlfQA
 
 ### getcontent chat
-POST http://localhost/api/chat/send
+POST http://ec2-18-183-20-31.ap-northeast-1.compute.amazonaws.com/api/chat/send
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODE1MDI3MX0.N-BMLe3QTKOcudqbz__yt3U9s5hSMPxaWYLA2bhybOljHbyLJRjwIHw0pRp-J-dC0eASUto7B4R6k4I3arlfQA
 
 {
     "senderId":1000000,
     "receiverId":1000001,
-    "content":"congdkfjdkf"
+    "content":"ongdkfjdkf"
 }
