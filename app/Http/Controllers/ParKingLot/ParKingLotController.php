@@ -154,6 +154,9 @@ class ParKingLotController extends Controller
         )->having('distance', '<', 1.5)
 
             ->get();
+            foreach($data as $parking_lot) {
+                $parking_lot->images = json_decode($parking_lot->images);
+            }
         return $data;
     }
 
