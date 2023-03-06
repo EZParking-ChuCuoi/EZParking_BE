@@ -3,6 +3,7 @@
 use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\RegisterController;
 use App\Http\Controllers\Account\ForgotPasswordController;
+use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\DashBoard\ManagerController;
 use App\Http\Controllers\ParKingLot\BlockParkingCarController;
 use App\Http\Controllers\ParKingLot\BookingController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\ParKingLot\Owner\BlockController;
 use App\Http\Controllers\ParKingLot\ParKingLotController;
 use App\Http\Controllers\Profile\OwnerController;
 use App\Http\Controllers\Profile\UserController;
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -79,12 +81,6 @@ Route::controller(OwnerController::class)->prefix("/owner/")->group(function () 
 
 });
 
-Route::controller(ManagerController::class)->prefix("/dashboard/")->group(function () {
- 
-    Route::get("parkingLots/{userId}", "getParkingUserManage");
-    Route::get("{parkingLotId}", "parkingLotBookingStats");
-    Route::get("{parkingLotId}/revenue/{period}", "getRevenueDetails");
-});
 
 
 Route::controller(BlockController::class)->prefix("/parking-lot/")->group(function () {
@@ -93,4 +89,18 @@ Route::controller(BlockController::class)->prefix("/parking-lot/")->group(functi
     Route::get("{idParking}/blocks", "getAllBlock");
     Route::put("block/{id}/update", "updateBlock");
     Route::delete("block/{id}/delete", "deleteBlock");
+});
+
+Route::controller(ManagerController::class)->prefix("/dashboard/")->group(function () {
+ 
+    Route::get("parkingLots/{userId}", "getParkingUserManage");
+    Route::get("{parkingLotId}", "parkingLotBookingStats");
+    Route::get("{parkingLotId}/revenue/{period}", "getRevenueDetails");
+});
+// Chat
+Route::controller(ChatController::class)->prefix("/chat/")->group(function () {
+ 
+    Route::get("history/{user1Id}/{user2Id}", "getChatHistory");
+    Route::post("send", "sendMessage");
+   
 });
