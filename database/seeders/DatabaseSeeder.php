@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
         
         // import database RoleDFUser
         \App\Models\RoleDFUser::factory(20)->create();
+        // message
+        \App\Models\Message::factory(50)->create();
         
         // import database ParkingLot
         \App\Models\ParkingLot::factory(4)->create();
