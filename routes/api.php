@@ -8,6 +8,7 @@ use App\Http\Controllers\DashBoard\ManagerController;
 use App\Http\Controllers\ParKingLot\BlockParkingCarController;
 use App\Http\Controllers\ParKingLot\BookingController;
 use App\Http\Controllers\ParKingLot\Owner\BlockController;
+use App\Http\Controllers\ParKingLot\Owner\SlotController;
 use App\Http\Controllers\ParKingLot\ParKingLotController;
 use App\Http\Controllers\Profile\OwnerController;
 use App\Http\Controllers\Profile\UserController;
@@ -90,6 +91,13 @@ Route::controller(BlockController::class)->prefix("/parking-lot/")->group(functi
     Route::put("block/{id}/update", "updateBlock");
     Route::delete("block/{id}/delete", "deleteBlock");
 });
+Route::controller(SlotController::class)->prefix("/parking-lot/")->group(function () {
+    Route::get("block/{blockId}/slots", "getAllSlot");
+    Route::get("block/slots/{slotId}", "getDetailSlot");
+    Route::post("block/slots/create", "createSlot");
+    Route::put("block/slots/update/{slotId}", "updateSlot");
+   
+});
 
 Route::controller(ManagerController::class)->prefix("/dashboard/")->group(function () {
  
@@ -99,7 +107,6 @@ Route::controller(ManagerController::class)->prefix("/dashboard/")->group(functi
 });
 // Chat
 Route::controller(ChatController::class)->prefix("/chat/")->group(function () {
- 
     Route::get("history/{user1Id}/{user2Id}", "getChatHistory");
     Route::post("send", "sendMessage");
    

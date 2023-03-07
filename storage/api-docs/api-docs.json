@@ -767,6 +767,147 @@
                 ]
             }
         },
+        "/api/parking-lot/block/{blockId}/slots": {
+            "get": {
+                "tags": [
+                    "Slot"
+                ],
+                "summary": "get all slot with id block",
+                "operationId": "getAllSlot",
+                "parameters": [
+                    {
+                        "name": "blockId",
+                        "in": "path",
+                        "description": "ID of parking lot",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/block/slot/create": {
+            "post": {
+                "tags": [
+                    "Slot"
+                ],
+                "summary": "create slot ",
+                "operationId": "createSlot",
+                "parameters": [
+                    {
+                        "name": "slotName",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "E3"
+                    },
+                    {
+                        "name": "blockId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/block/slots/{slotId}": {
+            "get": {
+                "tags": [
+                    "Slot"
+                ],
+                "summary": "get detail slot with id slot",
+                "operationId": "getDetailSlot",
+                "parameters": [
+                    {
+                        "name": "slotId",
+                        "in": "path",
+                        "description": "ID of slot",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 100000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/block/slots/update/{slotId}": {
+            "put": {
+                "tags": [
+                    "Slot"
+                ],
+                "summary": "update slot",
+                "operationId": "updateSlot",
+                "parameters": [
+                    {
+                        "name": "slotId",
+                        "in": "path",
+                        "description": "ID of slot",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 100000000
+                    },
+                    {
+                        "name": "slotName",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "E3"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/parking-lot": {
             "get": {
                 "tags": [
