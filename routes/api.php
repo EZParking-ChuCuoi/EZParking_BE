@@ -95,7 +95,7 @@ Route::controller(ManagerController::class)->prefix("/dashboard/")->group(functi
  
     Route::get("parkingLots/{userId}", "getParkingUserManage");
     Route::get("{parkingLotId}", "parkingLotBookingStats");
-    Route::get("{parkingLotId}/revenue/{period}", "getRevenueDetails");
+    Route::get("{userId}/revenue/{period}", "getRevenueDetails");
 });
 // Chat
 Route::controller(ChatController::class)->prefix("/chat/")->group(function () {
