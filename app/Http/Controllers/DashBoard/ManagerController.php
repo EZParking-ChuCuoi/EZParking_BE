@@ -29,66 +29,70 @@ class ManagerController extends Controller
      *)
      **/
     public function getParkingUserManage($userId)
-{
-    // Get the user with the specified ID
-    $user = User::findOrFail($userId);
-
-    // Get the user parking lots
-    $userParkingLots = $user->userParkingLots;
-
-    // Initialize an array to store the parking lots
-    $parkingLots = [];
-
-    // Set the start and end datetimes to the current date and time
-    $currentTime = now();
-    $nextDayTime = now();
-
-    // Loop through the user parking lots and add the associated parking lots to the array
-    foreach ($userParkingLots as $userParkingLot) {
-        $parkingLot = [
-            'idParking' => $userParkingLot->parkingLot->id,
-            'nameParkingLot' => $userParkingLot->parkingLot->nameParkingLot,
-            'available' => 0,
-            'booked' => 0
-        ];
-
-        // Get the slots for the parking lot
-        $slots = $userParkingLot->parkingLot->blocks->flatMap(function ($block) {
-            return $block->slots;
-        });
-
-        // Loop through the slots and check their availability for the current time period
-        foreach ($slots as $slot) {
-            $bookings = $slot->bookings ()->where(function ($query) use ($currentTime, $nextDayTime) {
-                $query->where(function ($query) use ($currentTime, $nextDayTime) {
-                    $query->where('bookDate', '>=', $currentTime)
-                          ->where('bookDate', '<', $nextDayTime);
-                })->orWhere(function ($query) use ($currentTime, $nextDayTime) {
-                    $query->where('returnDate', '>', $currentTime)
-                          ->where('returnDate', '<=', $nextDayTime);
-                })->orWhere(function ($query) use ($currentTime, $nextDayTime) {
-                    $query->where('bookDate', '<', $currentTime)
-                          ->where('returnDate', '>', $nextDayTime);
-                });
-            })->get();
-        
-            if ($bookings->isEmpty()) {
-                
-                $parkingLot['available']++;
-            } else {
-                $parkingLot['booked']++;
+    {
+        // Get the user with the specified ID
+        $user = User::findOrFail($userId);
+    
+        // Get the user parking lots
+        $userParkingLots = $user->userParkingLots;
+    
+        // Initialize an array to store the parking lots
+        $parkingLots = [];
+    
+        // Set the start and end datetimes to the current date and time
+        $currentTime = now();
+        $nextDayTime = now();
+    
+        // Loop through the user parking lots and add the associated parking lots to the array
+        foreach ($userParkingLots as $userParkingLot) {
+            $parkingLot = [
+                'idParking' => $userParkingLot->parkingLot->id,
+                'nameParkingLot' => $userParkingLot->parkingLot->nameParkingLot,
+                'available' => 0,
+                'booked' => 0,
+                'totalRevenue' => 0,
+                'numberOfBlocks' => $userParkingLot->parkingLot->blocks->count()
+            ];
+    
+            // Get the slots for the parking lot
+            $slots = $userParkingLot->parkingLot->blocks->flatMap(function ($block) {
+                return $block->slots;
+            });
+    
+            // Loop through the slots and check their availability for the current time period
+            foreach ($slots as $slot) {
+                $bookings = $slot->bookings ()->where(function ($query) use ($currentTime, $nextDayTime) {
+                    $query->where(function ($query) use ($currentTime, $nextDayTime) {
+                        $query->where('bookDate', '>=', $currentTime)
+                              ->where('bookDate', '<', $nextDayTime);
+                    })->orWhere(function ($query) use ($currentTime, $nextDayTime) {
+                        $query->where('returnDate', '>', $currentTime)
+                              ->where('returnDate', '<=', $nextDayTime);
+                    })->orWhere(function ($query) use ($currentTime, $nextDayTime) {
+                        $query->where('bookDate', '<', $currentTime)
+                              ->where('returnDate', '>', $nextDayTime);
+                    });
+                })->get();
+            
+                if ($bookings->isEmpty()) {
+                    $parkingLot['available']++;
+                } else {
+                    $parkingLot['booked']++;
+                    foreach ($bookings as $booking) {
+                        $parkingLot['totalRevenue'] += $booking->payment;
+                    }
+                }
             }
+    
+            $parkingLots[] = $parkingLot;
         }
-
-        $parkingLots[] = $parkingLot;
+    
+        // Return a response with the parking lots and their availability counts
+        return response()->json([
+            'message' => 'Success!',
+            'data' => $parkingLots
+        ]);
     }
-
-    // Return a response with the parking lots and their availability counts
-    return response()->json([
-        'message' => 'Success!',
-        'data' => $parkingLots
-    ]);
-}
     /**
      * @OA\Get(
      ** path="/api/dashboard/{$parkingLotId}", tags={"DashBoard"}, summary="Statistics parking lot block, revenue,userBooking by number",
