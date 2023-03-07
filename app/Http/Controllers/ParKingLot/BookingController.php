@@ -241,7 +241,22 @@ class BookingController extends Controller
             'data' => $outPut,
         ], 200);
     }
-
+     /**
+     * @OA\Get(
+     ** path="/api/booking/{userId}/history", tags={"History"}, summary="get history booking of user",
+     * operationId="historyBooking",
+     *   @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         required=true,
+     *         description="id user booking",
+     *         example=1000000,
+     *         @OA\Schema(type="integer"),
+     *     ),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
     public function historyBooking($userId)
     {
         $bookings = Booking::select(

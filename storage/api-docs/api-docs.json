@@ -535,6 +535,37 @@
                 ]
             }
         },
+        "/api/booking/{userId}/history": {
+            "get": {
+                "tags": [
+                    "History"
+                ],
+                "summary": "get history booking of user",
+                "operationId": "historyBooking",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "id user booking",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/parking-lot/{idParking}/blocks": {
             "get": {
                 "tags": [
