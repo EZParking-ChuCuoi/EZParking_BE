@@ -155,12 +155,13 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 ### booking now--
 POST  http://localhost/api/booking
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODE1MDI3MX0.N-BMLe3QTKOcudqbz__yt3U9s5hSMPxaWYLA2bhybOljHbyLJRjwIHw0pRp-J-dC0eASUto7B4R6k4I3arlfQA
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODQ1MjIzMn0.8PvmLI6jp6wjjggOB9XhXiLECQgjkYJZk8--0UtOhAwC6FxrS1BWmW-hWI-dbMW3hi8mFf0IAq6X8_YT642K5A
+
 
 
 {
-    "slot_ids":[100000028],
-    "user_id":1000001,
+    "slot_ids":[100000028,100000029,100000030],
+    "user_id":1000000,
     "start_datetime":"2023-01-27 14:50:00",
     "end_datetime":"2023-02-01 14:50:00",
     "licensePlate":["congkdfkd","fdkjfdkfjk","dkfdkfjkd"]
@@ -242,7 +243,8 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 ### history---------------------------------------------
 GET http://localhost/api/booking/1000000/history
 Content-Type: application/json;
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3Nzg0OTMwMH0.9TB50I8ZFSm6dLnXgZoSJJM1GCLPxbtw-0NmwZNhzhB83tXni4FF0juKcNMrWcaof-nT9ObEFOl7hhAWD34OPQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODQ1MjIzMn0.8PvmLI6jp6wjjggOB9XhXiLECQgjkYJZk8--0UtOhAwC6FxrS1BWmW-hWI-dbMW3hi8mFf0IAq6X8_YT642K5A
+
 
 
 
