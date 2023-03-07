@@ -29,30 +29,66 @@ class ManagerController extends Controller
      *)
      **/
     public function getParkingUserManage($userId)
-    {
-        // Get the user with the specified ID
-        $user = User::findOrFail($userId);
+{
+    // Get the user with the specified ID
+    $user = User::findOrFail($userId);
 
-        // Get the user parking lots
-        $userParkingLots = $user->userParkingLots;
+    // Get the user parking lots
+    $userParkingLots = $user->userParkingLots;
 
-        // Initialize an array to store the parking lots
-        $parkingLots = [];
+    // Initialize an array to store the parking lots
+    $parkingLots = [];
 
-        // Loop through the user parking lots and add the associated parking lots to the array
-        foreach ($userParkingLots as $userParkingLot) {
-            $parkingLots[] = [
-                'idParking' => $userParkingLot->parkingLot->id,
-                'nameParkingLot' => $userParkingLot->parkingLot->nameParkingLot,
-            ];
+    // Set the start and end datetimes to the current date and time
+    $currentTime = now();
+    $nextDayTime = now();
+
+    // Loop through the user parking lots and add the associated parking lots to the array
+    foreach ($userParkingLots as $userParkingLot) {
+        $parkingLot = [
+            'idParking' => $userParkingLot->parkingLot->id,
+            'nameParkingLot' => $userParkingLot->parkingLot->nameParkingLot,
+            'available' => 0,
+            'booked' => 0
+        ];
+
+        // Get the slots for the parking lot
+        $slots = $userParkingLot->parkingLot->blocks->flatMap(function ($block) {
+            return $block->slots;
+        });
+
+        // Loop through the slots and check their availability for the current time period
+        foreach ($slots as $slot) {
+            $bookings = $slot->bookings ()->where(function ($query) use ($currentTime, $nextDayTime) {
+                $query->where(function ($query) use ($currentTime, $nextDayTime) {
+                    $query->where('bookDate', '>=', $currentTime)
+                          ->where('bookDate', '<', $nextDayTime);
+                })->orWhere(function ($query) use ($currentTime, $nextDayTime) {
+                    $query->where('returnDate', '>', $currentTime)
+                          ->where('returnDate', '<=', $nextDayTime);
+                })->orWhere(function ($query) use ($currentTime, $nextDayTime) {
+                    $query->where('bookDate', '<', $currentTime)
+                          ->where('returnDate', '>', $nextDayTime);
+                });
+            })->get();
+        
+            if ($bookings->isEmpty()) {
+                
+                $parkingLot['available']++;
+            } else {
+                $parkingLot['booked']++;
+            }
         }
 
-        // Return a response with the parking lots
-        return response()->json([
-            'message' => 'Success!',
-            'data' => $parkingLots
-        ]);
+        $parkingLots[] = $parkingLot;
     }
+
+    // Return a response with the parking lots and their availability counts
+    return response()->json([
+        'message' => 'Success!',
+        'data' => $parkingLots
+    ]);
+}
     /**
      * @OA\Get(
      ** path="/api/dashboard/{$parkingLotId}", tags={"DashBoard"}, summary="Statistics parking lot block, revenue,userBooking by number",
@@ -176,9 +212,9 @@ class ManagerController extends Controller
         return response()->json([
             'message' => "Success!",
             'data' => [
-                'periodArray'=>$periodArray,
-                'totalSalesArray'=>$totalSalesArray,
-                'totalUsersArray'=>$totalUsersArray,
+                'periodArray' => $periodArray,
+                'totalSalesArray' => $totalSalesArray,
+                'totalUsersArray' => $totalUsersArray,
             ]
         ], 200); // Return a JSON response with the sales data
     }
@@ -188,7 +224,7 @@ class ManagerController extends Controller
     {
         $periods = [];
         $interval = CarbonInterval::day(); // Set interval to one day
-    
+
         $period = Carbon::parse($start); // Parse the start date into Carbon object
         while ($period <= $end) { // Loop through each day until the end date is reached
             $periods[] = $period->format($format); // Format the period according to the specified format and add it to the array
@@ -196,16 +232,15 @@ class ManagerController extends Controller
         }
         return $periods; // Return the array of periods
     }
-    
+
     private function fillMissingPeriods($periods, $sales, $format)
     {
         $missingPeriods = array_diff($periods, $sales->pluck('period')->toArray()); // Find the missing periods between the specified period array and the sales period array
-    
+
         foreach ($missingPeriods as $missingPeriod) { // Loop through each missing period
             $sales->push((object) ['period' => $missingPeriod, 'total_sales' => 0]); // Push an object with the missing period and zero sales into the sales array
         }
-    
+
         return $sales->sortBy('period'); // Sort the sales array by period and return it
     }
-    
 }
