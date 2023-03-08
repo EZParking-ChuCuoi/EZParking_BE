@@ -510,7 +510,7 @@
                     "History"
                 ],
                 "summary": "get history booking of user",
-                "operationId": "historyBooking",
+                "operationId": "historyBookingSummary",
                 "parameters": [
                     {
                         "name": "userId",
@@ -521,6 +521,39 @@
                             "type": "integer"
                         },
                         "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/booking/history/details": {
+            "get": {
+                "tags": [
+                    "History"
+                ],
+                "summary": "get history detail booking of user",
+                "operationId": "historyBookingDetail",
+                "parameters": [
+                    {
+                        "name": "bookingIds[]",
+                        "in": "query",
+                        "description": "Array of booking IDs",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
                     }
                 ],
                 "responses": {
@@ -899,6 +932,72 @@
                 "responses": {
                     "403": {
                         "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/parking-lot/block/slots/delete": {
+            "delete": {
+                "tags": [
+                    "Slot"
+                ],
+                "summary": "Delete multiple parking slots",
+                "description": "Deletes multiple parking slots by ID",
+                "operationId": "deleteSlot",
+                "parameters": [
+                    {
+                        "name": "ids",
+                        "in": "query",
+                        "description": "Array of parking slot IDs",
+                        "required": true,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Slots deleted successfully"
+                    },
+                    "400": {
+                        "description": "Invalid parameter",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slot not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [

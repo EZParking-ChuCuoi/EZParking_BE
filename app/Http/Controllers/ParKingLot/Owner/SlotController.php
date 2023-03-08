@@ -124,24 +124,76 @@ class SlotController extends Controller
         return response()->json($slot);
     }
 
-    public function deleteSlot(Request $request)
+
+    /**
+     * @OA\Delete(
+     *     path="/api/parking-lot/block/slots/delete",
+     *  tags={"Slot"},
+     *     summary="Delete multiple parking slots",
+     *     description="Deletes multiple parking slots by ID",
+     * operationId="deleteSlot",
+     *     @OA\Parameter(
+     *         name="ids",
+     *         in="query",
+     *         description="Array of parking slot IDs",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="array",
+     *             @OA\Items(type="integer")
+     *         ),
+     *         style="form",
+     *         explode=true,
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Slots deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Invalid parameter",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Slot not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string")
+     *         )
+     *     ),
+     * security={ {"passport":{}}}
+     * 
+     * )
+     */
+
+    public function deleteSlots(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'ids' => 'required|array',
             'ids.*' => 'integer',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
+    
         $ids = $request->input('ids');
+        $deletedSlots = [];
+    
         foreach ($ids as $id) {
             $slot = ParkingSlot::find($id);
             if (!$slot) {
-                return response()->json(['error' => 'Slot not found'], 404);
+                return response()->json(['error' => 'Slot not found for ID: ' . $id], 404);
             }
+            $deletedSlots[] = $slot->id;
             $slot->delete();
         }
-        return response()->json(['message' => 'Slots deleted successfully']);
+    
+        if (count($deletedSlots) == 0) {
+            return response()->json(['error' => 'No slots were deleted'], 404);
+        }
+    
+        return response()->json(['message' => 'Slots deleted successfully', 'deleted_slots' => $deletedSlots]);
     }
 }
