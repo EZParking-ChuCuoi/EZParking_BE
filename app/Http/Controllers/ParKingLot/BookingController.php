@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\ParKingLot;
 
+use App\Events\NotificationBooking;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\ParkingSlot;
+use App\Notifications\BookingNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,28 +70,27 @@ class BookingController extends Controller
                 $startDatetime = Carbon::parse($dateData['start_datetime']);
                 $endDatetime = Carbon::parse($dateData['end_datetime']);
                 $durationHours = $endDatetime->diffInHours($startDatetime);
-                $total_price=0;
-                $total_price= $durationHours * $price;
+                $total_price = 0;
+                $total_price = $durationHours * $price;
                 // Get difference in hours
                 switch (true) {
                     case ($durationHours < 24):
-                        $total_price -=  $durationHours * $price*5/100;
+                        $total_price -=  $durationHours * $price * 5 / 100;
                         break;
                     case ($durationHours >= 24 && $durationHours < 24 * 7):
-                        $total_price -=  $durationHours * $price*10/100;
+                        $total_price -=  $durationHours * $price * 10 / 100;
                         break;
                     case ($durationHours >= 24 * 7 && $durationHours < 24 * 30):
-                        $total_price -=  $durationHours * $price*20/100;
+                        $total_price -=  $durationHours * $price * 20 / 100;
                         break;
 
                     case ($durationHours >= 24 * 30 && $durationHours < 24 * 365):
-                        $total_price -=  $durationHours * $price*30/100;
+                        $total_price -=  $durationHours * $price * 30 / 100;
                         break;
 
                     case ($durationHours >= 24 * 365):
-                        $total_price -=  $durationHours * $price*40/100;
+                        $total_price -=  $durationHours * $price * 40 / 100;
                         break;
-
                 }
 
                 $output['slots'][] = [
@@ -143,7 +144,7 @@ class BookingController extends Controller
         if (count($emptySlots) === count($slotIds)) {
             $number = 0;
             $output = [];
-            $total =0;
+            $total = 0;
             $prices = ParkingSlot::whereIn('parking_slots.id', $emptySlots)
                 ->select('blocks.price')
                 ->join('blocks', 'blocks.id', '=', 'parking_slots.blockId')
@@ -151,14 +152,14 @@ class BookingController extends Controller
                 ->pluck('price')
                 ->toArray();
 
-                $startDatetime = Carbon::parse($dateData['start_datetime']);
-                $endDatetime = Carbon::parse($dateData['end_datetime']);
-                $durationHours = $endDatetime->diffInHours($startDatetime);
-                // Get difference in hours
-                
+            $startDatetime = Carbon::parse($dateData['start_datetime']);
+            $endDatetime = Carbon::parse($dateData['end_datetime']);
+            $durationHours = $endDatetime->diffInHours($startDatetime);
+            // Get difference in hours
+
             foreach ($emptySlots as $slot) {
-                $total_price = $prices[$number]*$durationHours;
-                $discount=0;
+                $total_price = $prices[$number] * $durationHours;
+                $discount = 0;
                 switch (true) {
                     case ($durationHours < 24):
                         $discount = 5;
@@ -179,9 +180,9 @@ class BookingController extends Controller
                         $discount = 0;
                         break;
                 }
-            
+
                 $total_price -= $durationHours * $prices[$number] * $discount / 100;
-            
+
                 $booking = new Booking();
                 $booking->licensePlate = $licensePlate[$number];
                 $booking->userId = $userId;
@@ -194,7 +195,12 @@ class BookingController extends Controller
                 $output['booking'][] = $booking;
                 $total += $total_price;
             }
-            $output["total"] =$total;
+            $output["total"] = $total;
+            event(new NotificationBooking([
+                'success' => true,
+                'message' => 'Booking created successfully',
+                'data' => $output,
+            ]));
             return response()->json([
                 'success' => true,
                 'message' => 'Booking created successfully',
@@ -217,7 +223,7 @@ class BookingController extends Controller
      * security={ {"passport":{}}}
      *)
      **/
-    
+
     public function getDetailQRcode(Request $request)
     {
 
@@ -241,10 +247,10 @@ class BookingController extends Controller
             'data' => $outPut,
         ], 200);
     }
-     /**
+    /**
      * @OA\Get(
      ** path="/api/booking/{userId}/history", tags={"History"}, summary="get history booking of user",
-     * operationId="historyBooking",
+     * operationId="historyBookingSummary",
      *   @OA\Parameter(
      *         name="userId",
      *         in="path",
@@ -257,15 +263,11 @@ class BookingController extends Controller
      * security={ {"passport":{}}}
      *)
      **/
-    public function historyBooking($userId)
+    function historyBookingSummary($userId)
     {
         $bookings = Booking::select(
-            'bookings.id as booking_id',
+            'bookings.id',
             'bookings.bookDate',
-            'bookings.payment',
-            'parking_slots.slotName',
-            'blocks.nameBlock',
-            'blocks.carType',
             'parking_lots.nameParkingLot as parking_lot_name'
         )
             ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
@@ -280,17 +282,73 @@ class BookingController extends Controller
         foreach ($bookings as $date => $bookingsByDate) {
             $totalPayment = $bookingsByDate->sum('payment');
             $parkingLotName = $bookingsByDate->isNotEmpty() ? $bookingsByDate->first()->parking_lot_name : null;
+            $bookingIds = $bookingsByDate->pluck('id');
             $response[] = [
                 'date' => $date,
                 'total_payment' => $totalPayment,
                 'parking_lot_name' => $parkingLotName,
-                'bookings' => $bookingsByDate->toArray(),
+                'booking_count' => $bookingsByDate->count(),
+                'booking_ids' => $bookingIds,
             ];
         }
 
         return response()->json([
-            'message' => 'Booking history',
+            'message' => 'Booking history summary',
             'data' => $response,
+        ], 200);
+    }
+    /**
+     * @OA\Get(
+     ** path="/api/booking/history/details", tags={"History"}, summary="get history detail booking of user",
+     * operationId="historyBookingDetail",
+     *     @OA\Parameter(
+     *         name="bookingIds[]",
+     *         in="query",
+     *         required=true,
+     *         description="Array of booking IDs",
+     *         @OA\Schema(type="array", @OA\Items(type="integer"))
+     *     ),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
+    public function historyBookingDetail(Request $request)
+    {
+        $bookingIds = $request->input('bookingIds');
+        if (!is_array($bookingIds)) {
+            return response()->json([
+                'message' => 'Invalid input: bookingIds must be an array',
+            ], 400);
+        }
+    
+        $bookings = Booking::select(
+            'bookings.id as booking_id',
+            'bookings.bookDate',
+            'bookings.payment',
+            'parking_slots.slotName',
+            'blocks.nameBlock',
+            'blocks.carType',
+            'parking_lots.nameParkingLot as parking_lot_name'
+        )
+            ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
+            ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
+            ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
+            ->whereIn('bookings.id', $bookingIds)
+            ->orderBy('bookings.bookDate', 'desc')
+            ->get();
+    
+        $totalPayment = 0;
+        foreach ($bookings as $booking) {
+            $totalPayment += $booking->payment;
+            
+        }
+    
+        return response()->json([
+            'message' => 'Booking history summary',
+            'data' => [
+                'total_payment' => $totalPayment,
+                'bookings' => $bookings,
+            ],
         ], 200);
     }
 }
