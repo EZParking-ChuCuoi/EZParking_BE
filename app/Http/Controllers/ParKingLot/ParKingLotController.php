@@ -139,19 +139,18 @@ class ParKingLotController extends Controller
         ]);
         $lat = $request->latitude;
         $lon = $request->longitude;
-        $data = DB::table("parking_lots")->select(
-            "parking_lots.*",
-            DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
-    
-            * cos(radians(parking_lots.address_latitude)) 
-    
-            * cos(radians(parking_lots.address_longitude) - radians(" . $lon . ")) 
-    
-            + sin(radians(" . $lat . ")) 
-    
+        $data = DB::table("parking_lots")
+            ->leftJoin('blocks', 'parking_lots.id', '=', 'blocks.parkingLotId')
+            ->select(
+                "parking_lots.*",
+                DB::raw("6371 * acos(cos(radians(" . $lat . "))
+            * cos(radians(parking_lots.address_latitude))
+            * cos(radians(parking_lots.address_longitude) - radians(" . $lon . "))
+            + sin(radians(" . $lat . "))
             * sin(radians(parking_lots.address_latitude))) AS distance")
-        )->having('distance', '<', 1.5)
-
+            )
+            ->having('distance', '<', 1.5)
+            ->groupBy('parking_lots.id')
             ->get();
         foreach ($data as $parking_lot) {
             $parking_lot->images = json_decode($parking_lot->images);
@@ -301,7 +300,8 @@ class ParKingLotController extends Controller
         ], 201);
     }
 
-    public function updateParkingLot(Request $request,$idParkingLot){
+    public function updateParkingLot(Request $request, $idParkingLot)
+    {
         $validator = Validator::make($request->all(), [
             'images' => 'required|array|min:1',
             'images.*' => 'required|image',
@@ -329,8 +329,7 @@ class ParKingLotController extends Controller
 
         $data = $validator->validated();
 
-        $parkingLot= ParkingLot::findOrFail()->get();
+        $parkingLot = ParkingLot::findOrFail()->get();
         return 'cong';
-
     }
 }
