@@ -268,6 +268,7 @@ class BookingController extends Controller
         $bookings = Booking::select(
             'bookings.id',
             'bookings.bookDate',
+            'bookings.payment',
             'parking_lots.nameParkingLot as parking_lot_name'
         )
             ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
