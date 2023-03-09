@@ -12,7 +12,6 @@ use App\Http\Controllers\ParKingLot\Owner\SlotController;
 use App\Http\Controllers\ParKingLot\ParKingLotController;
 use App\Http\Controllers\Profile\OwnerController;
 use App\Http\Controllers\Profile\UserController;
-use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -61,6 +60,8 @@ Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(f
     Route::get("{id}/info/comment", "showCommentOfParking");
     Route::get("location", "showParkingLotNearLocation");
     Route::post("create", "createParkingLot");
+    Route::put("update/{idParkingLot}", "updateParkingLot");
+    Route::delete("delete/{idParkingLot}", "updateParkingLot");
 });
 Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
     Route::get("{id}/slots", "getSlotStatusByBookingDateTime2");
