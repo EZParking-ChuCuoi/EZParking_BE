@@ -113,6 +113,31 @@ class BookingController extends Controller
         ];
         return $output;
     }
+    /**
+     * @OA\POST(
+     ** path="/api/booking", tags={"Booking"}, summary="booking now",
+     * operationId="bookParkingLot",
+     *     @OA\Parameter(
+     *         name="slot_ids[]",
+     *         in="query",
+     *         required=true,
+     *         description="Array of booking IDs",
+     *         @OA\Schema(type="array", @OA\Items(type="integer"))
+     *     ),
+     *  @OA\Parameter(name="user_id",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
+     *      @OA\Parameter(name="start_datetime",in="query",required=true,example="2023-01-27 14:50:00", @OA\Schema( type="string" )),
+     *      @OA\Parameter(name="end_datetime",in="query",required=true,example="2023-02-01 14:50:00", @OA\Schema( type="string" )),
+     *    @OA\Parameter(
+     *         name="licensePlate[]",
+     *         in="query",
+     *         required=true,
+     *         description="Array of booking IDs",
+     *         @OA\Schema(type="array", @OA\Items(type="string"))
+     *     ),
+     * @OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
     public function bookParkingLot(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -268,8 +293,10 @@ class BookingController extends Controller
         $bookings = Booking::select(
             'bookings.id',
             'bookings.bookDate',
+            'bookings.returnDate',
             'bookings.payment',
-            'parking_lots.nameParkingLot as parking_lot_name'
+            'parking_lots.nameParkingLot as parking_lot_name',
+            'parking_lots.address'
         )
             ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
             ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
@@ -284,8 +311,13 @@ class BookingController extends Controller
             $totalPayment = $bookingsByDate->sum('payment');
             $parkingLotName = $bookingsByDate->isNotEmpty() ? $bookingsByDate->first()->parking_lot_name : null;
             $bookingIds = $bookingsByDate->pluck('id');
+            $bookDate = $bookingsByDate[0]['returnDate'];
+            $returnDate = $bookingsByDate[0]['bookDate'];
+            $address = $bookingsByDate[0]['address'];
             $response[] = [
-                'date' => $date,
+                'bookDate' => $bookDate,
+                'returnDate' => $returnDate,
+                'address' => $address,
                 'total_payment' => $totalPayment,
                 'parking_lot_name' => $parkingLotName,
                 'booking_count' => $bookingsByDate->count(),
@@ -321,7 +353,7 @@ class BookingController extends Controller
                 'message' => 'Invalid input: bookingIds must be an array',
             ], 400);
         }
-    
+
         $bookings = Booking::select(
             'bookings.id as booking_id',
             'bookings.bookDate',
@@ -338,17 +370,16 @@ class BookingController extends Controller
             ->whereIn('bookings.id', $bookingIds)
             ->orderBy('bookings.bookDate', 'desc')
             ->get();
-    
+
         $totalPayment = 0;
         foreach ($bookings as $booking) {
             $totalPayment += $booking->payment;
-            
         }
-    
+
         return response()->json([
             'message' => 'Booking history summary',
             'data' => [
-                'total_payment' => $totalPayment,
+               
                 'bookings' => $bookings,
             ],
         ], 200);
