@@ -26,9 +26,10 @@ class RegisterController extends Controller
     /**
      * @OA\Post(
      ** path="/api/account/register", tags={"Account"}, summary="Register", operationId="register",
-     *  @OA\Parameter(name="fullName",in="query",required=true, @OA\Schema( type="string" )),
-     *  @OA\Parameter(name="email", in="query", required=true, @OA\Schema(type="string")),
-     *   @OA\Parameter( name="password", in="query", required=true, @OA\Schema(type="string")),
+     *  @OA\Parameter(name="fullName",in="query",example ="cong",required=true, @OA\Schema( type="string" )),
+     *  @OA\Parameter(name="email", in="query",example ="cong@yopmail.com" ,required=true, @OA\Schema(type="string")),
+     *   @OA\Parameter( name="password", in="query",example ="12345678", required=true, @OA\Schema(type="string")),
+     *   @OA\Parameter( name="password_confirmation", in="query", example ="12345678", required=true, @OA\Schema(type="string")),
      *   @OA\Response( response=201, description="Success",@OA\MediaType(mediaType="application/json",)),
      *   @OA\Response( response=401, description="Unauthenticated"
      *   ),
