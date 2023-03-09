@@ -132,31 +132,37 @@ class ParKingLotController extends Controller
      *)
      **/
     public function showParkingLotNearLocation(Request $request)
-    {
-        $validatedData = $request->validate([
-            'latitude' => 'required',
-            'longitude' => 'required',
-        ]);
-        $lat = $request->latitude;
-        $lon = $request->longitude;
-        $data = DB::table("parking_lots")
-            ->leftJoin('blocks', 'parking_lots.id', '=', 'blocks.parkingLotId')
-            ->select(
-                "parking_lots.*",
-                DB::raw("6371 * acos(cos(radians(" . $lat . "))
+{
+    $validatedData = $request->validate([
+        'latitude' => 'required',
+        'longitude' => 'required',
+    ]);
+
+    $lat = $request->latitude;
+    $lon = $request->longitude;
+
+    $data = DB::table("parking_lots")
+        ->leftJoin('blocks', 'parking_lots.id', '=', 'blocks.parkingLotId')
+        ->select(
+            "parking_lots.*",
+            DB::raw("6371 * acos(cos(radians(" . $lat . "))
             * cos(radians(parking_lots.address_latitude))
             * cos(radians(parking_lots.address_longitude) - radians(" . $lon . "))
             + sin(radians(" . $lat . "))
             * sin(radians(parking_lots.address_latitude))) AS distance")
-            )
-            ->having('distance', '<', 1.5)
-            ->groupBy('parking_lots.id')
-            ->get();
-        foreach ($data as $parking_lot) {
-            $parking_lot->images = json_decode($parking_lot->images);
-        }
-        return $data;
+        )
+        ->having('distance', '<', 1.5)
+        ->groupBy('parking_lots.id')
+        ->orderBy('distance','asc')
+        ->whereNotNull('blocks.id')
+        ->get();
+
+    foreach ($data as $parking_lot) {
+        $parking_lot->images = json_decode($parking_lot->images);
     }
+
+    return $data;
+}
 
     /**
      * @OA\Post(
