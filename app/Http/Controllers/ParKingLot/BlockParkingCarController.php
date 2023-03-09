@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 class BlockParkingCarController extends Controller
 {
-     
+
     /**
      * @OA\Get(
      ** path="/api/parking-lot/{id}/slots", tags={"Block"}, 
@@ -55,8 +55,12 @@ class BlockParkingCarController extends Controller
         foreach ($blocks as $block) {
 
             // Lấy ra tất cả các slot trong block đó.
-            $slots = ParkingSlot::where('blockId', $block->id)->get();
+            $slots = $block->slots;
 
+            // Kiểm tra nếu block không có slot thì bỏ qua.
+            if (count($slots) === 0) {
+                continue;
+            }
             // Khởi tạo mảng để lưu trữ trạng thái của từng slot trong block đó.
             $blockStatus = array();
 
@@ -101,5 +105,4 @@ class BlockParkingCarController extends Controller
                 'data' => $status,
             ]);
     }
-    
 }
