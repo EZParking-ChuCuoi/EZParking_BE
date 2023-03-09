@@ -132,37 +132,37 @@ class ParKingLotController extends Controller
      *)
      **/
     public function showParkingLotNearLocation(Request $request)
-{
-    $validatedData = $request->validate([
-        'latitude' => 'required',
-        'longitude' => 'required',
-    ]);
+    {
+        $validatedData = $request->validate([
+            'latitude' => 'required',
+            'longitude' => 'required',
+        ]);
 
-    $lat = $request->latitude;
-    $lon = $request->longitude;
+        $lat = $request->latitude;
+        $lon = $request->longitude;
 
-    $data = DB::table("parking_lots")
-        ->leftJoin('blocks', 'parking_lots.id', '=', 'blocks.parkingLotId')
-        ->select(
-            "parking_lots.*",
-            DB::raw("6371 * acos(cos(radians(" . $lat . "))
+        $data = DB::table("parking_lots")
+            ->leftJoin('blocks', 'parking_lots.id', '=', 'blocks.parkingLotId')
+            ->select(
+                "parking_lots.*",
+                DB::raw("6371 * acos(cos(radians(" . $lat . "))
             * cos(radians(parking_lots.address_latitude))
             * cos(radians(parking_lots.address_longitude) - radians(" . $lon . "))
             + sin(radians(" . $lat . "))
             * sin(radians(parking_lots.address_latitude))) AS distance")
-        )
-        ->having('distance', '<', 1.5)
-        ->groupBy('parking_lots.id')
-        ->orderBy('distance','asc')
-        ->whereNotNull('blocks.id')
-        ->get();
+            )
+            ->having('distance', '<', 1.5)
+            ->groupBy('parking_lots.id')
+            ->orderBy('distance', 'asc')
+            ->whereNotNull('blocks.id')
+            ->get();
 
-    foreach ($data as $parking_lot) {
-        $parking_lot->images = json_decode($parking_lot->images);
+        foreach ($data as $parking_lot) {
+            $parking_lot->images = json_decode($parking_lot->images);
+        }
+
+        return $data;
     }
-
-    return $data;
-}
 
     /**
      * @OA\Post(
@@ -305,6 +305,91 @@ class ParKingLotController extends Controller
             'data' => $parkingLot
         ], 201);
     }
+    /**
+     * @OA\POST(
+     *     path="/api/parking-lot/update/{idParkingLot}",
+     *     tags={"Parking Lot"},
+     *     summary="update  parking lot",
+     *     description="update parking lot with the specified details",
+     *     operationId="updateParkingLot",
+     *   *   @OA\Parameter(
+     *         name="idParkingLot",
+     *         in="path",
+     *         required=true,
+     *          example=1000002,
+     *         description="ID of the parking lot to update",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                
+     *                 @OA\Property(
+     *                     property="images[]",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="file"
+     *                     ),
+     *                     description="Array of images"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="openTime",
+     *                     type="string",
+     *                     format="time",
+     *                     example="20:08"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="endTime",
+     *                     type="string",
+     *                     format="time",
+     *                     example="21:08"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="nameParkingLot",
+     *                     type="string",
+     *                     example="Parking Lot Cong"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="address_latitude",
+     *                     type="string",
+     *                     example="16.060832"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="address_longitude",
+     *                     type="string",
+     *                     example="108.241491"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="address",
+     *                     type="string",
+     *                     example="101B Le Huu Tra"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="desc",
+     *                     type="string",
+     *                     example="gia ra dat an ninh coa"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="_method",
+     *                     type="string",
+     *                     example="PUT"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="201",
+     *         description="Parking lot created successfully",
+     *     ),
+     *     @OA\Response(
+     *         response="422",
+     *         description="Validation error",
+     *     ),
+     *     security={ {"passport":{}}}
+     * )
+     */
 
     public function updateParkingLot(Request $request, $idParkingLot)
     {
@@ -327,6 +412,7 @@ class ParKingLotController extends Controller
             'address' => 'required|string|max:255',
             'desc' => 'required',
         ]);
+
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors()
@@ -335,7 +421,33 @@ class ParKingLotController extends Controller
 
         $data = $validator->validated();
 
-        $parkingLot = ParkingLot::findOrFail()->get();
-        return 'cong';
+        $parkingLot = ParkingLot::findOrFail($idParkingLot);
+        $parkingLot->nameParkingLot = $data['nameParkingLot'];
+        $parkingLot->address = $data['address'];
+        $parkingLot->address_latitude = $data['address_latitude'];
+        $parkingLot->address_longitude = $data['address_longitude'];
+        $parkingLot->desc = $data['desc'];
+        $parkingLot->openTime = $data['openTime'];
+        $parkingLot->endTime = $data['endTime'];
+        $parkingLot->save();
+
+        $imageLinks = [];
+        foreach ($request->file('images') as $image) {
+            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(), 'parkingLot/images');
+            $imageLinks[] = $linkImage;
+        }
+        $parkingLot->images = json_encode($imageLinks);
+        $parkingLot->save();
+
+        return response()->json([
+            'message' => 'Parking lot updated successfully!',
+            'parking_lot' => $parkingLot
+        ], 200);
     }
+
+    public function deleteParkingLot($idParkingLot){
+        ParkingLot::deleteById($idParkingLot);
+        return response()->json(['message' => 'Parking lot deleted successfully.']);
+    }
+
 }

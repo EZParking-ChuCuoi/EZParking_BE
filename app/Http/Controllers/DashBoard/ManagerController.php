@@ -121,20 +121,23 @@ class ManagerController extends Controller
     public function getRevenueDetails($userId, $period)
     {
         $now = Carbon::now();
+        
 
         if ($period == 'day') {
-            $start = $now->startOfDay();
-            $end = $now->endOfDay();
-            $groupBy = DB::raw('DATE(bookDate)');
+                $start = $now->startOfMonth()->toDateString();
+                $end = $now->endOfMonth();
+                // return $start;
+            $groupBy = DB::raw('Date(bookDate)');
             $format = 'Y-m-d';
         } elseif ($period == 'month') {
-            $start = $now->startOfMonth();
-            $end = $now->endOfMonth();
+            $start = $now->startOfYear()->toDateString();
+          
+            $end = $now->endOfYear();
             $groupBy = DB::raw('DATE_FORMAT(bookDate, "%Y-%m")');
             $format = 'Y-m';
         } elseif ($period == 'year') {
-            $start = $now->startOfYear();
-            $end = $now->endOfYear();
+            $start = $now->copy()->subYears(10)->startOfYear();
+            $end = $now->endOfYear()->addYear();
             $groupBy = DB::raw('YEAR(bookDate)');
             $format = 'Y';
         } else {
@@ -157,6 +160,7 @@ class ManagerController extends Controller
             ->join('users', 'bookings.userId', '=', 'users.id')
             ->join('user_parking_lots', 'users.id', '=', 'user_parking_lots.userId')
             ->where('user_parking_lots.userId', $userId)
+            ->whereBetween('bookings.bookDate', [$start, $end])
             ->groupBy($groupBy)
             ->get();
         // return $sales;
@@ -170,7 +174,7 @@ class ManagerController extends Controller
 
         $start = Carbon::parse($sales->first()->period)->startOf($period);
         $end = Carbon::parse($sales->last()->period)->endOf($period);
-        $periods = $this->getPeriods($start, $end, $format);
+        $periods = $this->getPeriods($start, $end, $format, $period);
         $sales = $this->fillMissingPeriods($periods, $sales, $groupBy->getValue());
 
         $periodLabels = $sales->pluck('period')->toArray();
@@ -199,11 +203,23 @@ class ManagerController extends Controller
     }
 
 
-    private function getPeriods($start, $end, $format)
+    private function getPeriods($start, $end, $format, $period)
     {
         $periods = [];
         $interval = CarbonInterval::day(); // Set interval to one day
-
+    
+        if ($period == 'day') {
+            $currentMonth = Carbon::now()->month;
+            $start = Carbon::createFromDate(null, $currentMonth, 1);
+            $end = Carbon::now();
+        }
+        if ($period == 'year') {
+            $currentYear = Carbon::now()->year;
+            $start = Carbon::createFromDate($currentYear, 1, 1);
+            $end = Carbon::now();
+        }
+    
+    
         $period = Carbon::parse($start); // Parse the start date into Carbon object
         while ($period <= $end) { // Loop through each day until the end date is reached
             $periods[] = $period->format($format); // Format the period according to the specified format and add it to the array

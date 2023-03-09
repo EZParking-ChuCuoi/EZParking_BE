@@ -45,37 +45,36 @@ class BlockParkingCarController extends Controller
         $dateData = $validator->validated();
         $startDate = $dateData["start_datetime"];
         $endDate = $dateData["end_datetime"];
-        // Lấy ra tất cả các block trong parking lot với $parkingLotId được chỉ định.
+        //  give block of parkinglot id
         $blocks = Block::where('parkingLotId', $id)->get();
 
-        // Khởi tạo mảng để lưu trữ trạng thái của từng slot trong các block.
+        // create array to get status slot
         $status = array();
 
-        // Duyệt qua mỗi block.
+        // foreach block
         foreach ($blocks as $block) {
 
-            // Lấy ra tất cả các slot trong block đó.
+            // get all slot of block
             $slots = $block->slots;
 
-            // Kiểm tra nếu block không có slot thì bỏ qua.
+            // check blcok is null or not
             if (count($slots) === 0) {
                 continue;
             }
-            // Khởi tạo mảng để lưu trữ trạng thái của từng slot trong block đó.
+            // create array to get detail status slot
             $blockStatus = array();
 
-            // Duyệt qua mỗi slot.
+            // foreach slot
             foreach ($slots as $slot) {
 
-                // Lấy ra tất cả các booking trong slot đó, với điều kiện thời gian bắt đầu và kết thúc của booking
-                // phải nằm trong khoảng thời gian được chỉ định.
+                // get all booking in this slot
                 $bookings = Booking::where('slotId', $slot->id)
                     ->where('bookDate', '<=', $endDate)
                     ->where('returnDate', '>=', $startDate)
                     ->get();
 
-                // Nếu số lượng booking lớn hơn 0, có nghĩa là slot đã được đặt trong khoảng thời gian được chỉ định.
-                // Ngược lại, slot sẵn sàng để đặt trong khoảng thời gian đó.
+                // if slot >0 it mean slot have booking in date time
+                
                 if (count($bookings) > 0) {
                     $blockStatus[] = array(
                         'idSlot' => $slot->id,
@@ -90,7 +89,6 @@ class BlockParkingCarController extends Controller
                     );
                 }
             }
-            // Lưu trạng thái của từng slot trong block đó vào mảng chung.
             $status[] = array(
                 'block_id' => $block->id,
                 'carType' => $block->carType,
