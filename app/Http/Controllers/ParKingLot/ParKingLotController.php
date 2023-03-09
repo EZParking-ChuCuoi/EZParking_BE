@@ -75,27 +75,26 @@ class ParKingLotController extends Controller
     public function getInfoParkingLot($id)
     {
         // Check if the parking lot exists
-    $parkingLot = ParkingLot::find($id);
-    if (!$parkingLot) {
-        return response()->json(['error' => 'Parking lot not found'], 404);
-    }
-    
-    // Retrieve the parking lot information
-    $data = [
-        'id' => $parkingLot->id,
-        'nameParkingLot' => $parkingLot->nameParkingLot,
-        'address' => $parkingLot->address,
-        'address_latitude' => $parkingLot->address_latitude,
-        'address_longitude' => $parkingLot->address_longitude,
-        'openTime' => $parkingLot->openTime,
-        'endTime' => $parkingLot->endTime,
-        'desc' => $parkingLot->desc,
-        'images' =>json_decode($parkingLot->images)
+        $parkingLot = ParkingLot::find($id);
+        if (!$parkingLot) {
+            return response()->json(['error' => 'Parking lot not found'], 404);
+        }
 
-    ];
-    
-    return response()->json([$data], 200);
+        // Retrieve the parking lot information
+        $data = [
+            'id' => $parkingLot->id,
+            'nameParkingLot' => $parkingLot->nameParkingLot,
+            'address' => $parkingLot->address,
+            'address_latitude' => $parkingLot->address_latitude,
+            'address_longitude' => $parkingLot->address_longitude,
+            'openTime' => $parkingLot->openTime,
+            'endTime' => $parkingLot->endTime,
+            'desc' => $parkingLot->desc,
+            'images' => json_decode($parkingLot->images)
 
+        ];
+
+        return response()->json([$data], 200);
     }
 
     /**
@@ -154,9 +153,9 @@ class ParKingLotController extends Controller
         )->having('distance', '<', 1.5)
 
             ->get();
-            foreach($data as $parking_lot) {
-                $parking_lot->images = json_decode($parking_lot->images);
-            }
+        foreach ($data as $parking_lot) {
+            $parking_lot->images = json_decode($parking_lot->images);
+        }
         return $data;
     }
 
@@ -300,5 +299,38 @@ class ParKingLotController extends Controller
             'message' => 'Parking lot created successfully.',
             'data' => $parkingLot
         ], 201);
+    }
+
+    public function updateParkingLot(Request $request,$idParkingLot){
+        $validator = Validator::make($request->all(), [
+            'images' => 'required|array|min:1',
+            'images.*' => 'required|image',
+            'openTime' => [
+                'required',
+                'date_format:H:i',
+                'before:endTime',
+            ],
+            'endTime' => [
+                'required',
+                'date_format:H:i',
+                'after:openTime',
+            ],
+            'nameParkingLot' => 'required|string|max:255',
+            'address_latitude' => 'required',
+            'address_longitude' => 'required',
+            'address' => 'required|string|max:255',
+            'desc' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()
+            ], 422);
+        }
+
+        $data = $validator->validated();
+
+        $parkingLot= ParkingLot::findOrFail()->get();
+        return 'cong';
+
     }
 }
