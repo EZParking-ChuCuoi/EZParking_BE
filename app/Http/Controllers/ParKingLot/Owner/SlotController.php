@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ParKingLot\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\Block;
 use App\Models\ParkingSlot;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -30,6 +31,27 @@ class SlotController extends Controller
     {
         $block = Block::find($blockId);
         $slots = $block->slots;
+        $startDateTime = Carbon::now();
+        $endDateTime = Carbon::now();
+
+        // Loop through each slot and determine if it is available or booked
+        foreach ($slots as $slot) {
+            $bookings = $slot->bookings()->where(function ($query) use ($startDateTime, $endDateTime) {
+                $query->whereBetween('bookDate', [$startDateTime, $endDateTime])
+                    ->orWhereBetween('returnDate', [$startDateTime, $endDateTime])
+                    ->orWhere(function ($query) use ($startDateTime, $endDateTime) {
+                        $query->where('bookDate', '<', $startDateTime)
+                            ->where('returnDate', '>', $endDateTime);
+                    });
+            })->get();
+
+            if ($bookings->count() > 0) {
+                $slot->status = 'booked';
+            } else {
+                $slot->status = 'available';
+            }
+        }
+
         return response()->json($slots);
     }
 
@@ -173,14 +195,14 @@ class SlotController extends Controller
             'ids' => 'required|array',
             'ids.*' => 'integer',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-    
+
         $ids = $request->input('ids');
         $deletedSlots = [];
-    
+
         foreach ($ids as $id) {
             $slot = ParkingSlot::find($id);
             if (!$slot) {
@@ -189,11 +211,11 @@ class SlotController extends Controller
             $deletedSlots[] = $slot->id;
             $slot->delete();
         }
-    
+
         if (count($deletedSlots) == 0) {
             return response()->json(['error' => 'No slots were deleted'], 404);
         }
-    
+
         return response()->json(['message' => 'Slots deleted successfully', 'deleted_slots' => $deletedSlots]);
     }
 }
