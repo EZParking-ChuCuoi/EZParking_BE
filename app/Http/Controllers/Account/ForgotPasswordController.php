@@ -24,7 +24,7 @@ class ForgotPasswordController extends Controller
     }
     /**
      * @OA\Post(
-     ** path="api/password/sendCode", tags={"Account"}, summary="send code to reset account", operationId="sendCode",
+     ** path="/api/password/sendCode", tags={"Account"}, summary="send code to reset account", operationId="sendCode",
      *  @OA\Parameter(name="email", in="query", required=true, @OA\Schema(type="string")),
      *   @OA\Response( response=201, description="Success",@OA\MediaType(mediaType="application/json",)),
      *   @OA\Response( response=401, description="Unauthenticated"
@@ -57,7 +57,7 @@ class ForgotPasswordController extends Controller
     }
     /**
      * @OA\Post(
-     ** path="api/password/confirm-reset", tags={"Account"}, summary="send code to reset account", operationId="checkCode",
+     ** path="/api/password/confirm-reset", tags={"Account"}, summary="send code to reset account", operationId="checkCode",
      *  @OA\Parameter(name="otp",in="query",required=true, @OA\Schema( type="integer" )),
      *  @OA\Parameter(name="email", in="query", required=true, @OA\Schema(type="string")),
      *   @OA\Response( response=201, description="Success",@OA\MediaType(mediaType="application/json",)),
@@ -109,7 +109,7 @@ class ForgotPasswordController extends Controller
     }
     /**
      * @OA\Post(
-     ** path="api/password/reset", tags={"Account"}, summary="change password", operationId="resetPassword",
+     ** path="/api/password/reset", tags={"Account"}, summary="change password", operationId="resetPassword",
      *  @OA\Parameter(name="email", in="query", required=true, @OA\Schema(type="string")),
      *  @OA\Parameter(name="password", in="query", required=true, @OA\Schema(type="string")),
      *  @OA\Parameter(name="password_confirmation", in="query", required=true, @OA\Schema(type="string")),

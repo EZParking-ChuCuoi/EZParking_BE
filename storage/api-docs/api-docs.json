@@ -49,7 +49,7 @@
                 }
             }
         },
-        "api/password/sendCode": {
+        "/api/password/sendCode": {
             "post": {
                 "tags": [
                     "Account"
@@ -88,7 +88,7 @@
                 }
             }
         },
-        "api/password/confirm-reset": {
+        "/api/password/confirm-reset": {
             "post": {
                 "tags": [
                     "Account"
@@ -135,7 +135,7 @@
                 }
             }
         },
-        "api/password/reset": {
+        "/api/password/reset": {
             "post": {
                 "tags": [
                     "Account"
@@ -190,7 +190,7 @@
                 }
             }
         },
-        "api/account/register": {
+        "/api/account/register": {
             "post": {
                 "tags": [
                     "Account"
@@ -204,7 +204,8 @@
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "cong"
                     },
                     {
                         "name": "email",
@@ -212,7 +213,8 @@
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "cong@yopmail.com"
                     },
                     {
                         "name": "password",
@@ -220,7 +222,17 @@
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "12345678"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "12345678"
                     }
                 ],
                 "responses": {
@@ -232,20 +244,11 @@
                     },
                     "401": {
                         "description": "Unauthenticated"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "404": {
-                        "description": "not found"
-                    },
-                    "403": {
-                        "description": "Forbidden"
                     }
                 }
             }
         },
-        "api/account/confirm-registration": {
+        "/api/account/confirm-registration": {
             "post": {
                 "tags": [
                     "Account"
