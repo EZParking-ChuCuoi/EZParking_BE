@@ -25,19 +25,14 @@ class RegisterController extends Controller
     ) {}
     /**
      * @OA\Post(
-     ** path="api/account/register", tags={"Account"}, summary="Register", operationId="register",
+     ** path="/api/account/register", tags={"Account"}, summary="Register", operationId="register",
      *  @OA\Parameter(name="fullName",in="query",required=true, @OA\Schema( type="string" )),
      *  @OA\Parameter(name="email", in="query", required=true, @OA\Schema(type="string")),
      *   @OA\Parameter( name="password", in="query", required=true, @OA\Schema(type="string")),
      *   @OA\Response( response=201, description="Success",@OA\MediaType(mediaType="application/json",)),
      *   @OA\Response( response=401, description="Unauthenticated"
      *   ),
-     *   @OA\Response( response=400, description="Bad Request"
-     *   ),
-     *   @OA\Response( response=404, description="not found"
-     *   ),
-     *    @OA\Response( response=403, description="Forbidden"
-     *      )
+     *   
      *)
      **/
     public function register(RegisterRequest $request)
@@ -51,10 +46,11 @@ class RegisterController extends Controller
 
         $this->redisService->setOtp($user['email'], $otp);
         $this->redisService->setInfoRegis($userData, $otp);
+        return "check code";
     }
      /**
      * @OA\Post(
-     ** path="api/account/confirm-registration", tags={"Account"}, summary="confirm otp to create accont", operationId="confirmRegistration",
+     ** path="/api/account/confirm-registration", tags={"Account"}, summary="confirm otp to create accont", operationId="confirmRegistration",
      *  @OA\Parameter(name="otp",in="query",required=true, @OA\Schema( type="integer" )),
      *  @OA\Parameter(name="email", in="query", required=true, @OA\Schema(type="string")),
      *   @OA\Response( response=201, description="Success",@OA\MediaType(mediaType="application/json",)),
