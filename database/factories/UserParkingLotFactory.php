@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\ParkingLot;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,9 +17,11 @@ class UserParkingLotFactory extends Factory
      */
     public function definition()
     {
+        $parkingLotId = ParkingLot::inRandomOrder()->first()->id;
+
         return [
-            'userId' => rand(1000000,1000019),
-            'parkingId' => rand(1000000,1000003),
+            'userId' => rand(1000000,1000003),
+            'parkingId' => $parkingLotId,
         ];
     }
 }

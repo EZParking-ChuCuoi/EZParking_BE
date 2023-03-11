@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\DashBoard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Block;
 use App\Models\Booking;
+use App\Models\ParkingLot;
+use App\Models\ParkingSlot;
 use App\Models\User;
+use App\Models\UserParkingLot;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
@@ -121,23 +125,29 @@ class ManagerController extends Controller
     public function getRevenueDetails($userId, $period)
     {
         $now = Carbon::now();
-        
+    
 
         if ($period == 'day') {
-                $start = $now->startOfMonth()->toDateString();
-                $end = $now->endOfMonth();
-                // return $start;
+            $end = $now->toDateString();
+            $start = $now->startOfMonth()->toDateString();
             $groupBy = DB::raw('Date(bookDate)');
             $format = 'Y-m-d';
-        } elseif ($period == 'month') {
+        }elseif ($period == 'week') {
+            $end = $now->toDateString();
+            $start = $now->startOfMonth()->toDateString();
+            // return $start."............".$end;
+            $groupBy = DB::raw('WEEK(bookDate)');
+            $format = 'W';
+        }
+        elseif ($period == 'month') {
+            $end = $now->toDateString();
             $start = $now->startOfYear()->toDateString();
-          
-            $end = $now->endOfYear();
             $groupBy = DB::raw('DATE_FORMAT(bookDate, "%Y-%m")');
             $format = 'Y-m';
         } elseif ($period == 'year') {
-            $start = $now->copy()->subYears(10)->startOfYear();
-            $end = $now->endOfYear()->addYear();
+            $end = $now->endOfYear()->format('Y-m-d');
+            $start = $now->subYears(5)->format('Y-m-d');
+            // return $start. ' .........'.$end;
             $groupBy = DB::raw('YEAR(bookDate)');
             $format = 'Y';
         } else {
@@ -146,46 +156,52 @@ class ManagerController extends Controller
                 'data' => null
             ], 400);
         }
+        // Get the parking lot ids for the given user
+        $parkingLotIdsForUser = UserParkingLot::where('userId', $userId)->pluck('parkingId');
 
-        $sales = DB::table('bookings')
-            ->select(
-                DB::raw("{$groupBy} as period"),
-                DB::raw('SUM(bookings.payment) as total_sales'),
-                DB::raw('COUNT(DISTINCT bookings.userId) as total_users'),
-                DB::raw('COUNT(*) as total_bookings')
-            )
-            ->join('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
-            ->join('blocks', 'parking_slots.blockId', '=', 'blocks.id')
-            ->join('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
-            ->join('users', 'bookings.userId', '=', 'users.id')
-            ->join('user_parking_lots', 'users.id', '=', 'user_parking_lots.userId')
-            ->where('user_parking_lots.userId', $userId)
-            ->whereBetween('bookings.bookDate', [$start, $end])
-            ->groupBy($groupBy)
-            ->get();
-        // return $sales;
+        // Get the block ids in the parking lots for the given user
+        $blockIdsInParkingLots = Block::whereIn('parkingLotId', $parkingLotIdsForUser)->pluck('id');
 
-        if ($sales->isEmpty()) {
+        // Get the slot ids in the blocks for the given user
+        $slotIdsInBlocks = ParkingSlot::whereIn('blockId', $blockIdsInParkingLots)->pluck('id');
+
+
+        $bookings= Booking::whereIn('slotId',$slotIdsInBlocks)
+        ->select(
+            DB::raw("{$groupBy} as period"),
+            DB::raw('SUM(payment) as total_sales'),
+            DB::raw('COUNT(DISTINCT  userId) as total_users'),
+            DB::raw('COUNT(DISTINCT bookDate) as total_bookings'),
+ 
+        )
+        ->whereBetween('bookDate', [$start, $end])
+        ->groupBy($groupBy)
+        ->get();
+        
+        // return $bookings;
+
+     
+        if ($bookings->isEmpty()) {
             return response()->json([
-                'message' => "No sales data available for the specified period.",
+                'message' => "No bookings data available for the specified period.",
                 'data' => null
             ], 404);
         }
 
-        $start = Carbon::parse($sales->first()->period)->startOf($period);
-        $end = Carbon::parse($sales->last()->period)->endOf($period);
+        $start = Carbon::parse($bookings->first()->period)->startOf($period);
+        $end = Carbon::parse($bookings->last()->period)->endOf($period);
         $periods = $this->getPeriods($start, $end, $format, $period);
-        $sales = $this->fillMissingPeriods($periods, $sales, $groupBy->getValue());
+        $bookings = $this->fillMissingPeriods($periods, $bookings, $groupBy->getValue());
 
-        $periodLabels = $sales->pluck('period')->toArray();
-        $salesTotals = $sales->pluck('total_sales')->toArray();
-        $uniqueUsers = $sales->pluck('total_users')->toArray();
+        $periodLabels = $bookings->pluck('period')->toArray();
+        $salesTotals = $bookings->pluck('total_sales')->toArray();
+        $uniqueUsers = $bookings->pluck('total_users')->toArray();
         foreach ($uniqueUsers as &$value) {
             if (is_null($value)) {
                 $value = 0;
             }
         }
-        $bookingCounts = $sales->pluck('total_bookings')->toArray();
+        $bookingCounts = $bookings->pluck('total_bookings')->toArray();
         foreach ($bookingCounts as &$value) {
             if (is_null($value)) {
                 $value = 0;
@@ -207,19 +223,20 @@ class ManagerController extends Controller
     {
         $periods = [];
         $interval = CarbonInterval::day(); // Set interval to one day
-    
+
         if ($period == 'day') {
             $currentMonth = Carbon::now()->month;
             $start = Carbon::createFromDate(null, $currentMonth, 1);
             $end = Carbon::now();
         }
-        if ($period == 'year') {
-            $currentYear = Carbon::now()->year;
-            $start = Carbon::createFromDate($currentYear, 1, 1);
-            $end = Carbon::now();
+        elseif ($period == 'year') {
+            $now = Carbon::now();
+            $end = $now->startOfYear()->format('Y');
+            $start = $now->subYears(5)->format('Y');
+         
+            $start = Carbon::createFromDate($end, 1, 1);
+            $end = Carbon::createFromDate($start, 12, 31);
         }
-    
-    
         $period = Carbon::parse($start); // Parse the start date into Carbon object
         while ($period <= $end) { // Loop through each day until the end date is reached
             $periods[] = $period->format($format); // Format the period according to the specified format and add it to the array

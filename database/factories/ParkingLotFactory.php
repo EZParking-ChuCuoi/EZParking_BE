@@ -22,13 +22,11 @@ class ParkingLotFactory extends Factory
      */
     public function definition()
     {
-        $lang = 16.05;
-        $long = 108.25;
-    
+        
         return [
             'nameParkingLot' => $this->faker->name(),
-            'address_latitude' => $lang . rand(00000, 99999),
-            'address_longitude' => $long . rand(00000, 99999),
+            'address_latitude' => $this->faker->randomFloat(6, 16.0690, 16.0464),
+            'address_longitude' => $this->faker->randomFloat(6, 108.2212, 108.2371),
             'address' => $this->faker->address(),
             'images' => json_encode(['https://m.media-amazon.com/images/I/510kGCsWt7L._SL1000_.jpg', 'https://m.media-amazon.com/images/I/510kGCsWt7L._SL1000_.jpg', 'https://m.media-amazon.com/images/I/510kGCsWt7L._SL1000_.jpg']),
             'openTime' => $this->faker->time(),
