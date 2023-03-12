@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->increments('id')->from(1000000);
+            $table->increments('id')->from(100000000);
             $table->unsignedInteger("userId");
             $table->unsignedInteger("slotId");
             $table->dateTime('bookDate');

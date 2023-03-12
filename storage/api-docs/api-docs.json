@@ -540,45 +540,6 @@
                 ]
             }
         },
-        "/api/booking/show": {
-            "get": {
-                "tags": [
-                    "Booking"
-                ],
-                "summary": "Scan QRcode to get detail booking",
-                "operationId": "getDetailQRcode",
-                "parameters": [
-                    {
-                        "name": "userId",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": 1000000
-                    },
-                    {
-                        "name": "startDateTime",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "2023-02-27 14:30:00"
-                    }
-                ],
-                "responses": {
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
-            }
-        },
         "/api/booking/{userId}/history": {
             "get": {
                 "tags": [
@@ -617,6 +578,72 @@
                 ],
                 "summary": "get history detail booking of user",
                 "operationId": "historyBookingDetail",
+                "parameters": [
+                    {
+                        "name": "bookingIds[]",
+                        "in": "query",
+                        "description": "Array of booking IDs",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/booking/show": {
+            "get": {
+                "tags": [
+                    "QrCode"
+                ],
+                "summary": "Scan QRcode to get detail booking",
+                "operationId": "getDetailQRcode",
+                "parameters": [
+                    {
+                        "name": "bookingIds[]",
+                        "in": "query",
+                        "description": "Array of booking IDs",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/booking/update": {
+            "patch": {
+                "tags": [
+                    "QrCode"
+                ],
+                "summary": "Qr Code to confirm complete finish booking",
+                "operationId": "completeBooking",
                 "parameters": [
                     {
                         "name": "bookingIds[]",
