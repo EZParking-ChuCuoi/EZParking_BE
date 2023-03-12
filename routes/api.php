@@ -71,9 +71,10 @@ Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->gr
 Route::controller(BookingController::class)->prefix("/booking/")->group(function () {
     Route::get("slots", "getSlotsByIdWithBlockName");
     Route::post("", "bookParkingLot");
-    Route::get("show", "getDetailQRcode");
     Route::get("{userId}/history", "historyBookingSummary");
     Route::get("history/details", "historyBookingDetail");
+    Route::get("show", "getDetailQRcode");
+    Route::patch("update", "completeBooking");
 });
 
 // Space owner
@@ -98,7 +99,7 @@ Route::controller(SlotController::class)->prefix("/parking-lot/")->group(functio
     Route::get("block/slots/{slotId}", "getDetailSlot");
     Route::post("block/slots/create", "createSlot");
     Route::put("block/slots/update/{slotId}", "updateSlot");
-    Route::post("block/slots/delete", "deleteSlots");
+    Route::delete("block/slots/delete", "deleteSlots");
 
    
 });

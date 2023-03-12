@@ -33,7 +33,7 @@ class BlockParkingCarController extends Controller
      * security={ {"passport":{}}}
      *)
      **/
-    public function getSlotStatusByBookingDateTime2(Request $request, $id)
+    public function getSlotStatusByBookingDateTime(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'start_datetime' => 'required|date_format:Y-m-d H:i:s',

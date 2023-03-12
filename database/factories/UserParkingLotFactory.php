@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\ParkingLot;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,11 +16,16 @@ class UserParkingLotFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+     
     public function definition()
     {
+        $parkingLotId = ParkingLot::inRandomOrder()->first()->id;
+        $owner = User::where('role', 'owner')->inRandomOrder()->first();
+        $userId = $owner ? $owner->id : null;
         return [
-            'userId' => rand(1000000,1000019),
-            'parkingId' => rand(1000000,1000003),
+            'userId' => $userId ?: null,
+            'parkingId' => $parkingLotId,
         ];
     }
 }

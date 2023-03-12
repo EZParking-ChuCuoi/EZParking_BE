@@ -238,40 +238,7 @@ class BookingController extends Controller
             'data' => $bookedSlots
         ]);
     }
-    /**
-     * @OA\Get(
-     ** path="/api/booking/show", tags={"Booking"}, 
-     *  summary="Scan QRcode to get detail booking", operationId="getDetailQRcode",
-     *  @OA\Parameter(name="userId",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
-     *  @OA\Parameter(name="startDateTime",in="query",required=true,example="2023-02-27 14:30:00", @OA\Schema( type="string" )),
-     *@OA\Response( response=403, description="Forbidden"),
-     * security={ {"passport":{}}}
-     *)
-     **/
 
-    public function getDetailQRcode(Request $request)
-    {
-
-        $validator = validator::make($request->all(), [
-            'userId' => 'required|integer',
-            'startDateTime' => 'required|date_format:Y-m-d H:i:s',
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors()->toArray();
-        }
-        $dateData = $validator->validated();
-        $userId = $dateData['userId'];
-        $startDateTime = $dateData['startDateTime'];
-        $outPut = Booking::join('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
-            ->join('blocks', 'blocks.id', '=', 'parking_slots.blockId')
-            ->where('bookings.userId', $userId)
-            ->where('bookings.bookDate', $startDateTime)
-            ->get();
-        return response()->json([
-            'message' => 'Detail booking',
-            'data' => $outPut,
-        ], 200);
-    }
     /**
      * @OA\Get(
      ** path="/api/booking/{userId}/history", tags={"History"}, summary="get history booking of user",
@@ -379,9 +346,83 @@ class BookingController extends Controller
         return response()->json([
             'message' => 'Booking history summary',
             'data' => [
-               
+
                 'bookings' => $bookings,
             ],
+        ], 200);
+    }
+    /**
+     * @OA\Get(
+     ** path="/api/booking/show", tags={"QrCode"}, 
+     *  summary="Scan QRcode to get detail booking", operationId="getDetailQRcode",
+     *   @OA\Parameter(
+     *         name="bookingIds[]",
+     *         in="query",
+     *         required=true,
+     *         description="Array of booking IDs",
+     *         @OA\Schema(type="array", @OA\Items(type="integer"))
+     *     ),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
+
+    public function getDetailQRcode(Request $request)
+    {
+
+        $validator = validator::make($request->all(), [
+            'bookingIds' => 'required|array',
+            'bookingIds.*' => 'required|integer',
+
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors()->toArray();
+        }
+
+        $bookingIds = $request->input('bookingIds');
+       
+        $outPut = Booking::whereIn('id', $bookingIds)->get();
+        return response()->json([
+            'message' => 'Detail booking',
+            'data' => $outPut,
+        ], 200);
+    }
+
+    /**
+     * @OA\Patch(
+     ** path="/api/booking/update", tags={"QrCode"}, summary="Qr Code to confirm complete finish booking",
+     * operationId="completeBooking",
+     *     @OA\Parameter(
+     *         name="bookingIds[]",
+     *         in="query",
+     *         required=true,
+     *         description="Array of booking IDs",
+     *         @OA\Schema(type="array", @OA\Items(type="integer"))
+     *     ),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
+    public function completeBooking(Request $request)
+    {
+        $validator = validator::make($request->all(), [
+            'bookingIds' => 'required|array',
+            'bookingIds.*' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors()->toArray();
+        }
+
+        $dateData = $validator->validated();
+        $bookingIds = $dateData['bookingIds'];
+        $now = Carbon::now()->toDateTimeString();
+        foreach ($bookingIds as &$value) {
+            $booking = Booking::findOrFail($value);
+            $booking->returnDate = $now;
+            $booking->save();
+        }
+        return response()->json([
+            'message' => 'Update success!',
         ], 200);
     }
 }
