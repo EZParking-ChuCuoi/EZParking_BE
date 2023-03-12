@@ -64,7 +64,7 @@ Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(f
     Route::delete("delete/{idParkingLot}", "updateParkingLot");
 });
 Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
-    Route::get("{id}/slots", "getSlotStatusByBookingDateTime2");
+    Route::get("{id}/slots", "getSlotStatusByBookingDateTime");
     Route::post("block/create", "createBlockSlot");
 });
 
@@ -107,8 +107,9 @@ Route::controller(SlotController::class)->prefix("/parking-lot/")->group(functio
 Route::controller(ManagerController::class)->prefix("/dashboard/")->group(function () {
  
     Route::get("parkingLots/{userId}", "getParkingUserManage");
-    Route::get("{parkingLotId}", "parkingLotBookingStats");
+    Route::get("parkingLots/{parkingLotId}/{period}", "parkingLotBookingStats");
     Route::get("{userId}/revenue/{period}", "getRevenueDetails");
+
 });
 // Chat
 Route::controller(ChatController::class)->prefix("/chat/")->group(function () {

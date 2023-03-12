@@ -295,6 +295,47 @@
                 }
             }
         },
+        "/api/dashboard/parkingLots/{parkingLotId}/{period}": {
+            "get": {
+                "tags": [
+                    "DashBoard"
+                ],
+                "summary": "get statics of one parkingLot with a Id",
+                "operationId": "parkingLotBookingStats",
+                "parameters": [
+                    {
+                        "name": "parkingLotId",
+                        "in": "path",
+                        "description": "id parkingLot management",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    },
+                    {
+                        "name": "period",
+                        "in": "path",
+                        "description": "period day or week or month or year",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "day"
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/dashboard/parkingLots/{userId}": {
             "get": {
                 "tags": [
@@ -1488,7 +1529,7 @@
         "/api/user/": {
             "get": {
                 "tags": [
-                    "User"
+                    "Test"
                 ],
                 "summary": "get all user",
                 "operationId": "getAllUser",

@@ -19,7 +19,7 @@ class UserController extends Controller
     }
     /**
      * @OA\Get(
-     ** path="/api/user/", tags={"User"}, summary="get all user", operationId="getAllUser",
+     ** path="/api/user/", tags={"Test"}, summary="get all user", operationId="getAllUser",
      *   @OA\Response( response=201, description="Success",@OA\MediaType(mediaType="application/json",)),
      *   @OA\Response( response=401, description="Unauthenticated"
      *   ),
