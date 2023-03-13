@@ -1085,26 +1085,31 @@
             }
         },
         "/api/parking-lot/block/slots/delete": {
-            "delete": {
+            "post": {
                 "tags": [
                     "Slot"
                 ],
                 "summary": "Delete multiple parking slots",
                 "description": "Deletes multiple parking slots by ID",
                 "operationId": "deleteSlot",
-                "parameters": [
+                "requestBody": [
                     {
-                        "name": "ids",
-                        "in": "query",
-                        "description": "Array of parking slot IDs",
-                        "required": true,
-                        "style": "form",
-                        "explode": true,
+                        "mediaType": "application/json",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "integer"
-                            }
+                            "properties": {
+                                "ids[]": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    }
+                                },
+                                "_method": {
+                                    "type": "string",
+                                    "example": "delete"
+                                }
+                            },
+                            "type": "object"
                         }
                     }
                 ],
