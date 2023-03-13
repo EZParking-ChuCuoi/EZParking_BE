@@ -10,8 +10,10 @@ use App\Models\ParkingSlot;
 use App\Models\User;
 use App\Models\UserParkingLot;
 use App\Services\Interfaces\IParKingLotService;
+use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -445,10 +447,30 @@ class ParKingLotController extends Controller
         ], 200);
     }
 
+    /**
+     * @OA\Delete(
+     ** path="/api/parking-lot/delete/{idParkingLot}", tags={"Parking Lot"}, 
+     *  summary="Delete parking lot", operationId="deleteParkingLot",
+     *   @OA\Parameter(
+     *         name="idParkingLot",
+     *         in="path",
+     *         required=true,
+     *          example=1000000,
+     *         description="ID of the parking lot to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
     public function deleteParkingLot($idParkingLot){
-        $parkingLot = ParkingLot::findOrFail($idParkingLot);
+        $parkingLot = ParkingLot::find($idParkingLot);
+        if (!$parkingLot) {
+            return response()->json(['message' => 'Parking lot not found.'], 404);
+        }
+    
         $parkingLot->delete();
-        return response()->json(['message' => 'Parkings lot deleted successfully.']);
+        return response()->json(['message' => 'Parking lot deleted successfully.']);
     }
 
 }

@@ -274,15 +274,11 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 }
 
 ###
-delete http://localhost/api/parking-lot/delete/1000024
-Content-Type: application/json
+DELETE http://localhost/api/parking-lot/delete/1000028
+Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODk4MTAyNX0.ZeSClJjYkt1QugXa4MPvacJR7mhnXWgSzsgCJgPB6N_yUyakh986Aw1h9A4YQgy6Oo9oR5_Da-bJclSc8AMucg
 
-{
-    "ids":[1000022] 
  
-}
-
 
 ###
 PATCH http://localhost/api/booking/update
