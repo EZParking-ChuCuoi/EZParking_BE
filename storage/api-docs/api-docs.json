@@ -974,7 +974,7 @@
                 ]
             }
         },
-        "/api/parking-lot/block/slot/create": {
+        "/api/parking-lot/block/slots/create": {
             "post": {
                 "tags": [
                     "Slot"
@@ -1075,77 +1075,6 @@
                 "responses": {
                     "403": {
                         "description": "Forbidden"
-                    }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
-            }
-        },
-        "/api/parking-lot/block/slots/delete": {
-            "post": {
-                "tags": [
-                    "Slot"
-                ],
-                "summary": "Delete multiple parking slots",
-                "description": "Deletes multiple parking slots by ID",
-                "operationId": "deleteSlot",
-                "requestBody": [
-                    {
-                        "mediaType": "application/json",
-                        "schema": {
-                            "properties": {
-                                "ids[]": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "integer",
-                                        "format": "int64"
-                                    }
-                                },
-                                "_method": {
-                                    "type": "string",
-                                    "example": "delete"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Slots deleted successfully"
-                    },
-                    "400": {
-                        "description": "Invalid parameter",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Slot not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
                     }
                 },
                 "security": [

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ParKingLot\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\Block;
 use App\Models\ParkingSlot;
+use App\Rules\UniqueSlotNameInBlock;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -57,7 +58,7 @@ class SlotController extends Controller
 
     /**
      * @OA\Post(
-     ** path="/api/parking-lot/block/slot/create", tags={"Slot"}, 
+     ** path="/api/parking-lot/block/slots/create", tags={"Slot"}, 
      *  summary="create slot ", operationId="createSlot",
      *      @OA\Parameter(name="slotName",in="query",required=true,example="E3", @OA\Schema( type="string" )),
      *      @OA\Parameter(name="blockId",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
@@ -68,21 +69,31 @@ class SlotController extends Controller
      **/
     public function createSlot(Request $request)
     {
+
+        $blockId = $request->input('blockId');
+        $block = Block::findOrFail($blockId);
+
         $validator = Validator::make($request->all(), [
-            'slotName' => 'required|string|unique:parking_slots',
+            'slotName' => [
+                'required',
+                'string',
+                new UniqueSlotNameInBlock($block)
+            ],
             'blockId' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-
         $slot = new ParkingSlot();
         $slot->slotName = $request->slotName;
         $slot->blockId = $request->blockId;
         $slot->save();
 
-        return response()->json($slot, 201);
+        return response()->json([
+            'message' => 'Slot created successfully.',
+            'data' => $slot
+        ], 201);
     }
     /**
      * @OA\Get(
