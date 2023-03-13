@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Block;
 use App\Models\ParkingLot;
 use App\Models\ParkingSlot;
+use App\Rules\UniqueBlockNameInParkingLot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -52,10 +53,16 @@ class BlockController extends Controller
      **/
     public function createBlockSlot(Request $request)
     {
+        $parkingLotId = $request->input("parkingLotId");
+        $parkingLot = ParkingLot::findOrFail($parkingLotId);
 
         $validator = Validator::make($request->all(), [
             "parkingLotId" => 'required',
-            "nameBlock" => 'required|string|max:255',
+            'nameBlock' => [
+                'required',
+                'string',
+                new UniqueBlockNameInParkingLot($parkingLot)
+            ],
             "carType" => 'required|in:4-16SLOT,16-34SLOT',
             "desc" => 'required|string',
             "price" => 'required|digits_between:1,99999999999999',
