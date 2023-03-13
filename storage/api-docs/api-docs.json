@@ -1399,6 +1399,37 @@
                 ]
             }
         },
+        "/api/parking-lot/delete/{idParkingLot}": {
+            "delete": {
+                "tags": [
+                    "Parking Lot"
+                ],
+                "summary": "Delete parking lot",
+                "operationId": "deleteParkingLot",
+                "parameters": [
+                    {
+                        "name": "idParkingLot",
+                        "in": "path",
+                        "description": "ID of the parking lot to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/owner/create/{id}": {
             "post": {
                 "tags": [
