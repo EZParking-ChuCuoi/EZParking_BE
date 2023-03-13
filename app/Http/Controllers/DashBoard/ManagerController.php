@@ -46,13 +46,13 @@ class ManagerController extends Controller
     
 
         if ($period == 'day') {
-            $end = $now->toDateString();
-            $start = $now->startOfMonth()->toDateString();
+            $end = $now->toDateTimeString();
+            $start = $now->startOfMonth()->toDateTimeString();
             $groupBy = DB::raw('Date(bookDate)');
             $format = 'Y-m-d';
         }elseif ($period == 'week') {
-            $end = $now->toDateString();
-            $start = $now->startOfMonth()->toDateString();
+            $end = $now->toDateTimeString();
+            $start = $now->startOfMonth()->toDateTimeString();
             // return $start."............".$end;
             $groupBy = DB::raw('WEEK(bookDate)');
             $format = 'W';
@@ -249,20 +249,20 @@ class ManagerController extends Controller
     
 
         if ($period == 'day') {
-            $end = $now->toDateString();
-            $start = $now->startOfMonth()->toDateString();
+            $end = $now->toDateTimeString();
+            $start = $now->startOfMonth()->toDateTimeString();
             $groupBy = DB::raw('Date(bookDate)');
             $format = 'Y-m-d';
         }elseif ($period == 'week') {
             $end = $now->toDateString();
-            $start = $now->startOfMonth()->toDateString();
+            $start = $now->startOfMonth()->toDateTimeString();
             // return $start."............".$end;
             $groupBy = DB::raw('WEEK(bookDate)');
             $format = 'W';
         }
         elseif ($period == 'month') {
-            $end = $now->toDateString();
-            $start = $now->startOfYear()->toDateString();
+            $end = $now->toDateTimeString();
+            $start = $now->startOfYear()->toDateTimeString();
             $groupBy = DB::raw('DATE_FORMAT(bookDate, "%Y-%m")');
             $format = 'Y-m';
         } elseif ($period == 'year') {
@@ -299,7 +299,6 @@ class ManagerController extends Controller
         ->groupBy($groupBy)
         ->get();
         
-        // return $bookings;
 
      
         if ($bookings->isEmpty()) {
