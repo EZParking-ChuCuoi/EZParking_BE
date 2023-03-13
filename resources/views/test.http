@@ -264,18 +264,19 @@ Accept: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODQ1MjIzMn0.8PvmLI6jp6wjjggOB9XhXiLECQgjkYJZk8--0UtOhAwC6FxrS1BWmW-hWI-dbMW3hi8mFf0IAq6X8_YT642K5A
 
 ###
-DELETE  http://localhost/api/parking-lot/block/slots/delete
+post  http://localhost/api/parking-lot/block/slots/delete
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODQ1MjIzMn0.8PvmLI6jp6wjjggOB9XhXiLECQgjkYJZk8--0UtOhAwC6FxrS1BWmW-hWI-dbMW3hi8mFf0IAq6X8_YT642K5A
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODk4MTAyNX0.ZeSClJjYkt1QugXa4MPvacJR7mhnXWgSzsgCJgPB6N_yUyakh986Aw1h9A4YQgy6Oo9oR5_Da-bJclSc8AMucg
 
 {
     "ids":[100000007,100000005,100000006]
+ 
 }
 
 ###
 PATCH http://localhost/api/booking/update
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODg0NDMxMn0.XEkqYbMllPmFFQGy9yNFqExJNBh5zbnvGwH4KlAtSdgr3gFis_mlpwhp4g12upgQgHORNZPdnSQHpK-mqHrM_w
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODk4MTAyNX0.ZeSClJjYkt1QugXa4MPvacJR7mhnXWgSzsgCJgPB6N_yUyakh986Aw1h9A4YQgy6Oo9oR5_Da-bJclSc8AMucg
 
 {
     "bookingIds":[1000000,1000001]

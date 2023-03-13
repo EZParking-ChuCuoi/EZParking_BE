@@ -99,7 +99,7 @@ Route::controller(SlotController::class)->prefix("/parking-lot/")->group(functio
     Route::get("block/slots/{slotId}", "getDetailSlot");
     Route::post("block/slots/create", "createSlot");
     Route::put("block/slots/update/{slotId}", "updateSlot");
-    Route::delete("block/slots/delete", "deleteSlots");
+    Route::post("block/slots/delete", "deleteSlots");
 
    
 });

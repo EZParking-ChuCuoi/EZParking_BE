@@ -146,49 +146,6 @@ class SlotController extends Controller
         return response()->json($slot);
     }
 
-
-    /**
-     * @OA\Delete(
-     *     path="/api/parking-lot/block/slots/delete",
-     *  tags={"Slot"},
-     *     summary="Delete multiple parking slots",
-     *     description="Deletes multiple parking slots by ID",
-     * operationId="deleteSlot",
-     *     @OA\Parameter(
-     *         name="ids",
-     *         in="query",
-     *         description="Array of parking slot IDs",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="array",
-     *             @OA\Items(type="integer")
-     *         ),
-     *         style="form",
-     *         explode=true,
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Slots deleted successfully"
-     *     ),
-     *     @OA\Response(
-     *         response="400",
-     *         description="Invalid parameter",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Slot not found",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string")
-     *         )
-     *     ),
-     * security={ {"passport":{}}}
-     * 
-     * )
-     */
-
     public function deleteSlots(Request $request)
     {
         $validator = Validator::make($request->all(), [
