@@ -257,9 +257,9 @@ class ParKingLotController extends Controller
                 'date_format:H:i',
                 'after:openTime',
             ],
-            'nameParkingLot' => 'required|string|max:255',
-            'address_latitude' => 'required',
-            'address_longitude' => 'required',
+            'nameParkingLot' => 'required|string|max:255|unique:parking_lots,nameParkingLot',
+            'address_latitude' => 'required|unique:parking_lots,address_latitude',
+            'address_longitude' => 'required|unique:parking_lots,address_longitude',
             'address' => 'required|string|max:255',
             'desc' => 'required',
         ]);
@@ -446,8 +446,9 @@ class ParKingLotController extends Controller
     }
 
     public function deleteParkingLot($idParkingLot){
-        ParkingLot::deleteById($idParkingLot);
-        return response()->json(['message' => 'Parking lot deleted successfully.']);
+        $parkingLot = ParkingLot::findOrFail($idParkingLot);
+        $parkingLot->delete();
+        return response()->json(['message' => 'Parkings lot deleted successfully.']);
     }
 
 }

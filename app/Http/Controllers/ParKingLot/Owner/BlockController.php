@@ -170,7 +170,7 @@ class BlockController extends Controller
         $block->price = $validatedData["price"];
         $block->save();
         return response()->json([
-            'message' => 'block updated successfully',
+            'message' => 'Block updated successfully',
             'data' => $block
         ], 200);
     }

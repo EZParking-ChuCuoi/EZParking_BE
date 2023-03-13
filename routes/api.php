@@ -61,7 +61,7 @@ Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(f
     Route::get("location", "showParkingLotNearLocation");
     Route::post("create", "createParkingLot");
     Route::put("update/{idParkingLot}", "updateParkingLot");
-    Route::delete("delete/{idParkingLot}", "updateParkingLot");
+    Route::delete("delete/{idParkingLot}", "deleteParkingLot");
 });
 Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
     Route::get("{id}/slots", "getSlotStatusByBookingDateTime");
