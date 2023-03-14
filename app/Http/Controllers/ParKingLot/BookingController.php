@@ -152,10 +152,13 @@ class BookingController extends Controller
         }
         $dateData = $validator->validated();
         $slotIds = $dateData['slot_ids'];
+        $userIds =ParkingSlot::find($slotIds[0])->block->parkingLot->userParkingLot->pluck('userId');
+    
         $userId = $dateData['user_id'];
         $licensePlate = $dateData['licensePlate'];
         $startDatetime = $dateData['start_datetime'];
         $endDatetime = $dateData['end_datetime'];
+
 
         $bookedSlots = Booking::where(function ($query) use ($startDatetime, $endDatetime) {
             $query->where('bookDate', '<', $endDatetime)
@@ -222,6 +225,7 @@ class BookingController extends Controller
             }
             $output["total"] = $total;
             $output["idBookings"] = $slotIds;
+            $output["isUsers"] = $userIds;
             event(new NotificationBooking([
                 'success' => true,
                 'message' => 'Booking created successfully',

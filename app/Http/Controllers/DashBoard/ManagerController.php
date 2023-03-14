@@ -42,7 +42,7 @@ class ManagerController extends Controller
      **/
     public function parkingLotBookingStats($parkingLotId, $period)
     {
-        $now = Carbon::now();
+        $now = Carbon::now()->locale('en');
 
 
         if ($period == 'day') {
