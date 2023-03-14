@@ -271,14 +271,16 @@ class BookingController extends Controller
             'parking_lots.nameParkingLot as parking_lot_name',
             'parking_lots.address',
             'parking_lots.id as idParkingLot',
+            'user_parking_lots.userId',
         )
             ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
             ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
             ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
+            ->join('user_parking_lots', 'user_parking_lots.parkingId', '=', 'parking_lots.id')
             ->where('bookings.userId', '=', $userId)
-            ->orderBy('bookings.bookDate', 'desc')->limit(10)
+            ->orderBy('bookings.bookDate', 'desc')
             ->get()
-            ->groupBy('bookDate');
+            ->groupBy('bookDate')->take(10);
 
         $response = [];
        
@@ -289,8 +291,7 @@ class BookingController extends Controller
             $bookDate = $bookingsByDate[0]['returnDate'];
             $returnDate = $bookingsByDate[0]['bookDate'];
             $address = $bookingsByDate[0]['address'];
-            $idParkingLot = $bookingsByDate[0]['idParkingLot'];
-            $idSpaceOwner = ParkingLot::find($idParkingLot)->userParkingLot->pluck('userId');
+            $idSpaceOwner = $bookingsByDate[0]['userId'];
             $response[] = [
                 'bookDate' => $bookDate,
                 'returnDate' => $returnDate,
