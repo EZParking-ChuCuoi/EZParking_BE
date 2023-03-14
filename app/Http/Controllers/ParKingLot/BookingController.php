@@ -152,8 +152,7 @@ class BookingController extends Controller
         }
         $dateData = $validator->validated();
         $slotIds = $dateData['slot_ids'];
-        $userIds =ParkingSlot::find($slotIds[0])->block->parkingLot->userParkingLot->pluck('userId');
-    
+        $userIds =ParkingSlot::find($slotIds[0])->block->parkingLot->userParkingLot->pluck('userId')[0];
         $userId = $dateData['user_id'];
         $licensePlate = $dateData['licensePlate'];
         $startDatetime = $dateData['start_datetime'];
