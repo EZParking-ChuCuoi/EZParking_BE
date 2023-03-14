@@ -43,21 +43,20 @@ class ManagerController extends Controller
     public function parkingLotBookingStats($parkingLotId, $period)
     {
         $now = Carbon::now();
-    
+
 
         if ($period == 'day') {
             $end = $now->toDateTimeString();
             $start = $now->startOfMonth()->toDateTimeString();
             $groupBy = DB::raw('Date(bookDate)');
             $format = 'Y-m-d';
-        }elseif ($period == 'week') {
+        } elseif ($period == 'week') {
             $end = $now->toDateTimeString();
             $start = $now->startOfMonth()->toDateTimeString();
             // return $start."............".$end;
             $groupBy = DB::raw('WEEK(bookDate)');
             $format = 'W';
-        }
-        elseif ($period == 'month') {
+        } elseif ($period == 'month') {
             $end = $now->toDateString();
             $start = $now->startOfYear()->toDateString();
             $groupBy = DB::raw('DATE_FORMAT(bookDate, "%Y-%m")');
@@ -90,17 +89,17 @@ class ManagerController extends Controller
         $slotIdsInBlocks = ParkingSlot::whereIn('blockId', $blockIdsInParkingLots)->pluck('id');
 
 
-        $bookings= Booking::whereIn('slotId',$slotIdsInBlocks)
-        ->select(
-            DB::raw("{$groupBy} as period"),
-            DB::raw('SUM(payment) as total_sales'),
-            DB::raw('COUNT(DISTINCT  userId) as total_users'),
-            DB::raw('COUNT(DISTINCT bookDate) as total_bookings'),
- 
-        )
-        ->whereBetween('bookDate', [$start, $end])
-        ->groupBy($groupBy)
-        ->get();
+        $bookings = Booking::whereIn('slotId', $slotIdsInBlocks)
+            ->select(
+                DB::raw("{$groupBy} as period"),
+                DB::raw('SUM(payment) as total_sales'),
+                DB::raw('COUNT(DISTINCT  userId) as total_users'),
+                DB::raw('COUNT(DISTINCT bookDate) as total_bookings'),
+
+            )
+            ->whereBetween('bookDate', [$start, $end])
+            ->groupBy($groupBy)
+            ->get();
         if ($bookings->isEmpty()) {
             return response()->json([
                 'message' => "No bookings data available for the specified period.",
@@ -167,9 +166,9 @@ class ManagerController extends Controller
         // Set the start and end datetimes to the current date and time
         $currentTime = now();
         $nextDayTime = now();
-
         // Loop through the user parking lots and add the associated parking lots to the array
         foreach ($userParkingLots as $userParkingLot) {
+
             $parkingLot = [
                 'idParking' => $userParkingLot->parkingLot->id,
                 'nameParkingLot' => $userParkingLot->parkingLot->nameParkingLot,
@@ -245,22 +244,22 @@ class ManagerController extends Controller
      **/
     public function getRevenueDetails($userId, $period)
     {
+
         $now = Carbon::now();
-    
+
 
         if ($period == 'day') {
             $end = $now->toDateTimeString();
             $start = $now->startOfMonth()->toDateTimeString();
             $groupBy = DB::raw('Date(bookDate)');
             $format = 'Y-m-d';
-        }elseif ($period == 'week') {
+        } elseif ($period == 'week') {
             $end = $now->toDateString();
             $start = $now->startOfMonth()->toDateTimeString();
             // return $start."............".$end;
             $groupBy = DB::raw('WEEK(bookDate)');
             $format = 'W';
-        }
-        elseif ($period == 'month') {
+        } elseif ($period == 'month') {
             $end = $now->toDateTimeString();
             $start = $now->startOfYear()->toDateTimeString();
             $groupBy = DB::raw('DATE_FORMAT(bookDate, "%Y-%m")');
@@ -287,20 +286,20 @@ class ManagerController extends Controller
         $slotIdsInBlocks = ParkingSlot::whereIn('blockId', $blockIdsInParkingLots)->pluck('id');
 
 
-        $bookings= Booking::whereIn('slotId',$slotIdsInBlocks)
-        ->select(
-            DB::raw("{$groupBy} as period"),
-            DB::raw('SUM(payment) as total_sales'),
-            DB::raw('COUNT(DISTINCT  userId) as total_users'),
-            DB::raw('COUNT(DISTINCT bookDate) as total_bookings'),
- 
-        )
-        ->whereBetween('bookDate', [$start, $end])
-        ->groupBy($groupBy)
-        ->get();
-        
+        $bookings = Booking::whereIn('slotId', $slotIdsInBlocks)
+            ->select(
+                DB::raw("{$groupBy} as period"),
+                DB::raw('SUM(payment) as total_sales'),
+                DB::raw('COUNT(DISTINCT  userId) as total_users'),
+                DB::raw('COUNT(DISTINCT bookDate) as total_bookings'),
 
-     
+            )
+            ->whereBetween('bookDate', [$start, $end])
+            ->groupBy($groupBy)
+            ->get();
+
+
+
         if ($bookings->isEmpty()) {
             return response()->json([
                 'message' => "No bookings data available for the specified period.",
@@ -348,12 +347,11 @@ class ManagerController extends Controller
             $currentMonth = Carbon::now()->month;
             $start = Carbon::createFromDate(null, $currentMonth, 1);
             $end = Carbon::now();
-        }
-        elseif ($period == 'year') {
+        } elseif ($period == 'year') {
             $now = Carbon::now();
             $end = $now->startOfYear()->format('Y');
             $start = $now->subYears(5)->format('Y');
-         
+
             $start = Carbon::createFromDate($end, 1, 1);
             $end = Carbon::createFromDate($start, 12, 31);
         }

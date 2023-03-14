@@ -290,6 +290,13 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 }
 
 
+###
+GET http://localhost/api/booking/check-date
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODk4MTAyNX0.ZeSClJjYkt1QugXa4MPvacJR7mhnXWgSzsgCJgPB6N_yUyakh986Aw1h9A4YQgy6Oo9oR5_Da-bJclSc8AMucg
+
+ 
+
 
 ### eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsImV4cCI6MTY3ODg0NDMxMn0.XEkqYbMllPmFFQGy9yNFqExJNBh5zbnvGwH4KlAtSdgr3gFis_mlpwhp4g12upgQgHORNZPdnSQHpK-mqHrM_w
 #  ?===========Chat============

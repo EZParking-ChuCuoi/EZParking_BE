@@ -120,7 +120,7 @@ class SlotController extends Controller
         return response()->json($slot);
     }
     /**
-     * @OA\Put(
+     * @OA\put(
      ** path="/api/parking-lot/block/slots/update/{slotId}", tags={"Slot"}, 
      *  summary="update slot", operationId="updateSlot",
      *   @OA\Parameter(
