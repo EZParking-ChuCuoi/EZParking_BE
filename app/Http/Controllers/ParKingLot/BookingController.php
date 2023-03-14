@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ParKingLot;
 use App\Events\NotificationBooking;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\ParkingLot;
 use App\Models\ParkingSlot;
 use App\Notifications\BookingNotification;
 use Carbon\Carbon;
@@ -152,7 +153,7 @@ class BookingController extends Controller
         }
         $dateData = $validator->validated();
         $slotIds = $dateData['slot_ids'];
-        $userIds =ParkingSlot::find($slotIds[0])->block->parkingLot->userParkingLot->pluck('userId')[0];
+        $userIds =ParkingSlot::find($slotIds[0])->block->parkingLot->userParkingLot->pluck('userId');
         $userId = $dateData['user_id'];
         $licensePlate = $dateData['licensePlate'];
         $startDatetime = $dateData['start_datetime'];
@@ -224,7 +225,7 @@ class BookingController extends Controller
             }
             $output["total"] = $total;
             $output["idBookings"] = $slotIds;
-            $output["isUsers"] = $userIds;
+            $output["idSpaceOwner"] = $userIds;
             event(new NotificationBooking([
                 'success' => true,
                 'message' => 'Booking created successfully',
@@ -268,7 +269,8 @@ class BookingController extends Controller
             'bookings.returnDate',
             'bookings.payment',
             'parking_lots.nameParkingLot as parking_lot_name',
-            'parking_lots.address'
+            'parking_lots.address',
+            'parking_lots.id as idParkingLot',
         )
             ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
             ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
@@ -286,6 +288,8 @@ class BookingController extends Controller
             $bookDate = $bookingsByDate[0]['returnDate'];
             $returnDate = $bookingsByDate[0]['bookDate'];
             $address = $bookingsByDate[0]['address'];
+            $idParkingLot = $bookingsByDate[0]['idParkingLot'];
+            $idSpaceOwner = ParkingLot::find($idParkingLot)->userParkingLot->pluck('userId');
             $response[] = [
                 'bookDate' => $bookDate,
                 'returnDate' => $returnDate,
@@ -294,6 +298,7 @@ class BookingController extends Controller
                 'parking_lot_name' => $parkingLotName,
                 'booking_count' => $bookingsByDate->count(),
                 'booking_ids' => $bookingIds,
+                'idSpaceOwner' => $idSpaceOwner?:null,
             ];
         }
 
