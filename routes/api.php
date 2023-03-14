@@ -75,6 +75,8 @@ Route::controller(BookingController::class)->prefix("/booking/")->group(function
     Route::get("history/details", "historyBookingDetail");
     Route::get("show", "getDetailQRcode");
     Route::patch("update", "completeBooking");
+
+    Route::get("check-date","checkReturnDAte");
 });
 
 // Space owner

@@ -221,6 +221,7 @@ class BookingController extends Controller
                 $total += $total_price;
             }
             $output["total"] = $total;
+            $output["idBookings"] = $slotIds;
             event(new NotificationBooking([
                 'success' => true,
                 'message' => 'Booking created successfully',
@@ -235,7 +236,8 @@ class BookingController extends Controller
         return response()->json([
             'success' => false,
             'message' => 'One or more slots are already booked during the requested time period',
-            'data' => $bookedSlots
+            'data' => $bookedSlots,
+
         ]);
     }
 
@@ -380,7 +382,7 @@ class BookingController extends Controller
         }
 
         $bookingIds = $request->input('bookingIds');
-       
+
         $outPut = Booking::whereIn('id', $bookingIds)->get();
         return response()->json([
             'message' => 'Detail booking',
@@ -425,4 +427,6 @@ class BookingController extends Controller
             'message' => 'Update success!',
         ], 200);
     }
+
+   
 }
