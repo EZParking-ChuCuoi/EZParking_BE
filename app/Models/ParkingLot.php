@@ -13,7 +13,7 @@ class ParkingLot extends Model
     protected $fillable = ['nameParkingLot', 'address', 'images', 'openTime','address_latitude','address_longitude', 'endTime', 'desc'];
     public function userParkingLot()
     {
-        return $this->hasMany(\App\Models\UserParkingLot::class);
+        return $this->hasMany(\App\Models\UserParkingLot::class,'parkingId');
     }
     public function blocks()
     {
