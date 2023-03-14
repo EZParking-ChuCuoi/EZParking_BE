@@ -153,7 +153,7 @@ class BookingController extends Controller
         }
         $dateData = $validator->validated();
         $slotIds = $dateData['slot_ids'];
-        $userIds =ParkingSlot::find($slotIds[0])->block->parkingLot->userParkingLot->pluck('userId');
+        $userIds =ParkingSlot::find($slotIds[0])->block->parkingLot->userParkingLot->pluck('userId')[0];
         $userId = $dateData['user_id'];
         $licensePlate = $dateData['licensePlate'];
         $startDatetime = $dateData['start_datetime'];
@@ -276,11 +276,12 @@ class BookingController extends Controller
             ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
             ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
             ->where('bookings.userId', '=', $userId)
-            ->orderBy('bookings.bookDate', 'desc')
+            ->orderBy('bookings.bookDate', 'desc')->limit(10)
             ->get()
             ->groupBy('bookDate');
 
         $response = [];
+       
         foreach ($bookings as $date => $bookingsByDate) {
             $totalPayment = $bookingsByDate->sum('payment');
             $parkingLotName = $bookingsByDate->isNotEmpty() ? $bookingsByDate->first()->parking_lot_name : null;
