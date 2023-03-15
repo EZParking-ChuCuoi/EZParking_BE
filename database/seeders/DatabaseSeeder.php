@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
             foreach ($blocks as $block) {
                 $slotCount = 1;
 
-                $slots = ParkingSlot::factory(10)->create(['blockId' => $block->id])->each(function ($slot) use ($block, &$slotCount) {
+                $slots = ParkingSlot::factory(30)->create(['blockId' => $block->id])->each(function ($slot) use ($block, &$slotCount) {
                     $lastLetter = substr($block->nameBlock, -1);
                     $slot->slotName = strtoupper($lastLetter) . $slotCount++;
                     $slot->save();
