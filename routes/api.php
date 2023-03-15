@@ -117,5 +117,10 @@ Route::controller(ManagerController::class)->prefix("/dashboard/")->group(functi
 Route::controller(ChatController::class)->prefix("/chat/")->group(function () {
     Route::get("history/{user1Id}/{user2Id}", "getChatHistory");
     Route::post("send", "sendMessage");
-   
 });
+// wilisht
+Route::controller(Ws::class)->prefix("/chat/")->group(function () {
+    Route::get("history/{user1Id}/{user2Id}", "getChatHistory");
+    Route::post("send", "sendMessage");
+});
+

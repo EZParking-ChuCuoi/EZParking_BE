@@ -13,7 +13,7 @@ class UserParkingLot extends Model
     protected $fillable = ['userId','parkingId'];
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(\App\Models\User::class,'userId');
     }
     public function parkingLot()
     {

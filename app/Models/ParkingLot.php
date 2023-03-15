@@ -23,5 +23,8 @@ class ParkingLot extends Model
     {
         return $this->hasMany(\App\Models\Comment::class,  'parkingId');
     }
-  
+    public function user()
+    {
+        return $this->hasOneThrough(User::class, UserParkingLot::class, 'parkingId', 'id', 'id', 'userId');
+    }
 }

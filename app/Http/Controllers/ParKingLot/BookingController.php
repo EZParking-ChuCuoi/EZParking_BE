@@ -403,8 +403,15 @@ class BookingController extends Controller
         $sumPayment= $bookings->sum('payment');
         $outPut['booking']=$bookings;
         $outPut['totalPrice']=$sumPayment;
-        $inForUser =$inForParking->userParkingLot;
-        $outPut['inForSpaceOwner']=$inForUser;
+        $inForUser=$inForParking->user;
+     
+  
+        $outPut['inForSpaceOwner']=[
+            'id'=>$inForUser->id,
+            'phone'=>$inForUser->phone,
+            'fullName'=>$inForUser->fullName,
+
+        ];
         $outPut['inForParkingLot']=[
             'nameParkingLot'=>$inForParking->nameParkingLot,
             'address'=>$inForParking->address,

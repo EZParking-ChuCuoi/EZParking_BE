@@ -20,14 +20,14 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // import database user
-        \App\Models\User::factory(50)->create();
+        $users =\App\Models\User::factory(50)->create();
         // import database role
         \App\Models\Role::factory(3)->create();
 
         // import database RoleDFUser
         \App\Models\RoleDFUser::factory(20)->create();
         // message
-        \App\Models\Message::factory(100)->create();
+        // \App\Models\Message::factory(100)->create();
         
         
         
@@ -46,18 +46,21 @@ class DatabaseSeeder extends Seeder
             foreach ($blocks as $block) {
                 $slotCount = 1;
 
-                $slots = ParkingSlot::factory(40)->create(['blockId' => $block->id])->each(function ($slot) use ($block, &$slotCount) {
+                $slots = ParkingSlot::factory(10)->create(['blockId' => $block->id])->each(function ($slot) use ($block, &$slotCount) {
                     $lastLetter = substr($block->nameBlock, -1);
                     $slot->slotName = strtoupper($lastLetter) . $slotCount++;
                     $slot->save();
 
-                    $slot->bookings()->createMany(Booking::factory(3)->raw([
+                    $slot->bookings()->createMany(Booking::factory(1)->raw([
                         'slotId' => $slot->id,
                     ]));
                 });
             }
         }
 
+        foreach ($users as $user){
+            \App\Models\Wishlist::factory(3)->create(['userId'=>$user->id]);
+        }
         // import database UserParkingLot
 
         //import database comments
