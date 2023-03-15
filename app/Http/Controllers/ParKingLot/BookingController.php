@@ -289,8 +289,8 @@ class BookingController extends Controller
             $totalPayment = $bookingsByDate->sum('payment');
             $parkingLotName = $bookingsByDate->isNotEmpty() ? $bookingsByDate->first()->parking_lot_name : null;
             $bookingIds = $bookingsByDate->pluck('id');
-            $bookDate = $bookingsByDate[0]['returnDate'];
-            $returnDate = $bookingsByDate[0]['bookDate'];
+            $bookDate = $bookingsByDate[0]['bookDate'];
+            $returnDate = $bookingsByDate[0]['returnDate'];
             $address = $bookingsByDate[0]['address'];
             $idSpaceOwner = $bookingsByDate[0]['userId'];
             $created_at = $bookingsByDate[0]['created_at'];
@@ -396,7 +396,19 @@ class BookingController extends Controller
 
         $bookingIds = $request->input('bookingIds');
 
-        $outPut = Booking::whereIn('id', $bookingIds)->get();
+        $bookings= Booking::whereIn('id', $bookingIds)->get();
+        $idSlot= $bookings->pluck('slotId')[0];
+        $inForParking= ParkingSlot::find($idSlot)->block->parkingLot;
+
+        $sumPayment= $bookings->sum('payment');
+        $outPut['booking']=$bookings;
+        $outPut['totalPrice']=$sumPayment;
+        $inForUser =$inForParking->userParkingLot;
+        $outPut['inForSpaceOwner']=$inForUser;
+        $outPut['inForParkingLot']=[
+            'nameParkingLot'=>$inForParking->nameParkingLot,
+            'address'=>$inForParking->address,
+        ];
         return response()->json([
             'message' => 'Detail booking',
             'data' => $outPut,
