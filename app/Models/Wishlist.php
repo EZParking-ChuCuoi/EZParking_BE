@@ -9,14 +9,14 @@ class Wishlist extends Model
 {
     use HasFactory;
     protected $table = 'wishlists';
-    protected $fillable = ['userId','parkingLotId'];
+    protected $fillable = ['userId', 'parkingLotId'];
     public function user()
     {
-        return $this->belongsTo(User::class,'userId');
+        return $this->belongsTo(User::class, 'userId');
     }
 
-    public function parkingLot()
+    public function parkingLots()
     {
-        return $this->belongsTo(ParkingLot::class,'parkingLotId');
+        return $this->belongsToMany(ParkingLot::class, 'parkingLotId');
     }
 }

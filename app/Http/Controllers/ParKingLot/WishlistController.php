@@ -30,7 +30,7 @@ class WishlistController extends Controller
             $user = User::findOrFail($userId);
 
             // Get user's wishlist with parking lot details
-            $wishlist = $user->wishlists->with('parkingLotId');
+            $wishlist = $user->wishlists->parkingLots;
 
             return $wishlist;
 

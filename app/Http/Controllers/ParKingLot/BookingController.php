@@ -404,13 +404,14 @@ class BookingController extends Controller
             'blocks.carType',
             'parking_lots.nameParkingLot as parking_lot_name',
             'user_parking_lots.userId as idSpaceOwner',
-            'users.fullName as nameSpaceOwner',
+            'users.fullName'
         )
+            
             ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
             ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
             ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
             ->join('user_parking_lots', 'user_parking_lots.parkingId', '=', 'parking_lots.id')
-            ->join('users', 'users.id', '=', 'user_parking_lots.userId')
+            ->join('users', 'bookings.userId', '=', 'users.id')
             ->whereIn('bookings.id', $bookingIds)
             ->orderBy('bookings.bookDate', 'desc')
             ->get();
