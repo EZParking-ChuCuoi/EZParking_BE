@@ -72,7 +72,7 @@ class WishlistController extends Controller
    /**
      * @OA\Post(
      ** path="/api/user/wishlist/add", tags={"Wishlist"}, 
-     *  summary="add wishlist", operationId="addWishList",
+     *  summary="add wishlist or Delete wishlist", operationId="addWishList",
          *  @OA\Parameter(name="userId",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
          *  @OA\Parameter(name="parkingLotId",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
 
@@ -96,8 +96,9 @@ class WishlistController extends Controller
             ->first();
 
         if ($existingWishlist) {
+            $existingWishlist->delete();
             return response()->json([
-                'message' => 'This parking lot is already in the user\'s wishlist'
+                'message' => 'Delete wishlist success!'
             ], 422);
         }
 
