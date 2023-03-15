@@ -1445,13 +1445,52 @@
                 "tags": [
                     "Wishlist"
                 ],
-                "summary": "detail parking lot with id",
+                "summary": "get all parkingLot have wishlist",
                 "operationId": "getWishlist",
                 "parameters": [
                     {
                         "name": "userId",
                         "in": "path",
-                        "description": "ID of the parking lot to retrieve",
+                        "description": "id user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/user/wishlist/add": {
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "add wishlist",
+                "operationId": "addWishList",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    },
+                    {
+                        "name": "parkingLotId",
+                        "in": "query",
                         "required": true,
                         "schema": {
                             "type": "integer"

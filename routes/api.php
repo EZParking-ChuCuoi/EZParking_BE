@@ -123,6 +123,6 @@ Route::controller(ChatController::class)->prefix("/chat/")->group(function () {
 // wilisht
 Route::controller(WishlistController::class)->prefix("/user/")->group(function () {
     Route::get("{userId}/wishlist", "getWishlist");
-    Route::post("send", "sendMessage");
+    Route::post("wishlist/add", "addWishList");
 });
 

@@ -14,13 +14,13 @@ class WishlistController extends Controller
    /**
      * @OA\Get(
      ** path="/api/user/{userId}/wishlist", tags={"Wishlist"}, 
-     *  summary="detail parking lot with id", operationId="getWishlist",
+     *  summary="get all parkingLot have wishlist", operationId="getWishlist",
      *   @OA\Parameter(
      *         name="userId",
      *         in="path",
      *         required=true,
      *          example=1000000,
-     *         description="ID of the parking lot to retrieve",
+     *         description="id user",
      *         @OA\Schema(type="integer")
      *     ),
      *@OA\Response( response=403, description="Forbidden"),
@@ -46,37 +46,40 @@ class WishlistController extends Controller
                     'message' => 'Wishlist not found.'
                 ], 404);
             }
-            $data = [
-                'id' => $wishlist->id,
-                'nameParkingLot' => $wishlist->nameParkingLot,
-                'address' => $wishlist->address,
-                'address_latitude' => $wishlist->address_latitude,
-                'address_longitude' => $wishlist->address_longitude,
-                'openTime' => $wishlist->openTime,
-                'endTime' => $wishlist->endTime,
-                'desc' => $wishlist->desc,
-                'images' => json_decode($wishlist->images)
-    
-            ];
+            $wishlistData = [];
+
+            foreach ($wishlist as $parkingLot) {
+                $wishlistData[] = [
+                    'id' => $parkingLot->id,
+                    'nameParkingLot' => $parkingLot->nameParkingLot,
+                    'address' => $parkingLot->address,
+                    'address_latitude' => $parkingLot->address_latitude,
+                    'address_longitude' => $parkingLot->address_longitude,
+                    'openTime' => $parkingLot->openTime,
+                    'endTime' => $parkingLot->endTime,
+                    'desc' => $parkingLot->desc,
+                    'images' => json_decode($parkingLot->images)
+                ];
+            }
             // Return the wishlist data
-            return response()->json($data, 200);
+            return response()->json($wishlistData, 200);
         } catch (\Throwable $th) {
         }
     }
 
 
 
-    //  /**
-    //  * @OA\Post(
-    //  ** path="/api/parking-lot/block/slots/create", tags={"Slot"}, 
-    //  *  summary="create slot ", operationId="createSlot",
-    //  *      @OA\Parameter(name="slotName",in="query",required=true,example="E3", @OA\Schema( type="string" )),
-    //  *      @OA\Parameter(name="blockId",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
-    //  * 
-    //  *@OA\Response( response=403, description="Forbidden"),
-    //  * security={ {"passport":{}}}
-    //  *)
-    //  **/
+   /**
+     * @OA\Post(
+     ** path="/api/user/wishlist/add", tags={"Wishlist"}, 
+     *  summary="add wishlist", operationId="addWishList",
+         *  @OA\Parameter(name="userId",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
+         *  @OA\Parameter(name="parkingLotId",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
+
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
     public function addWishList(Request $request)
     {
         $validatedData = $request->validate([
