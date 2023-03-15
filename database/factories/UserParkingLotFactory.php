@@ -20,12 +20,12 @@ class UserParkingLotFactory extends Factory
      
     public function definition()
     {
-        $parkingLotId = ParkingLot::inRandomOrder()->first()->id;
+        
         $owner = User::where('role', 'owner')->inRandomOrder()->first();
         $userId = $owner ? $owner->id : null;
         return [
             'userId' => $userId ?: null,
-            'parkingId' => $parkingLotId,
+            'parkingId' => 1000000,
         ];
     }
 }

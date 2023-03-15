@@ -272,13 +272,14 @@ class BookingController extends Controller
             'parking_lots.address',
             'parking_lots.id as idParkingLot',
             'user_parking_lots.userId',
+            'bookings.created_at',
         )
             ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
             ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
             ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
             ->join('user_parking_lots', 'user_parking_lots.parkingId', '=', 'parking_lots.id')
             ->where('bookings.userId', '=', $userId)
-            ->orderBy('bookings.bookDate', 'desc')
+            ->orderBy('bookings.created_at', 'desc')
             ->get()
             ->groupBy('bookDate')->take(10);
 
@@ -292,6 +293,7 @@ class BookingController extends Controller
             $returnDate = $bookingsByDate[0]['bookDate'];
             $address = $bookingsByDate[0]['address'];
             $idSpaceOwner = $bookingsByDate[0]['userId'];
+            $created_at = $bookingsByDate[0]['created_at'];
             $response[] = [
                 'bookDate' => $bookDate,
                 'returnDate' => $returnDate,
@@ -301,6 +303,7 @@ class BookingController extends Controller
                 'booking_count' => $bookingsByDate->count(),
                 'booking_ids' => $bookingIds,
                 'idSpaceOwner' => $idSpaceOwner?:null,
+                'created_at' => $created_at?:null,
             ];
         }
 

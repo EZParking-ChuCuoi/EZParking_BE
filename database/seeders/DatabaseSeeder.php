@@ -32,7 +32,9 @@ class DatabaseSeeder extends Seeder
         
         
         $parkingLots = ParkingLot::factory(50)->create();
-        \App\Models\UserParkingLot::factory(20)->create();
+        foreach ($parkingLots as $parkingLot){
+            \App\Models\UserParkingLot::factory(1)->create(['parkingId' => $parkingLot->id]);
+        }
 
         foreach ($parkingLots as $parkingLot) {
             $blocks = Block::factory(5)->create(['parkingLotId' => $parkingLot->id])->each(function ($block, $index) {
