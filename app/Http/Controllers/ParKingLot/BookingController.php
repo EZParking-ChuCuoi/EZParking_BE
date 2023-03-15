@@ -184,7 +184,7 @@ class BookingController extends Controller
             $endDatetime = Carbon::parse($dateData['end_datetime']);
             $durationHours = $endDatetime->diffInHours($startDatetime);
             // Get difference in hours
-
+            $bookingIds = [];
             foreach ($emptySlots as $slot) {
                 $total_price = $prices[$number] * $durationHours;
                 $discount = 0;
@@ -219,12 +219,13 @@ class BookingController extends Controller
                 $booking->bookDate = $startDatetime;
                 $booking->returnDate = $endDatetime;
                 $booking->save();
+                $bookingIds[] = $booking->id;
                 $number += 1;
                 $output['booking'][] = $booking;
                 $total += $total_price;
             }
             $output["total"] = $total;
-            $output["idBookings"] = $slotIds;
+            $output["idBookings"] = $bookingIds;
             $output["idSpaceOwner"] = $userIds;
             event(new NotificationBooking([
                 'success' => true,
