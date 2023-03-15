@@ -60,7 +60,7 @@ class ParKingLotController extends Controller
     }
     /**
      * @OA\Get(
-     ** path="/api/parking-lot/{id}/info", tags={"Parking Lot"}, 
+     ** path="/api/parking-lot/{id}/info/{userId}", tags={"Parking Lot"}, 
      *  summary="detail parking lot with id", operationId="getInfoParkingLot",
      *   @OA\Parameter(
      *         name="id",
@@ -69,12 +69,19 @@ class ParKingLotController extends Controller
      *          example=1000000,
      *         description="ID of the parking lot to retrieve",
      *         @OA\Schema(type="integer")
+     *     ), @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         required=true,
+     *          example=1000000,
+     *         description="IDuser to see status wishlist",
+     *         @OA\Schema(type="integer")
      *     ),
      *@OA\Response( response=403, description="Forbidden"),
      * security={ {"passport":{}}}
      *)
      **/
-    public function getInfoParkingLot($id)
+    public function getInfoParkingLot($id,$userId)
     {
         // Check if the parking lot exists
         $parkingLot = ParkingLot::find($id);
@@ -82,6 +89,12 @@ class ParKingLotController extends Controller
             return response()->json(['error' => 'Parking lot not found'], 404);
         }
 
+        $wishlistId = DB::table('wishlists')
+        ->join('parking_lots', 'wishlists.parkingLotId', '=', 'parking_lots.id')
+        ->where('wishlists.userId', '=', $userId)
+        ->where('wishlists.parkingLotId', '=', $id)
+        ->value('wishlists.id');
+        
         // Retrieve the parking lot information
         $data = [
             'id' => $parkingLot->id,
@@ -92,6 +105,7 @@ class ParKingLotController extends Controller
             'openTime' => $parkingLot->openTime,
             'endTime' => $parkingLot->endTime,
             'desc' => $parkingLot->desc,
+            'statusWishlist' => ($wishlistId) ? 1 : 0,
             'images' => json_decode($parkingLot->images)
 
         ];

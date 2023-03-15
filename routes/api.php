@@ -57,7 +57,7 @@ Route::controller(UserController::class)->prefix("/user/")->group(function () {
 
 Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(function () {
     Route::get("", "index");
-    Route::get("{id}/info", "getInfoParkingLot");
+    Route::get("{id}/info/{userId}", "getInfoParkingLot");
     Route::get("{id}/info/price", "getPriceOfParkingLot");
     Route::get("{id}/info/comment", "showCommentOfParking");
     Route::get("location", "showParkingLotNearLocation");

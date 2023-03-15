@@ -1134,7 +1134,7 @@
                 ]
             }
         },
-        "/api/parking-lot/{id}/info": {
+        "/api/parking-lot/{id}/info/{userId}": {
             "get": {
                 "tags": [
                     "Parking Lot"
@@ -1146,6 +1146,16 @@
                         "name": "id",
                         "in": "path",
                         "description": "ID of the parking lot to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "IDuser to see status wishlist",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1430,6 +1440,37 @@
                 ]
             }
         },
+        "/api/user/{userId}/wishlist": {
+            "get": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "detail parking lot with id",
+                "operationId": "getWishlist",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of the parking lot to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/owner/create/{id}": {
             "post": {
                 "tags": [
@@ -1611,11 +1652,6 @@
         }
     },
     "components": {
-        "responses": {
-            "403": {
-                "description": "Forbidden"
-            }
-        },
         "securitySchemes": {
             "passport": {
                 "type": "apiKey",
