@@ -403,6 +403,7 @@ class BookingController extends Controller
             'blocks.nameBlock',
             'blocks.carType',
             'parking_lots.nameParkingLot as parking_lot_name',
+            'parking_lots.address',
             'user_parking_lots.userId as idSpaceOwner',
             'users.fullName'
         )
