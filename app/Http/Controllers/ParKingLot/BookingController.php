@@ -153,7 +153,7 @@ class BookingController extends Controller
         }
         $dateData = $validator->validated();
         $slotIds = $dateData['slot_ids'];
-        $userIds =ParkingSlot::find($slotIds[0])->block->parkingLot->userParkingLot->pluck('userId')[0];
+        $userIds = ParkingSlot::find($slotIds[0])->block->parkingLot->userParkingLot->pluck('userId')[0];
         $userId = $dateData['user_id'];
         $licensePlate = $dateData['licensePlate'];
         $startDatetime = $dateData['start_datetime'];
@@ -285,7 +285,7 @@ class BookingController extends Controller
             ->groupBy('bookDate')->take(10);
 
         $response = [];
-       
+
         foreach ($bookings as $date => $bookingsByDate) {
             $totalPayment = $bookingsByDate->sum('payment');
             $parkingLotName = $bookingsByDate->isNotEmpty() ? $bookingsByDate->first()->parking_lot_name : null;
@@ -303,8 +303,8 @@ class BookingController extends Controller
                 'parking_lot_name' => $parkingLotName,
                 'booking_count' => $bookingsByDate->count(),
                 'booking_ids' => $bookingIds,
-                'idSpaceOwner' => $idSpaceOwner?:null,
-                'created_at' => $created_at?:null,
+                'idSpaceOwner' => $idSpaceOwner ?: null,
+                'created_at' => $created_at ?: null,
             ];
         }
 
@@ -354,10 +354,7 @@ class BookingController extends Controller
             ->orderBy('bookings.bookDate', 'desc')
             ->get();
 
-        $totalPayment = 0;
-        foreach ($bookings as $booking) {
-            $totalPayment += $booking->payment;
-        }
+      
 
         return response()->json([
             'message' => 'Booking history summary',
@@ -397,29 +394,37 @@ class BookingController extends Controller
 
         $bookingIds = $request->input('bookingIds');
 
-        $bookings= Booking::whereIn('id', $bookingIds)->get();
-        $idSlot= $bookings->pluck('slotId')[0];
-        $inForParking= ParkingSlot::find($idSlot)->block->parkingLot;
+        $bookings = Booking::select(
+            'bookings.id as booking_id',
+            'bookings.bookDate',
+            'bookings.licensePlate',
+            'bookings.payment',
+            'parking_slots.slotName',
+            'blocks.nameBlock',
+            'blocks.carType',
+            'parking_lots.nameParkingLot as parking_lot_name',
+            'user_parking_lots.userId as idSpaceOwner',
+            'users.fullName as nameSpaceOwner',
+        )
+            ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
+            ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
+            ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
+            ->join('user_parking_lots', 'user_parking_lots.parkingId', '=', 'parking_lots.id')
+            ->join('users', 'users.id', '=', 'user_parking_lots.userId')
+            ->whereIn('bookings.id', $bookingIds)
+            ->orderBy('bookings.bookDate', 'desc')
+            ->get();
 
-        $sumPayment= $bookings->sum('payment');
-        $outPut['booking']=$bookings;
-        $outPut['totalPrice']=$sumPayment;
-        $inForUser=$inForParking->user;
-     
-  
-        $outPut['inForSpaceOwner']=[
-            'id'=>$inForUser->id,
-            'phone'=>$inForUser->phone,
-            'fullName'=>$inForUser->fullName,
+        $totalPayment = $bookings->sum('payment');
+         
 
-        ];
-        $outPut['inForParkingLot']=[
-            'nameParkingLot'=>$inForParking->nameParkingLot,
-            'address'=>$inForParking->address,
-        ];
         return response()->json([
-            'message' => 'Detail booking',
-            'data' => $outPut,
+            'message' => 'Booking history summary',
+            'data' => [
+
+                'bookings' => $bookings,
+                'totalPayment' => $totalPayment,
+            ],
         ], 200);
     }
 
@@ -460,6 +465,4 @@ class BookingController extends Controller
             'message' => 'Update success!',
         ], 200);
     }
-
-   
 }

@@ -28,6 +28,13 @@ class User extends Model  implements Authenticatable
     {
         return $this->hasMany(\App\Models\Comment::class,'userId');
     }
+
+    public function wishlists(){
+        return $this->hasMany(Wishlist::class,'userId');
+    }
+
+    
+
     protected $hidden = [
         'password', 'remember_token',
     ];

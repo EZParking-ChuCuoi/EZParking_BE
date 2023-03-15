@@ -3,11 +3,66 @@
 namespace App\Http\Controllers\ParKingLot;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
+    /**
+     * @QA\Get(
+     * path= "/api/wishlist", tags="Wishlist",
+     * summary="create slot ", operationId="createSlot",
+     *      
+     *  *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     * )
+     */
+    public function getWishlist($userId)
+    {
+
+       
+
+
+        try {
+            // Get user by ID
+            $user = User::findOrFail($userId);
+
+            // Get user's wishlist with parking lot details
+            $wishlist = $user->wishlists->with('parkingLotId');
+
+            return $wishlist;
+
+            // Check if wishlist exists
+            if (!$wishlist) {
+                return response()->json([
+                    'message' => 'Wishlist not found.'
+                ], 404);
+            }
+
+            // Map the results to return only the needed attributes
+            $wishlistData = $wishlist->parkingLots->map(function ($parkingLot) {
+                return [
+                    'id' => $parkingLot->id,
+                    'name' => $parkingLot->name,
+                    'address' => $parkingLot->address,
+                    'price' => $parkingLot->price,
+                    'rating' => $parkingLot->rating,
+                    'image' => $parkingLot->image,
+                    'created_at' => $parkingLot->created_at,
+                    'updated_at' => $parkingLot->updated_at
+                ];
+            });
+
+            // Return the wishlist data
+            return response()->json($wishlistData, 200);
+        } catch (\Throwable $th) {
+        }
+    }
+
+
+
     //  /**
     //  * @OA\Post(
     //  ** path="/api/parking-lot/block/slots/create", tags={"Slot"}, 

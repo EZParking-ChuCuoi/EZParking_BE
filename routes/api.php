@@ -10,8 +10,10 @@ use App\Http\Controllers\ParKingLot\BookingController;
 use App\Http\Controllers\ParKingLot\Owner\BlockController;
 use App\Http\Controllers\ParKingLot\Owner\SlotController;
 use App\Http\Controllers\ParKingLot\ParKingLotController;
+use App\Http\Controllers\ParKingLot\WishlistController;
 use App\Http\Controllers\Profile\OwnerController;
 use App\Http\Controllers\Profile\UserController;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -119,8 +121,8 @@ Route::controller(ChatController::class)->prefix("/chat/")->group(function () {
     Route::post("send", "sendMessage");
 });
 // wilisht
-Route::controller(Ws::class)->prefix("/chat/")->group(function () {
-    Route::get("history/{user1Id}/{user2Id}", "getChatHistory");
+Route::controller(WishlistController::class)->prefix("/user/")->group(function () {
+    Route::get("{userId}/wishlist", "getWishlist");
     Route::post("send", "sendMessage");
 });
 
