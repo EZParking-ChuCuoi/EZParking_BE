@@ -16,15 +16,15 @@ return new class extends Migration
     {
         Schema::create('parking_lots', function (Blueprint $table) {
             $table->increments("id")->from(1000000);
-            $table-> string("image");
+            $table-> json("images")->nullable();
             $table-> time("openTime");
             $table-> time("endTime");
             $table-> string("nameParkingLot",100)->unique();
             $table->double('address_latitude')->nullable();
             $table->double('address_longitude')->nullable();
             $table-> string("address",200);
-            $table-> string("desc");
-            $table-> boolean('status');
+            $table-> string("desc")->nullable();
+            $table-> boolean('status')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

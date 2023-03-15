@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Auth\AuthController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
+use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\ParKingLot\BlockParkingCarController;
 use App\Http\Controllers\ParKingLot\ParKingLotController;
 use Illuminate\Support\Facades\Route;
@@ -30,4 +31,8 @@ use Illuminate\Support\Facades\Route;
 //     Route::get('/', function () {return view('welcome');
 //     });
 // });
-Route::get("/", fn() => view("welcome"));
+Route::get("/", fn () => view("welcome"));
+// Route::get('/', [ChatController::class, 'getChatHistory'])->name('chat');
+// Route::get('/chat/history/{user1Id}/{user2Id}', [ChatController::class, 'getChatHistory'])->name('chat.history');
+// Route::post('/chat/send-message', [ChatController::class, 'sendMessage'])->name('send-message');
+

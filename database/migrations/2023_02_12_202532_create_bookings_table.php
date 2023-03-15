@@ -14,15 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->increments('id')->from(1000000);
+            $table->increments('id')->from(100000000);
             $table->unsignedInteger("userId");
             $table->unsignedInteger("slotId");
             $table->dateTime('bookDate');
             $table->dateTime('returnDate');
+            $table->string('licensePlate');
             $table->double('payment');
-            $table->boolean('bookingStatus');
-            $table->integer('rating');
-            $table->string('comment');
             $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('slotId')->references('id')->on('parking_slots')->onDelete('cascade');
             $table->timestamps();

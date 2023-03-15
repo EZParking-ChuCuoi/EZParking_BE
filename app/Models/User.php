@@ -20,9 +20,9 @@ class User extends Model  implements Authenticatable
     {
         return $this->hasMany(\App\Models\Booking::class,'userId');
     }
-    public function userParkingLot()
+    public function userParkingLots()
     {
-        return $this->hasMany(\App\Models\UserParkingLot::class);
+        return $this->hasMany(\App\Models\UserParkingLot::class,'userId');
     }
     public function comments()
     {

@@ -19,10 +19,8 @@ class ParkingSlotFactory extends Factory
     {
 
         return [
-            'blockId'=> rand(1000000,1000019),
-            'slotCode'=>Str::random(10),
-            'status'=>$this->faker->boolean(),
-            'desc'=>$this->faker->sentence($nbWords = 6, $variableNbWords = true),
+            'blockId'=> rand(1000000,1000003),
+            'slotName'=>Str::random(10),
             
         ];
     }

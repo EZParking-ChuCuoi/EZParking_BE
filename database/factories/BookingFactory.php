@@ -18,21 +18,27 @@ class BookingFactory extends Factory
     public function definition()
     {
         $fromDate = "2023-01-01";
-        $toDate = "2023-01-3";
-        $from = "2023-01-4";
-        $to = "2023-01-8";
-
-
+        $toDate = "2023-12-31";
+        $from = "2023-01-01";
+        $to = "2023-12-31";
+        
+        $startDateTime = $this->faker->dateTimeBetween($fromDate, $toDate);
+        $endDateTime = $this->faker->dateTimeBetween($from, $to);
+        
+        // Make sure startDateTime is earlier than endDateTime
+        if ($startDateTime > $endDateTime) {
+            $tempDateTime = $startDateTime;
+            $startDateTime = $endDateTime;
+            $endDateTime = $tempDateTime;
+        }
+        
         return [
-            'userId'=>rand(1000000,1000019),
-            'slotId'=>rand(100000000,100000020),
-            'bookDate'=>$this->faker->dateTimeBetween($fromDate, $toDate)->format("Y-m-d H:i:s"),
-            'returnDate'=>$this->faker->dateTimeBetween($from, $to)->format("Y-m-d H:i:s"),
-            'payment'=>$this->faker->numberBetween($min = 1500.000, $max = 6000.000),
-            'bookingStatus'=>$this->faker->boolean(),
-            'rating'=>rand(1,5),
-            'comment'=>$this->faker->sentence($nbWords = 6, $variableNbWords = true),
-            'rating'=>rand(1,5),
+            'userId' => rand(1000000, 1000019),
+            'slotId' => rand(100000000, 100000099),
+            'licensePlate' => $this->faker->regexify('[0-9]{2}[A-Z]{1}-[0-9]{3}\.[0-9]{2}'),
+            'bookDate' => $startDateTime->format("Y-m-d H:i:s"),
+            'returnDate' => $endDateTime->format("Y-m-d H:i:s"),
+            'payment' => $this->faker->numberBetween($min = 1500.000, $max = 6000.000),
         ];
     }
 }

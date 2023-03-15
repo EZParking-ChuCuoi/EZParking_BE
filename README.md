@@ -19,3 +19,7 @@
 - password: password
 3. Debug for eloquen query database : https://laravel.com/docs/9.x/telescope#main-content
 # Query database
+
+## Swagger run ```php artisan l5-swagger:generate``` fix bg
+## connect AWS: ```ssh -i "keyforapi.pem" ubuntu@ec2-54-178-92-241.ap-northeast-1.compute.amazonaws.com```
+

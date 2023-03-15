@@ -13,11 +13,26 @@ use Illuminate\Support\Facades\Validator;
 
 class BlockParkingCarController extends Controller
 {
-    public function getBlock($id)
-    {
-        $blockData = ParkingLot::find($id)->blocks()->orderBy('carType', 'asc')->get();
-        return $blockData ?: null;
-    }
+
+    /**
+     * @OA\Get(
+     ** path="/api/parking-lot/{id}/slots", tags={"Block"}, 
+     *  summary="get all slot in this block with detail status", operationId="getSlotStatusByBookingDateTime2",
+     *   @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *          example=1000000,
+     *         description="ID of the parking lot to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *      @OA\Parameter(name="start_datetime",in="query",required=true,example="2023-03-01 14:30:00", @OA\Schema( type="string" )),
+     *      @OA\Parameter(name="end_datetime",in="query",required=true,example="2023-04-01 14:30:00", @OA\Schema( type="string" )),
+     * 
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
     public function getSlotStatusByBookingDateTime(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -28,82 +43,52 @@ class BlockParkingCarController extends Controller
             return $validator->errors()->toArray();
         }
         $dateData = $validator->validated();
-        $startDatetime = $dateData["start_datetime"];
-        $endDatetime = $dateData["end_datetime"];
-        $slots = ParkingSlot::leftJoin('bookings', function ($join) use ($startDatetime, $endDatetime) {
-            $join->on('parking_slots.id', '=', 'bookings.slotId')
-                ->where(function ($query) use ($startDatetime, $endDatetime) {
-                    $query->whereBetween('bookDate', [$startDatetime, $endDatetime])
-                        ->orWhereBetween('returnDate', [$startDatetime, $endDatetime])
-                        ->orWhere(function ($query) use ($startDatetime, $endDatetime) {
-                            $query->where('bookDate', '<', $startDatetime)
-                                ->where('returnDate', '>', $endDatetime);
-                        });
-                });
-        })
-            ->select('parking_slots.*', 'bookings.bookDate', 'bookings.returnDate', DB::raw('CASE WHEN bookings.id IS NULL THEN "available" ELSE "blocked" END AS status'))
-            ->where('parking_slots.blockId', $id)
-            ->get();
-
-        return response()->json([
-            'data' => $slots,
-        ]);
-    }
-    public function getSlotStatusByBookingDateTime2(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'start_datetime' => 'required|date_format:Y-m-d H:i:s',
-            'end_datetime' => 'required|date_format:Y-m-d H:i:s|after:start_datetime',
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors()->toArray();
-        }
-        $dateData = $validator->validated();
-        
-        // Lấy ra tất cả các block trong parking lot với $parkingLotId được chỉ định.
+        $startDate = $dateData["start_datetime"];
+        $endDate = $dateData["end_datetime"];
+        //  give block of parkinglot id
         $blocks = Block::where('parkingLotId', $id)->get();
 
-        // Khởi tạo mảng để lưu trữ trạng thái của từng slot trong các block.
+        // create array to get status slot
         $status = array();
 
-        // Duyệt qua mỗi block.
+        // foreach block
         foreach ($blocks as $block) {
 
-            // Lấy ra tất cả các slot trong block đó.
-            $slots = ParkingSlot::where('blockId', $block->id)->get();
+            // get all slot of block
+            $slots = $block->slots;
 
-            // Khởi tạo mảng để lưu trữ trạng thái của từng slot trong block đó.
+            // check blcok is null or not
+            if (count($slots) === 0) {
+                continue;
+            }
+            // create array to get detail status slot
             $blockStatus = array();
 
-            // Duyệt qua mỗi slot.
+            // foreach slot
             foreach ($slots as $slot) {
 
-                // Lấy ra tất cả các booking trong slot đó, với điều kiện thời gian bắt đầu và kết thúc của booking
-                // phải nằm trong khoảng thời gian được chỉ định.
+                // get all booking in this slot
                 $bookings = Booking::where('slotId', $slot->id)
-                    ->where('bookDate', '>=', $dateData["start_datetime"])
-                    ->where('returnDate', '<=', $dateData["end_datetime"])
+                    ->where('bookDate', '<=', $endDate)
+                    ->where('returnDate', '>=', $startDate)
                     ->get();
 
-                // Nếu số lượng booking lớn hơn 0, có nghĩa là slot đã được đặt trong khoảng thời gian được chỉ định.
-                // Ngược lại, slot sẵn sàng để đặt trong khoảng thời gian đó.
+                // if slot >0 it mean slot have booking in date time
+                
                 if (count($bookings) > 0) {
                     $blockStatus[] = array(
                         'idSlot' => $slot->id,
-                        'slotCode' => $slot->slotCode,
-                        'status' => 'booked'
+                        'slotName' => $slot->slotName,
+                        'status' => 0
                     );
                 } else {
                     $blockStatus[] = array(
                         'idSlot' => $slot->id,
-                        'slotCode' => $slot->slotCode,
-                        
-                        'status' => 'available'
+                        'slotName' => $slot->slotName,
+                        'status' => 1
                     );
                 }
             }
-
-            // Lưu trạng thái của từng slot trong block đó vào mảng chung.
             $status[] = array(
                 'block_id' => $block->id,
                 'carType' => $block->carType,
@@ -113,10 +98,9 @@ class BlockParkingCarController extends Controller
             );
         }
 
-        return 
-        //  view('welcome')->with('data',$status);
-        response()->json([
-            'data' => $status,
-        ]);
+        return
+            response()->json([
+                'data' => $status,
+            ]);
     }
 }

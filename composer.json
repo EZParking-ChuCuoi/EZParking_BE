@@ -8,15 +8,16 @@
         "php": "^8.1",
         "cboden/ratchet": "^0.4.4",
         "cloudinary-labs/cloudinary-laravel": "^2.0",
+        "darkaonline/l5-swagger": "^8.5",
         "firebase/php-jwt": "^6.3",
         "guzzlehttp/guzzle": "^7.5",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "predis/predis": "^2.0"
+        "predis/predis": "^2.0",
+        "pusher/pusher-php-server": "^7.2"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.8",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",

@@ -28,4 +28,5 @@ class ParKingLotService implements \App\Services\Interfaces\IParKingLotService
     {
         return true;
     }
+    
 }
