@@ -19,6 +19,6 @@ class Booking extends Model
         return $this->belongsTo(\App\Models\User::class,'userId');
     }
     protected $hidden = [
-        'created_at', 'updated_at','deleted_at'
+        'updated_at','deleted_at'
     ];
 }
