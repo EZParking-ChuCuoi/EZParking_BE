@@ -7,6 +7,7 @@ use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\DashBoard\ManagerController;
 use App\Http\Controllers\ParKingLot\BlockParkingCarController;
 use App\Http\Controllers\ParKingLot\BookingController;
+use App\Http\Controllers\ParKingLot\NotificationController;
 use App\Http\Controllers\ParKingLot\Owner\BlockController;
 use App\Http\Controllers\ParKingLot\Owner\SlotController;
 use App\Http\Controllers\ParKingLot\ParKingLotController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Profile\UserController;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Telescope\Http\Controllers\NotificationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,7 +79,6 @@ Route::controller(BookingController::class)->prefix("/booking/")->group(function
     Route::get("history/details", "historyBookingDetail");
     Route::get("show", "getDetailQRcode");
     Route::patch("update", "completeBooking");
-
     Route::get("check-date","checkReturnDAte");
 });
 
@@ -126,3 +127,9 @@ Route::controller(WishlistController::class)->prefix("/user/")->group(function (
     Route::post("wishlist/add", "addWishList");
 });
 
+// Notification
+Route::controller(NotificationController::class)->prefix("/users/")->group(function () {
+    Route::get("{userId}/notifications", "index");
+
+  
+});

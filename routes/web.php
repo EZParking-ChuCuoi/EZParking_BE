@@ -36,3 +36,7 @@ Route::get("/", fn () => view("welcome"));
 // Route::get('/chat/history/{user1Id}/{user2Id}', [ChatController::class, 'getChatHistory'])->name('chat.history');
 // Route::post('/chat/send-message', [ChatController::class, 'sendMessage'])->name('send-message');
 
+Route::get('test', function () {
+    event(new App\Events\StatusAddWishList('Someone'));
+    return "Event has been sent!";
+});

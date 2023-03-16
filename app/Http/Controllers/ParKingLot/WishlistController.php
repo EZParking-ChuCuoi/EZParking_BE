@@ -99,7 +99,7 @@ class WishlistController extends Controller
             $existingWishlist->delete();
             return response()->json([
                 'message' => 'Delete wishlist success!'
-            ], 422);
+            ], 200);
         }
 
         $wishlist = Wishlist::create([
