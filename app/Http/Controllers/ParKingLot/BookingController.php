@@ -227,11 +227,11 @@ class BookingController extends Controller
             $output["total"] = $total;
             $output["idBookings"] = $bookingIds;
             $output["idSpaceOwner"] = $userIds;
-            event(new NotificationBooking([
-                'success' => true,
-                'message' => 'Booking created successfully',
-                'data' => $output,
-            ]));
+            // event(new NotificationBooking([
+            //     'success' => true,
+            //     'message' => 'Booking created successfully',
+            //     'data' => $output,
+            // ]));
             return response()->json([
                 'success' => true,
                 'message' => 'Booking created successfully',
