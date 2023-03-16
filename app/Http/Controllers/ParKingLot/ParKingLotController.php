@@ -35,29 +35,26 @@ class ParKingLotController extends Controller
     {
         return $this->parKingLot->getAllParkingLot(true);
     }
-    /**
-     * @OA\Get(
-     ** path="/api/parking-lot/{id}/info/price", tags={"Parking Lot"}, 
-     *  summary="detail price of parking lot with id", operationId="getPriceOfParkingLot",
-     *   @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *          example=1000000,
-     *         description="ID of the parking lot to retrieve",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *@OA\Response( response=403, description="Forbidden"),
-     * security={ {"passport":{}}}
-     *)
-     **/
-    public function getPriceOfParkingLot($id)
-    {
-        $price = ParkingLot::find($id)->blocks()->orderBy('price')->get('price');
-        $priceData['priceFrom'] = $price[0]['price'];
-        $priceData['priceTo'] = $price[sizeof($price) - 1]['price'];
-        return $priceData ?: null;
-    }
+    // /**
+    //  * @OA\Get(
+    //  ** path="/api/parking-lot/{id}/info/price", tags={"Parking Lot"}, 
+    //  *  summary="detail price of parking lot with id", operationId="getPriceOfParkingLot",
+    //  *   @OA\Parameter(
+    //  *         name="id",
+    //  *         in="path",
+    //  *         required=true,
+    //  *          example=1000000,
+    //  *         description="ID of the parking lot to retrieve",
+    //  *         @OA\Schema(type="integer")
+    //  *     ),
+    //  *@OA\Response( response=403, description="Forbidden"),
+    //  * security={ {"passport":{}}}
+    //  *)
+    //  **/
+    // public function getPriceOfParkingLot($id)
+    // {
+
+    // }
     /**
      * @OA\Get(
      ** path="/api/parking-lot/{id}/info/{userId}", tags={"Parking Lot"}, 
@@ -81,7 +78,7 @@ class ParKingLotController extends Controller
      * security={ {"passport":{}}}
      *)
      **/
-    public function getInfoParkingLot($id,$userId)
+    public function getInfoParkingLot($id, $userId)
     {
         // Check if the parking lot exists
         $parkingLot = ParkingLot::find($id);
@@ -90,12 +87,14 @@ class ParKingLotController extends Controller
         }
 
         $wishlistId = DB::table('wishlists')
-        ->join('parking_lots', 'wishlists.parkingLotId', '=', 'parking_lots.id')
-        ->where('wishlists.userId', '=', $userId)
-        ->where('wishlists.parkingLotId', '=', $id)
-        ->value('wishlists.id');
-        
-        // Retrieve the parking lot information
+            ->join('parking_lots', 'wishlists.parkingLotId', '=', 'parking_lots.id')
+            ->where('wishlists.userId', '=', $userId)
+            ->where('wishlists.parkingLotId', '=', $id)
+            ->value('wishlists.id');
+
+        $arrayPrice = ParkingLot::find($id)->blocks()->orderBy('price')->pluck('price')->toArray();
+        $avgPrice = intval(array_sum($arrayPrice) / sizeof($arrayPrice));
+
         $data = [
             'id' => $parkingLot->id,
             'nameParkingLot' => $parkingLot->nameParkingLot,
@@ -106,7 +105,8 @@ class ParKingLotController extends Controller
             'endTime' => $parkingLot->endTime,
             'desc' => $parkingLot->desc,
             'statusWishlist' => ($wishlistId) ? 1 : 0,
-            'images' => json_decode($parkingLot->images)
+            'images' => json_decode($parkingLot->images),
+            'avgPrice' => $avgPrice ?? null,
 
         ];
 
@@ -161,6 +161,7 @@ class ParKingLotController extends Controller
             ->leftJoin('blocks', 'parking_lots.id', '=', 'blocks.parkingLotId')
             ->select(
                 "parking_lots.*",
+                DB::raw("FLOOR(AVG(blocks.price)) as avg_price"),
                 DB::raw("6371 * acos(cos(radians(" . $lat . "))
             * cos(radians(parking_lots.address_latitude))
             * cos(radians(parking_lots.address_longitude) - radians(" . $lon . "))
@@ -477,14 +478,14 @@ class ParKingLotController extends Controller
      * security={ {"passport":{}}}
      *)
      **/
-    public function deleteParkingLot($idParkingLot){
+    public function deleteParkingLot($idParkingLot)
+    {
         $parkingLot = ParkingLot::find($idParkingLot);
         if (!$parkingLot) {
             return response()->json(['message' => 'Parking lot not found.'], 404);
         }
-    
+
         $parkingLot->delete();
         return response()->json(['message' => 'Parking lot deleted successfully.']);
     }
-
 }

@@ -57,13 +57,13 @@ Route::controller(UserController::class)->prefix("/user/")->group(function () {
 
 Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(function () {
     Route::get("", "index");
-    Route::get("{id}/info/{userId}", "getInfoParkingLot");
-    Route::get("{id}/info/price", "getPriceOfParkingLot");
+    
     Route::get("{id}/info/comment", "showCommentOfParking");
     Route::get("location", "showParkingLotNearLocation");
     Route::post("create", "createParkingLot");
     Route::put("update/{idParkingLot}", "updateParkingLot");
     Route::delete("delete/{idParkingLot}", "deleteParkingLot");
+    Route::get("{id}/info/{userId}", "getInfoParkingLot");
 });
 Route::controller(BlockParkingCarController::class)->prefix("/parking-lot/")->group(function () {
     Route::get("{id}/slots", "getSlotStatusByBookingDateTime");
