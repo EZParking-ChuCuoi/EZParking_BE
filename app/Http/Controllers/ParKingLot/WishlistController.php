@@ -40,6 +40,11 @@ class WishlistController extends Controller
             $parkingLotIds = $user->wishlists->pluck('parkingLotId')->toArray();
             // echo $parkingLotId;
             $wishlist = ParkingLot::whereIn('id', $parkingLotIds)->get();
+            if (!$wishlist) {
+                return response()->json([
+                    'message' => 'Wishlist not found.'
+                ], 404);
+            }
             $bookingsByDate = Booking::select(
                 'parking_lots.id as parking_lot_id',
                 'parking_lots.nameParkingLot',
@@ -52,42 +57,24 @@ class WishlistController extends Controller
                 ->where('bookings.userId', $userId)
                 ->groupBy('parking_lots.id', 'bookings.bookDate')
                 ->get();
-
-            $bookingsCountByParkingLot = $bookingsByDate->groupBy('parking_lot_id')
+                
+                $bookingsCountByParkingLot = $bookingsByDate->groupBy('parking_lot_id')
                 ->map(function ($item) {
-                    return [
+                    $output = [
                         'parking_lot_id' => $item[0]->parking_lot_id,
                         'nameParkingLot' => $item[0]->nameParkingLot,
                         'address' => $item[0]->address,
-                        'count' => count($item)
+                        'count' => count($item) ?? 0
                     ];
+                    return $output;
                 })
                 ->values()
                 ->toArray();
-                return $bookingsCountByParkingLot;
-            // Check if wishlist exists
-            if (!$wishlist) {
-                return response()->json([
-                    'message' => 'Wishlist not found.'
-                ], 404);
-            }
-            $wishlistData = [];
-
-            foreach ($wishlist as $parkingLot) {
-                $wishlistData[] = [
-                    'id' => $parkingLot->id,
-                    'nameParkingLot' => $parkingLot->nameParkingLot,
-                    'address' => $parkingLot->address,
-                    'address_latitude' => $parkingLot->address_latitude,
-                    'address_longitude' => $parkingLot->address_longitude,
-                    'openTime' => $parkingLot->openTime,
-                    'endTime' => $parkingLot->endTime,
-                    'desc' => $parkingLot->desc,
-                    'images' => json_decode($parkingLot->images)
-                ];
-            }
+                
+            
+             
             // Return the wishlist data
-            return response()->json($wishlistData, 200);
+            return response()->json($bookingsCountByParkingLot, 200);
         } catch (\Throwable $th) {
         }
     }
