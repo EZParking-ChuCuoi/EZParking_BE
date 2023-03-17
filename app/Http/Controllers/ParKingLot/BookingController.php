@@ -144,7 +144,8 @@ class BookingController extends Controller
         $validator = Validator::make($request->all(), [
             'slot_ids' => 'required|array',
             'user_id' =>   'required',
-            'licensePlate' => 'required|array',
+            'licensePlate' => 'required|array|regex:/^[0-9]{2}[A-Z]{1,2}[0-9]{4,5}$/',
+            'error_message_here',
             'start_datetime' => 'required|date',
             'end_datetime' => 'required|date|after:start_datetime',
         ]);

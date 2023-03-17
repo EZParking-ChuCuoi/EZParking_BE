@@ -144,7 +144,7 @@ class UserController extends Controller
         $linkImage = CloudinaryStorage::upload($file->getRealPath(), $file->getClientOriginalName(), 'account/profile');
         $user->avatar = $linkImage;
     }
-    return $user;
+   
     $user->save();
     
     return $this->responseSuccessWithData("Update successful", [$user], Response::HTTP_OK);
