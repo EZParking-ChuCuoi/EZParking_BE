@@ -117,7 +117,7 @@ class BlockController extends Controller
     {
         $block = Block::findOrFail($id);
         return response()->json([
-            'message' => 'block updated successfully',
+            'message' => 'Success!',
             'data' => $block
         ], 200);
     }

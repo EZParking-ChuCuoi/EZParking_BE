@@ -121,7 +121,7 @@ class UserController extends Controller
     public function updateProfile(Request $request, $id)
 {
     $validator = Validator::make($request->all(), [
-        'fullName' => 'nullable|string|max:255|required_without_all:avatar',
+        'fullName' => 'nullable|string|max:255|alpha|required_without_all:avatar',
         'avatar' => 'nullable|image|max:2048|required_without_all:fullName',
     ]);
     
