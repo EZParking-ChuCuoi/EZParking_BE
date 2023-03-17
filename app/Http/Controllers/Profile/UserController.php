@@ -114,31 +114,39 @@ class UserController extends Controller
      *         response=200,
      *         description="Profile updated successfully"
      *     ),
-     * security={ {"passport":{}}}
+     *         security={ {"passport":{}}}
      * 
      * )
      */
     public function updateProfile(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'fullName' => 'required',
-            'avatar' => 'required|image|max:2048',
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors()->toArray();
-        }
-        $dateData = $validator->validated();
-
-        $user = User::find($id);
-
-
-        $user->fullName = $dateData["fullName"];
-        if ($request->hasFile('avatar')) {
-            $file   = $request->file('avatar');
-            $linkImage = CloudinaryStorage::upload($file->getRealPath(), $file->getClientOriginalName(), 'account/profile');
-            $user->avatar = $linkImage;
-        }
-        $user->save();
-        return $this->responseSuccessWithData("update success", [$user], Response::HTTP_OK);
+{
+    $validator = Validator::make($request->all(), [
+        'fullName' => 'nullable|string|max:255|required_without_all:avatar',
+        'avatar' => 'nullable|image|max:2048|required_without_all:fullName',
+    ]);
+    
+    $validator->setCustomMessages([
+        'required_without_all' => 'At least one of the values fields is required.',
+    ]);
+    
+    if ($validator->fails()) {
+        $errors = $validator->errors();
+      
+        return $errors->toArray();
     }
+    $user = User::find($id);
+    if ($request->has('fullName')&& $request->filled('fullName')) {
+        $user->fullName = $request->input('fullName');
+    }
+    
+    if ($request->hasFile('avatar')) {
+        $file = $request->file('avatar');
+        $linkImage = CloudinaryStorage::upload($file->getRealPath(), $file->getClientOriginalName(), 'account/profile');
+        $user->avatar = $linkImage;
+    }
+    return $user;
+    $user->save();
+    
+    return $this->responseSuccessWithData("Update successful", [$user], Response::HTTP_OK);
+}
 }

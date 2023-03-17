@@ -31,36 +31,36 @@ class DatabaseSeeder extends Seeder
         
         
         
-        // $parkingLots = ParkingLot::factory(50)->create();
-        // foreach ($parkingLots as $parkingLot){
-        //     \App\Models\UserParkingLot::factory(1)->create(['parkingId' => $parkingLot->id]);
-        // }
+        $parkingLots = ParkingLot::factory(50)->create();
+        foreach ($parkingLots as $parkingLot){
+            \App\Models\UserParkingLot::factory(1)->create(['parkingId' => $parkingLot->id]);
+        }
 
-        // foreach ($parkingLots as $parkingLot) {
-        //     $blocks = Block::factory(5)->create(['parkingLotId' => $parkingLot->id])->each(function ($block, $index) {
-        //         $blockNames = ['Khu A', 'Khu B', 'Khu C', 'Khu D', 'Khu E', 'Khu F', 'Khu G', 'Khu H', 'Khu I', 'Khu J'];
-        //         $block->nameBlock = $blockNames[$index];
-        //         $block->save();
-        //     });
+        foreach ($parkingLots as $parkingLot) {
+            $blocks = Block::factory(1)->create(['parkingLotId' => $parkingLot->id])->each(function ($block, $index) {
+                $blockNames = ['Khu A', 'Khu B', 'Khu C', 'Khu D', 'Khu E', 'Khu F', 'Khu G', 'Khu H', 'Khu I', 'Khu J'];
+                $block->nameBlock = $blockNames[$index];
+                $block->save();
+            });
 
-        //     foreach ($blocks as $block) {
-        //         $slotCount = 1;
+            foreach ($blocks as $block) {
+                $slotCount = 1;
 
-        //         $slots = ParkingSlot::factory(30)->create(['blockId' => $block->id])->each(function ($slot) use ($block, &$slotCount) {
-        //             $lastLetter = substr($block->nameBlock, -1);
-        //             $slot->slotName = strtoupper($lastLetter) . $slotCount++;
-        //             $slot->save();
+                $slots = ParkingSlot::factory(10)->create(['blockId' => $block->id])->each(function ($slot) use ($block, &$slotCount) {
+                    $lastLetter = substr($block->nameBlock, -1);
+                    $slot->slotName = strtoupper($lastLetter) . $slotCount++;
+                    $slot->save();
 
-        //             $slot->bookings()->createMany(Booking::factory(1)->raw([
-        //                 'slotId' => $slot->id,
-        //             ]));
-        //         });
-        //     }
-        // }
+                    $slot->bookings()->createMany(Booking::factory(1)->raw([
+                        'slotId' => $slot->id,
+                    ]));
+                });
+            }
+        }
 
-        // foreach ($users as $user){
-        //     \App\Models\Wishlist::factory(3)->create(['userId'=>$user->id]);
-        // }
+        foreach ($users as $user){
+            \App\Models\Wishlist::factory(3)->create(['userId'=>$user->id]);
+        }
         // import database UserParkingLot
 
         \App\Models\Notification::factory(800)->create();

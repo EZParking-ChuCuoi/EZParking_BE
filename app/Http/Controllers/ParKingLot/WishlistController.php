@@ -55,12 +55,12 @@ class WishlistController extends Controller
                 ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
                 ->whereIn('parking_lots.id', $parkingLotIds)
                 ->where('bookings.userId', $userId)
-                ->groupBy('parking_lots.id', 'bookings.bookDate')
+                ->groupBy('parking_lots.id', 'bookings.bookDate','bookings.userId')
                 ->get();
-                
+                 
                 $bookingsCountByParkingLot = $bookingsByDate->groupBy('parking_lot_id')
                 ->map(function ($item) {
-                    $output = [
+                    $output = [           // Return the wishlist data
                         'parking_lot_id' => $item[0]->parking_lot_id,
                         'nameParkingLot' => $item[0]->nameParkingLot,
                         'address' => $item[0]->address,
@@ -70,9 +70,7 @@ class WishlistController extends Controller
                 })
                 ->values()
                 ->toArray();
-                
-            
-             
+                return $bookingsCountByParkingLot;
             // Return the wishlist data
             return response()->json($bookingsCountByParkingLot, 200);
         } catch (\Throwable $th) {

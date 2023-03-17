@@ -30,10 +30,13 @@ class BlockController extends Controller
      **/
     public function getAllBlock($idParking)
     {
-        $data = Block::where('parkingLotId', $idParking)->get();
+        $data = Block::where('parkingLotId', $idParking)
+            ->withCount('slots')
+            ->get();
+
         return response()->json([
             'message' => 'Successfully',
-            'block' => $data,
+            'blocks' => $data,
         ], 200);
     }
     /**
@@ -200,7 +203,8 @@ class BlockController extends Controller
      * 
      * )
      */
-    public function deleteBlock($id){
+    public function deleteBlock($id)
+    {
         $block = Block::findOrFail($id);
         $block->slots()->delete();
         $block->delete();

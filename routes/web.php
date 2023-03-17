@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\PusherTestEvent;
 use App\Http\Controllers\Admin\Auth\AuthController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\Chat\ChatController;
@@ -36,7 +37,13 @@ Route::get("/", fn () => view("welcome"));
 // Route::get('/chat/history/{user1Id}/{user2Id}', [ChatController::class, 'getChatHistory'])->name('chat.history');
 // Route::post('/chat/send-message', [ChatController::class, 'sendMessage'])->name('send-message');
 
-Route::get('test', function () {
-    event(new App\Events\StatusAddWishList('Someone'));
-    return "Event has been sent!";
+Route::get('/pusher-test', function () {
+    $userIds= [1000008,1000007];
+    foreach ($userIds as $userId) {
+        $user = App\Models\User::find($userId);
+        $channelName = "private-user.$user->id";
+        event(new PusherTestEvent($channelName));
+    }
+    return 'Pusher test event sent';
 });
+

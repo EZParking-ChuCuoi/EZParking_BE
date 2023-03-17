@@ -10,8 +10,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class StatusAddWishList
+class PusherTestEvent implements ShouldBroadcast
 {
+
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $username;
@@ -26,7 +27,7 @@ class StatusAddWishList
     public function __construct($username)
     {
         $this->username = $username;
-        $this->message  = "{$username} liked your status";
+        $this->message  = "{$username} add wishlist";
     }
 
     /**
@@ -36,6 +37,10 @@ class StatusAddWishList
      */
     public function broadcastOn()
     {
-        return ['status-wishlist'];
+        return new PrivateChannel($this->username);
+    }
+    public function broadcastAs()
+    {
+        return 'my-event';
     }
 }
