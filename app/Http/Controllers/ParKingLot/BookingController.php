@@ -144,8 +144,8 @@ class BookingController extends Controller
         $validator = Validator::make($request->all(), [
             'slot_ids' => 'required|array',
             'user_id' =>   'required',
-            'licensePlate' => 'required|array|regex:/^[0-9]{2}[A-Z]{1,2}[0-9]{4,5}$/',
-            'error_message_here',
+            'licensePlate' => 'required|array',
+            'licensePlate.*' => 'regex:/^[0-9]{2}[A-Z]{1,2}[-]?[0-9A-Z]{4,5}$/',
             'start_datetime' => 'required|date',
             'end_datetime' => 'required|date|after:start_datetime',
         ]);
@@ -355,7 +355,7 @@ class BookingController extends Controller
             ->orderBy('bookings.bookDate', 'desc')
             ->get();
 
-      
+
 
         return response()->json([
             'message' => 'Booking history summary',
@@ -408,7 +408,7 @@ class BookingController extends Controller
             'user_parking_lots.userId as idSpaceOwner',
             'users.fullName'
         )
-            
+
             ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
             ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
             ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
@@ -419,7 +419,7 @@ class BookingController extends Controller
             ->get();
 
         $totalPayment = $bookings->sum('payment');
-         
+
 
         return response()->json([
             'message' => 'Booking history summary',
