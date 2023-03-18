@@ -711,6 +711,39 @@
                 ]
             }
         },
+        "/api/booking/cancel": {
+            "put": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "cancel booking",
+                "operationId": "cancelBooking",
+                "parameters": [
+                    {
+                        "name": "bookingIds[]",
+                        "in": "query",
+                        "description": "Array of booking IDs",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/parking-lot/{idParking}/blocks": {
             "get": {
                 "tags": [

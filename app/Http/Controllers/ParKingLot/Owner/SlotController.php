@@ -143,10 +143,11 @@ class SlotController extends Controller
      **/
     public function updateSlot(Request $request, $slotId)
     {
+         
+        $block = ParkingSlot::findOrFail($slotId)->block;
         $validator = Validator::make($request->all(), [
-            'slotName' => 'required|string|unique:parking_slots',
+            'slotName' => ['nullable','string',  new UniqueSlotNameInBlock($block)],
         ]);
-
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
@@ -154,9 +155,9 @@ class SlotController extends Controller
         if (!$slot) {
             return response()->json(['error' => 'Slot not found'], 404);
         }
-
-
-        $slot->slotName = $request->slotName;
+        if ($request->has('slotName')) {
+            $slot->slotName = $request->slotName;
+        }
         $slot->save();
 
         return response()->json($slot);

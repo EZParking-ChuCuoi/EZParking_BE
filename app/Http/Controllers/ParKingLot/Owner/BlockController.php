@@ -164,15 +164,23 @@ class BlockController extends Controller
     {
         $block = Block::findOrFail($id);
         $validatedData = $request->validate([
-            "nameBlock" => 'required|string|max:255',
-            "carType" => 'required|in:4-16SLOT,16-34SLOT',
-            "desc" => 'required|string',
-            "price" => 'required|digits_between:1,99999999999999',
+            "nameBlock" => 'nullable|string|max:255',
+            "carType" => 'nullable|in:4-16SLOT,16-34SLOT',
+            "desc" => 'nullable|string',
+            "price" => 'nullable|digits_between:1,99999999999999',
         ]);
-        $block->nameBlock = $validatedData["nameBlock"];
-        $block->desc = $validatedData["desc"];
-        $block->carType = $validatedData["carType"];
-        $block->price = $validatedData["price"];
+        if (isset($validatedData["nameBlock"])) {
+            $block->nameBlock = $validatedData["nameBlock"];
+        }
+        if (isset($validatedData["desc"])) {
+            $block->desc = $validatedData["desc"];
+        }
+        if (isset($validatedData["carType"])) {
+            $block->carType = $validatedData["carType"];
+        }
+        if (isset($validatedData["price"])) {
+            $block->price = $validatedData["price"];
+        }
         $block->save();
         return response()->json([
             'message' => 'Block updated successfully',

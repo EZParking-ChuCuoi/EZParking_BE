@@ -10,6 +10,7 @@ use App\Models\ParkingLot;
 use App\Models\ParkingSlot;
 use App\Notifications\BookingNotification;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -229,10 +230,10 @@ class BookingController extends Controller
             $output["idBookings"] = $bookingIds;
             $output["idSpaceOwner"] = $idSpaceOwner->id;
 
-            $userNotify =[$userId,$idSpaceOwner->id];
-            for ($i=0; $i < sizeof($userNotify) ; $i++) { 
-               
-                event(new BookingEvent($output,$userNotify[$i]));
+            $userNotify = [$userId, $idSpaceOwner->id];
+            for ($i = 0; $i < sizeof($userNotify); $i++) {
+
+                event(new BookingEvent($output, $userNotify[$i]));
             }
             return response()->json([
                 'success' => true,
@@ -468,5 +469,60 @@ class BookingController extends Controller
         return response()->json([
             'message' => 'Update success!',
         ], 200);
+    }
+
+    /**
+     * @OA\Put(
+     ** path="/api/booking/cancel", tags={"Booking"}, summary="cancel booking",
+     * operationId="cancelBooking",
+     *   @OA\Parameter(
+     *         name="bookingIds[]",
+     *         in="query",
+     *         required=true,
+     *         description="Array of booking IDs",
+     *         @OA\Schema(type="array", @OA\Items(type="integer"))
+     *     ),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
+    public function cancelBooking(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'bookingIds' => 'required|array',
+            'bookingIds.*' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $bookingIds = $request->input('bookingIds');
+        DB::beginTransaction();
+
+        try {
+            foreach ($bookingIds as $bookingId) {
+                $booking = Booking::find($bookingId);
+
+                if (!$booking) {
+                    throw new Exception("Booking with ID $bookingId not found");
+                }
+
+                if ($booking->bookDate <= Carbon::now()->toDateString()) {
+                    throw new Exception("Cannot cancel booking with ID $bookingId as it has already started");
+                }
+
+                $booking->returnDate = Carbon::now()->toDateString();
+                $booking->save();
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Bookings cancelled successfully']);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }

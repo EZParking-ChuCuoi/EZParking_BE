@@ -80,6 +80,7 @@ Route::controller(BookingController::class)->prefix("/booking/")->group(function
     Route::get("show", "getDetailQRcode");
     Route::patch("update", "completeBooking");
     Route::get("check-date","checkReturnDAte");
+    Route::put("cancel","cancelBooking");
 });
 
 // Space owner
@@ -101,9 +102,9 @@ Route::controller(BlockController::class)->prefix("/parking-lot/")->group(functi
 });
 Route::controller(SlotController::class)->prefix("/parking-lot/")->group(function () {
     Route::get("block/{blockId}/slots", "getAllSlot");
+    Route::put("block/slots/update/{slotId}", "updateSlot");
     Route::get("block/slots/{slotId}", "getDetailSlot");
     Route::post("block/slots/create", "createSlot");
-    Route::put("block/slots/update/{slotId}", "updateSlot");
     Route::post("block/slots/delete", "deleteSlots");
 
    

@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Services\Implements\ScheduleService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -19,6 +20,7 @@ class Kernel extends ConsoleKernel
     // protected function schedule(Schedule $schedule)
     // {
     //     $schedule->call(function () {
+    //         Log::debug("message");
     //        $schedule = new ScheduleService();
     //        $schedule->setScheduleExpiredTime();
     //     })->everyMinute();
