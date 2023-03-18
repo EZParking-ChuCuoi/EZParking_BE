@@ -12,13 +12,14 @@ use App\Models\User;
 use App\Models\UserParkingLot;
 use App\Services\Interfaces\IParKingLotService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Http\Response;
 class ParKingLotController extends Controller
 {
     public function __construct(private readonly IParKingLotService $parKingLot)
@@ -37,26 +38,32 @@ class ParKingLotController extends Controller
     {
         return $this->parKingLot->getAllParkingLot(true);
     }
-    // /**
-    //  * @OA\Get(
-    //  ** path="/api/parking-lot/{id}/info/price", tags={"Parking Lot"}, 
-    //  *  summary="detail price of parking lot with id", operationId="getPriceOfParkingLot",
-    //  *   @OA\Parameter(
-    //  *         name="id",
-    //  *         in="path",
-    //  *         required=true,
-    //  *          example=1000000,
-    //  *         description="ID of the parking lot to retrieve",
-    //  *         @OA\Schema(type="integer")
-    //  *     ),
-    //  *@OA\Response( response=403, description="Forbidden"),
-    //  * security={ {"passport":{}}}
-    //  *)
-    //  **/
-    // public function getPriceOfParkingLot($id)
-    // {
+    /**
+     * @OA\Get(
+     ** path="/api/parking-lot/{idParking}", tags={"Parking Lot"}, 
+     *  summary="detail parking lot with id", operationId="showParkingLot",
+     *   @OA\Parameter(
+     *         name="idParking",
+     *         in="path",
+     *         required=true,
+     *          example=1000000,
+     *         description="ID of the parking lot to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
+ 
+    public function showParkingLot($id){
+        try {
+            $parking_lot = ParkingLot::findOrFail($id);
+            return response()->json($parking_lot, Response::HTTP_OK);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Parking lot not found'], Response::HTTP_NOT_FOUND);
+        }
+    }
 
-    // }
     /**
      * @OA\Get(
      ** path="/api/parking-lot/{id}/info/{userId}", tags={"Parking Lot"}, 

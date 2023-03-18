@@ -41,7 +41,7 @@ Route::get("/", fn () => view("welcome"));
 
 Route::get('/pusher-test', function () {
     $ownerId= 1000000;
-    event(new WishlistEvent('cong',$ownerId));
+    // event(new WishlistEvent('cong',$ownerId));
 
   
     return 'Notification sent!';

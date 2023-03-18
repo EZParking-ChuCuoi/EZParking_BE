@@ -59,7 +59,7 @@ Route::controller(UserController::class)->prefix("/user/")->group(function () {
 
 Route::controller(ParKingLotController::class)->prefix("/parking-lot/")->group(function () {
     Route::get("", "index");
-    
+    Route::get("{idParking}","showParkingLot");
     Route::get("{id}/info/comment", "showCommentOfParking");
     Route::get("location", "showParkingLotNearLocation");
     Route::post("create", "createParkingLot");

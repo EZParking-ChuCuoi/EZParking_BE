@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ParKingLot;
 
+use App\Events\WishlistEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\ParkingLot;
@@ -112,8 +113,10 @@ class WishlistController extends Controller
             ], 200);
         }
 
-        $ownerId = 
-
+        $ownerId = ParkingLot::find($parkingLotId)->user->id;
+        $nameParkingLot = ParkingLot::find($parkingLotId)->nameParkingLot;
+        $userName= User::find($userId)->fullName;
+        event(new WishlistEvent($userName,1000008,$nameParkingLot));
         $wishlist = Wishlist::create([
             'userId' => $userId,
             'parkingLotId' => $parkingLotId

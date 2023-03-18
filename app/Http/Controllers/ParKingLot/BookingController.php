@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ParKingLot;
 
+use App\Events\BookingEvent;
 use App\Events\NotificationBooking;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
@@ -154,12 +155,11 @@ class BookingController extends Controller
         }
         $dateData = $validator->validated();
         $slotIds = $dateData['slot_ids'];
-        $userIds = ParkingSlot::find($slotIds[0])->block->parkingLot->userParkingLot->pluck('userId')[0];
+        $idSpaceOwner = ParkingSlot::find($slotIds[0])->block->parkingLot->user;
         $userId = $dateData['user_id'];
         $licensePlate = $dateData['licensePlate'];
         $startDatetime = $dateData['start_datetime'];
         $endDatetime = $dateData['end_datetime'];
-
 
         $bookedSlots = Booking::where(function ($query) use ($startDatetime, $endDatetime) {
             $query->where('bookDate', '<', $endDatetime)
@@ -227,12 +227,13 @@ class BookingController extends Controller
             }
             $output["total"] = $total;
             $output["idBookings"] = $bookingIds;
-            $output["idSpaceOwner"] = $userIds;
-            // event(new NotificationBooking([
-            //     'success' => true,
-            //     'message' => 'Booking created successfully',
-            //     'data' => $output,
-            // ]));
+            $output["idSpaceOwner"] = $idSpaceOwner->id;
+
+            $userNotify =[$userId,$idSpaceOwner->id];
+            for ($i=0; $i < sizeof($userNotify) ; $i++) { 
+               
+                event(new BookingEvent($output,$userNotify[$i]));
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'Booking created successfully',
