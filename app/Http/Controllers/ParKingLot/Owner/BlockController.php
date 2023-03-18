@@ -67,9 +67,9 @@ class BlockController extends Controller
                 new UniqueBlockNameInParkingLot($parkingLot)
             ],
             "carType" => 'required|in:4-16SLOT,16-34SLOT',
-            "desc" => 'required|string',
+            "desc" => 'string',
             "price" => 'required|digits_between:1,99999999999999',
-            "numberOfSlot" => 'required|integer|min:1|max:100',
+            "numberOfSlot" => 'required|integer|min:1|max:50',
         ]);
         if ($validator->fails()) {
             return $validator->errors()->toArray();

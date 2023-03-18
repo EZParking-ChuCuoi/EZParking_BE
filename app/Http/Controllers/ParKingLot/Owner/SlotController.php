@@ -85,6 +85,10 @@ class SlotController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
+        if ($block->slots()->count() >= 50) {
+            return response()->json(['error' => 'Cannot create slot. Maximum number of slots exceeded.'], 400);
+        }
+
         $slot = new ParkingSlot();
         $slot->slotName = $request->slotName;
         $slot->blockId = $request->blockId;

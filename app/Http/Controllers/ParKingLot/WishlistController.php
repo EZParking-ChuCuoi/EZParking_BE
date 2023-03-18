@@ -112,10 +112,13 @@ class WishlistController extends Controller
             ], 200);
         }
 
+        $ownerId = 
+
         $wishlist = Wishlist::create([
             'userId' => $userId,
             'parkingLotId' => $parkingLotId
         ]);
+
 
         return response()->json([
             'message' => 'Wishlist created successfully',
