@@ -4,9 +4,11 @@ namespace App\Http\Controllers\ParKingLot\Owner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Block;
+use App\Models\Booking;
 use App\Models\ParkingLot;
 use App\Models\ParkingSlot;
 use App\Rules\UniqueBlockNameInParkingLot;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -206,6 +208,17 @@ class BlockController extends Controller
     public function deleteBlock($id)
     {
         $block = Block::findOrFail($id);
+
+        // Check if there are any active bookings for the block's slots
+        $activeBookings = Booking::whereIn('slotId', $block->slots()->pluck('id')->toArray())
+            ->where('bookDate', '<=', Carbon::now())
+            ->where('returnDate', '>=', Carbon::now())
+            ->count();
+            
+        if ($activeBookings > 0) {
+            return response()->json(['message' => 'Unable to delete block as it is currently in use.'], 409);
+        }
+    
         $block->slots()->delete();
         $block->delete();
         return response()->json(['message' => 'Block and all slots deleted successfully']);

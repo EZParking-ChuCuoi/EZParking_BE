@@ -5,11 +5,13 @@ namespace App\Http\Controllers\ParKingLot;
 use App\Http\Controllers\Clound\CloudinaryStorage;
 use App\Http\Controllers\Controller;
 use App\Models\Block;
+use App\Models\Booking;
 use App\Models\ParkingLot;
 use App\Models\ParkingSlot;
 use App\Models\User;
 use App\Models\UserParkingLot;
 use App\Services\Interfaces\IParKingLotService;
+use Carbon\Carbon;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -483,6 +485,17 @@ class ParKingLotController extends Controller
         $parkingLot = ParkingLot::find($idParkingLot);
         if (!$parkingLot) {
             return response()->json(['message' => 'Parking lot not found.'], 404);
+        }
+        $activeBookings = Booking::whereIn('slotId', function($query) use($idParkingLot) {
+            $query->select('id')->from('parking_slots')->whereIn('blockId', function($query) use($idParkingLot) {
+                $query->select('id')->from('blocks')->where('parkingLotId', $idParkingLot);
+            });
+        })
+        ->where('bookDate', '<=', Carbon::now())
+        ->where('returnDate', '>=', Carbon::now())
+        ->count();
+        if ($activeBookings > 0) {
+            return response()->json(['message' => 'Unable to delete parking lot as it is currently in use.'], 409);
         }
 
         $parkingLot->delete();

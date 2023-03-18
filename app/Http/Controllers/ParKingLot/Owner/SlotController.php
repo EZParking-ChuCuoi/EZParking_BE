@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ParKingLot\Owner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Block;
+use App\Models\Booking;
 use App\Models\ParkingSlot;
 use App\Rules\UniqueSlotNameInBlock;
 use Carbon\Carbon;
@@ -167,26 +168,43 @@ class SlotController extends Controller
             'ids' => 'required|array',
             'ids.*' => 'integer',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-
+    
         $ids = $request->input('ids');
         $deletedSlots = [];
-
+        $errSlots=[];
         foreach ($ids as $id) {
             $slot = ParkingSlot::find($id);
             if (!$slot) {
-                return response()->json(['error' => 'Slot not found for ID: ' . $id], 404);
+                $errSlots[] = 'Slot not found for ID: ' . $id;
+                continue;
             }
-            $deletedSlots[] = $slot->id;
+    
+            $activeBookings = Booking::where('slotId', $id)
+                ->where('bookDate', '<=', Carbon::now())
+                ->where('returnDate', '>=', Carbon::now())
+                ->count();
+    
+            if ($activeBookings > 0) {
+                $errSlots[] = 'Unable to delete the requested slot "'.$slot->slotName.'" because it is currently in use';
+                continue;
+            }
+    
+            $deletedSlots[] = $slot->slotName;
             $slot->delete();
         }
-
-        if (count($deletedSlots) == 0) {
+    
+        if (count($deletedSlots) == 0 && count($errSlots) > 0) {
+            return response()->json(['error' => 'Unable to delete the requested slots because of the following errors:', 'err_slots' => $errSlots], 409);
+        } elseif (count($deletedSlots) == 0 && count($errSlots) == 0) {
             return response()->json(['error' => 'No slots were deleted'], 404);
+        } elseif (count($deletedSlots) > 0 && count($errSlots) > 0) {
+            return response()->json(['message' => 'Some slots were deleted successfully, but others could not be deleted because of the following errors:', 'deleted_slots' => $deletedSlots, 'err_slots' => $errSlots], 409);
         }
+    
 
         return response()->json(['message' => 'Slots deleted successfully', 'deleted_slots' => $deletedSlots]);
     }
