@@ -1354,6 +1354,13 @@
                                             "type": "file"
                                         }
                                     },
+                                    "imageUpdates[]": {
+                                        "description": "Array of images",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
                                     "openTime": {
                                         "type": "string",
                                         "format": "time",

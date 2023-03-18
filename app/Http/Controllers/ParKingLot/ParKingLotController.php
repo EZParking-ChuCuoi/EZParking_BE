@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\UserParkingLot;
 use App\Services\Interfaces\IParKingLotService;
 use Carbon\Carbon;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\Request;
@@ -364,6 +365,14 @@ class ParKingLotController extends Controller
      *                     ),
      *                     description="Array of images"
      *                 ),
+     *                     @OA\Property(
+     *                     property="imageUpdates[]",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="string"
+     *                     ),
+     *                     description="Array of images"
+     *                 ),
      *                 @OA\Property(
      *                     property="openTime",
      *                     type="string",
@@ -421,59 +430,90 @@ class ParKingLotController extends Controller
      * )
      */
 
-    public function updateParkingLot(Request $request, $idParkingLot)
-    {
-        $validator = Validator::make($request->all(), [
-            'images' => 'required|array|min:1',
-            'images.*' => 'required|image',
-            'openTime' => [
-                'required',
-                'date_format:H:i',
-                'before:endTime',
-            ],
-            'endTime' => [
-                'required',
-                'date_format:H:i',
-                'after:openTime',
-            ],
-            'nameParkingLot' => 'required|string|max:255',
-            'address_latitude' => 'required',
-            'address_longitude' => 'required',
-            'address' => 'required|string|max:255',
-            'desc' => 'required',
-        ]);
+        public function updateParkingLot(Request $request, $idParkingLot)
+        {
+            $validator = Validator::make($request->all(), [
+                'images' => 'array|min:1',
+                'imageUpdates' => 'array|nullable',
+                'images.*' => 'image|nullable',
+                'openTime' => [
+                    'sometimes',
+                    'nullable',
+                    'date_format:H:i',
+                    'before:endTime',
+                ],
+                'endTime' => [
+                    'sometimes',
+                    'nullable',
+                    'date_format:H:i',
+                    'after:openTime',
+                ],
+                'nameParkingLot' => 'sometimes|nullable|string|max:255',
+                'address_latitude' => 'sometimes|nullable',
+                'address_longitude' => 'sometimes',
+                'address' => 'sometimes|nullable|string|max:255',
+                'desc' => 'sometimes|nullable',
+            ]);
 
-        if ($validator->fails()) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'error' => $validator->errors()
+                ], 422);
+            }
+
+            $data = $validator->validated();
+
+            $parkingLot = ParkingLot::findOrFail($idParkingLot);
+
+            if (isset($data['nameParkingLot'])) {
+                $parkingLot->nameParkingLot = $data['nameParkingLot'];
+            }
+
+            if (isset($data['address'])) {
+                $parkingLot->address = $data['address'];
+            }
+
+            if (isset($data['address_latitude'])) {
+                $parkingLot->address_latitude = $data['address_latitude'];
+            }
+
+            if (isset($data['address_longitude'])) {
+                $parkingLot->address_longitude = $data['address_longitude'];
+            }
+
+            if (isset($data['desc'])) {
+                $parkingLot->desc = $data['desc'];
+            }
+
+            if (isset($data['openTime'])) {
+                $parkingLot->openTime = $data['openTime'];
+            }
+
+            if (isset($data['endTime'])) {
+                $parkingLot->endTime = $data['endTime'];
+            }
+            $imageUpdates = [];
+            
+            if (isset($data['imageUpdates'])&& !in_array(null, $data['imageUpdates'], true)) {
+                $imageUpdates = $data['imageUpdates'];
+            } else {
+                $imageUpdates = json_decode($parkingLot->images);
+            }
+            if (isset($data['images']) && is_array($request->file('images'))) {
+                foreach ($request->file('images') as $image) {
+                    $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(), 'parkingLot/images');
+                    $imageUpdates[] = $linkImage;
+                }
+            }
+            $parkingLot->images = json_encode($imageUpdates);
+         
+            $parkingLot->save();
+
             return response()->json([
-                'error' => $validator->errors()
-            ], 422);
+                'message' => 'Parking lot updated successfully!',
+                'parking_lot' => $parkingLot
+            ], 200);
         }
-
-        $data = $validator->validated();
-
-        $parkingLot = ParkingLot::findOrFail($idParkingLot);
-        $parkingLot->nameParkingLot = $data['nameParkingLot'];
-        $parkingLot->address = $data['address'];
-        $parkingLot->address_latitude = $data['address_latitude'];
-        $parkingLot->address_longitude = $data['address_longitude'];
-        $parkingLot->desc = $data['desc'];
-        $parkingLot->openTime = $data['openTime'];
-        $parkingLot->endTime = $data['endTime'];
-        $parkingLot->save();
-
-        $imageLinks = [];
-        foreach ($request->file('images') as $image) {
-            $linkImage = CloudinaryStorage::upload($image->getRealPath(), $image->getClientOriginalName(), 'parkingLot/images');
-            $imageLinks[] = $linkImage;
-        }
-        $parkingLot->images = json_encode($imageLinks);
-        $parkingLot->save();
-
-        return response()->json([
-            'message' => 'Parking lot updated successfully!',
-            'parking_lot' => $parkingLot
-        ], 200);
-    }
 
     /**
      * @OA\Delete(
