@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use Carbon\Carbon;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -50,11 +49,9 @@ class WishlistEvent implements ShouldBroadcastNow
 
     public function broadcastWith()
     {
-        $now = Carbon::now();
-        $now->modify('+2 minutes');
+        
         return [
             'data' => $this->message,
-            'time' =>'2023-03-18T13:34:34.672Z',
         ];
     }
 }

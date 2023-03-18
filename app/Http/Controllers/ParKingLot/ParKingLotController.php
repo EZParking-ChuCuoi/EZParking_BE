@@ -170,7 +170,6 @@ class ParKingLotController extends Controller
             ->leftJoin('blocks', 'parking_lots.id', '=', 'blocks.parkingLotId')
             ->select(
                 "parking_lots.*",
-                DB::raw("FLOOR(AVG(blocks.price)) as avg_price"),
                 DB::raw("6371 * acos(cos(radians(" . $lat . "))
             * cos(radians(parking_lots.address_latitude))
             * cos(radians(parking_lots.address_longitude) - radians(" . $lon . "))

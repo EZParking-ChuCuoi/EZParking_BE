@@ -36,12 +36,12 @@ class BookingEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('wishlists' . '.' . $this->userInfo);
+        return new Channel('booking' . '.' . $this->userInfo);
     }
 
     public function broadcastAs()
     {
-        return 'wishlist';
+        return 'booking';
     }
 
     public function broadcastWith()

@@ -116,7 +116,7 @@ class WishlistController extends Controller
         $ownerId = ParkingLot::find($parkingLotId)->user->id;
         $nameParkingLot = ParkingLot::find($parkingLotId)->nameParkingLot;
         $userName= User::find($userId)->fullName;
-        event(new WishlistEvent($userName,1000008,$nameParkingLot));
+        event(new WishlistEvent($userName,$ownerId,$nameParkingLot));
         $wishlist = Wishlist::create([
             'userId' => $userId,
             'parkingLotId' => $parkingLotId
