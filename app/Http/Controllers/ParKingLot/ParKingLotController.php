@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
+
 class ParKingLotController extends Controller
 {
     public function __construct(private readonly IParKingLotService $parKingLot)
@@ -54,11 +55,15 @@ class ParKingLotController extends Controller
      * security={ {"passport":{}}}
      *)
      **/
- 
-    public function showParkingLot($id){
+
+    public function showParkingLot($id)
+    {
         try {
             $parking_lot = ParkingLot::findOrFail($id);
-            return response()->json($parking_lot, Response::HTTP_OK);
+            $response_data = $parking_lot->toArray(); // convert the model to an array
+            $response_data['images'] = json_decode($parking_lot->images); // add the images attribute to the response array
+
+            return response()->json($response_data, Response::HTTP_OK);
         } catch (ModelNotFoundException $e) {
             return response()->json(['message' => 'Parking lot not found'], Response::HTTP_NOT_FOUND);
         }
@@ -492,14 +497,14 @@ class ParKingLotController extends Controller
         if (!$parkingLot) {
             return response()->json(['message' => 'Parking lot not found.'], 404);
         }
-        $activeBookings = Booking::whereIn('slotId', function($query) use($idParkingLot) {
-            $query->select('id')->from('parking_slots')->whereIn('blockId', function($query) use($idParkingLot) {
+        $activeBookings = Booking::whereIn('slotId', function ($query) use ($idParkingLot) {
+            $query->select('id')->from('parking_slots')->whereIn('blockId', function ($query) use ($idParkingLot) {
                 $query->select('id')->from('blocks')->where('parkingLotId', $idParkingLot);
             });
         })
-        ->where('bookDate', '<=', Carbon::now())
-        ->where('returnDate', '>=', Carbon::now())
-        ->count();
+            ->where('bookDate', '<=', Carbon::now())
+            ->where('returnDate', '>=', Carbon::now())
+            ->count();
         if ($activeBookings > 0) {
             return response()->json(['message' => 'Unable to delete parking lot as it is currently in use.'], 409);
         }
