@@ -294,13 +294,27 @@ class BookingController extends Controller
             $parkingLotName = $bookingsByDate->isNotEmpty() ? $bookingsByDate->first()->parking_lot_name : null;
             $bookingIds = $bookingsByDate->pluck('id');
             $bookDate = $bookingsByDate[0]['bookDate'];
+
             $returnDate = $bookingsByDate[0]['returnDate'];
+            $now = Carbon::now();
+            $statusBooking = 'Completed';
+            if ($bookDate >= $now->toDateTimeString()) {
+                $statusBooking ="Pending";
+            }
+            if ($bookDate >= $returnDate) {
+                $statusBooking = 'Cancelled';
+            }
+            if( $bookDate <= $now && $now < $returnDate){
+                $statusBooking="parked";
+
+            }
             $address = $bookingsByDate[0]['address'];
             $idSpaceOwner = $bookingsByDate[0]['userId'];
             $created_at = $bookingsByDate[0]['created_at'];
             $response[] = [
                 'bookDate' => $bookDate,
                 'returnDate' => $returnDate,
+                'statusBooking' => $statusBooking,
                 'address' => $address,
                 'total_payment' => $totalPayment,
                 'parking_lot_name' => $parkingLotName,
