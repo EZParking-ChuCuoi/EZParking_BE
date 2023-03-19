@@ -10,14 +10,15 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class WishlistEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $userName;
+    public $user;
     public $message;
-
+    public $parkingLotName;
     public $ownerId;
 
     /**
@@ -25,10 +26,10 @@ class WishlistEvent implements ShouldBroadcastNow
      *
      * @return void
      */
-    public function __construct($userName, $ownerId,$nameParkingLot)
+    public function __construct($user, $ownerId,$nameParkingLot)
     {
-        $this->userName = $userName;
-        $this->message = "{$userName} add wishlist parkingLot {$nameParkingLot}";
+        $this->user = $user;
+        $this->message = "{$user->fullName} add wishlist parkingLot {$nameParkingLot}";
         $this->ownerId = $ownerId;
     }
 
@@ -49,9 +50,30 @@ class WishlistEvent implements ShouldBroadcastNow
 
     public function broadcastWith()
     {
-        
+         
+          
+        $userId = $this->ownerId;
+        $message = $this->message;
+        $data = ['parking_lot_name' => $this->parkingLotName];
+
+        DB::table('notifications')->insert([
+            'userId' => $userId,
+            'title' => 'New Wishlist',
+            'type' => 'wishlist',
+            'image' => $this->user->avatar,
+            'message' => $message,
+            'data' => json_encode($data),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
         return [
-            'data' => $this->message,
+            'userId' => $userId,
+            'title' => 'New Wishlist',
+            'type' => 'wishlist',
+            'message' => $message,
+            'avatar'=>$this->user->avatar,  
         ];
     }
+   
+    
 }

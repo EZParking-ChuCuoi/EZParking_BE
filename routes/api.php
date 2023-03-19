@@ -7,6 +7,7 @@ use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\DashBoard\ManagerController;
 use App\Http\Controllers\ParKingLot\BlockParkingCarController;
 use App\Http\Controllers\ParKingLot\BookingController;
+use App\Http\Controllers\ParKingLot\CommentController;
 use App\Http\Controllers\ParKingLot\NotificationController;
 use App\Http\Controllers\ParKingLot\Owner\BlockController;
 use App\Http\Controllers\ParKingLot\Owner\SlotController;
@@ -129,8 +130,9 @@ Route::controller(WishlistController::class)->prefix("/user/")->group(function (
 });
 
 // Notification
-Route::controller(NotificationController::class)->prefix("/users/")->group(function () {
-    Route::get("{userId}/notifications", "index");
-
-  
+Route::controller(NotificationController::class)->prefix("/notifications/")->group(function () {
+    Route::get("{userId}", "index");
+});
+Route::controller(CommentController::class)->prefix("/comments/")->group(function () {
+    Route::post("", "store");
 });

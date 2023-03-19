@@ -11,6 +11,7 @@ use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WishlistController extends Controller
 {
@@ -55,11 +56,10 @@ class WishlistController extends Controller
                 ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
                 ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
                 ->whereIn('parking_lots.id', $parkingLotIds)
-                ->where('bookings.userId', $userId)
-                ->groupBy('parking_lots.id', 'bookings.bookDate','bookings.userId')
+                ->groupBy('parking_lots.id', 'bookings.bookDate', 'bookings.userId')
                 ->get();
-                 
-                $bookingsCountByParkingLot = $bookingsByDate->groupBy('parking_lot_id')
+
+            $bookingsCountByParkingLot = $bookingsByDate->groupBy('parking_lot_id')
                 ->map(function ($item) {
                     $output = [           // Return the wishlist data
                         'parking_lot_id' => $item[0]->parking_lot_id,
@@ -71,7 +71,6 @@ class WishlistController extends Controller
                 })
                 ->values()
                 ->toArray();
-                return $bookingsCountByParkingLot;
             // Return the wishlist data
             return response()->json($bookingsCountByParkingLot, 200);
         } catch (\Throwable $th) {
@@ -115,8 +114,13 @@ class WishlistController extends Controller
 
         $ownerId = ParkingLot::find($parkingLotId)->user->id;
         $nameParkingLot = ParkingLot::find($parkingLotId)->nameParkingLot;
-        $userName= User::find($userId)->fullName;
-        event(new WishlistEvent($userName,$ownerId,$nameParkingLot));
+        $user = User::find($userId, ['id', 'fullName', 'avatar']);
+        try {
+
+            event(new WishlistEvent($user, $ownerId, $nameParkingLot));
+        } catch (\Throwable $th) {
+            Log::error('Error sending wishlist event: ' . $th->getMessage());
+        }
         $wishlist = Wishlist::create([
             'userId' => $userId,
             'parkingLotId' => $parkingLotId

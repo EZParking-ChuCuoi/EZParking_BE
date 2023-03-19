@@ -8,11 +8,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\ParkingLot;
 use App\Models\ParkingSlot;
+use App\Models\User;
 use App\Notifications\BookingNotification;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
@@ -156,7 +158,7 @@ class BookingController extends Controller
         }
         $dateData = $validator->validated();
         $slotIds = $dateData['slot_ids'];
-        $idSpaceOwner = ParkingSlot::find($slotIds[0])->block->parkingLot->user;
+        $idSpaceOwner = ParkingSlot::find($slotIds[0])->block->parkingLot->user ?: null;
         $userId = $dateData['user_id'];
         $licensePlate = $dateData['licensePlate'];
         $startDatetime = $dateData['start_datetime'];
@@ -228,13 +230,26 @@ class BookingController extends Controller
             }
             $output["total"] = $total;
             $output["idBookings"] = $bookingIds;
-            $output["idSpaceOwner"] = $idSpaceOwner->id;
 
-            $userNotify = [$userId, $idSpaceOwner->id];
-            for ($i = 0; $i < sizeof($userNotify); $i++) {
 
-                event(new BookingEvent($output, $userNotify[$i]));
+                $user = User::find($userId);
+            $owner = User::find($idSpaceOwner->id);
+            $tempImage = $user->avatar;
+            $user->avatar = $owner->avatar;
+            $owner->avatar = $tempImage;
+            $tempName = $user->fullName;
+            $user->fullName = $owner->fullName;
+            $owner->fullName = $tempName;
+            $userNotify = [$user, $owner];
+
+            try {
+                foreach ($userNotify as $user) {
+                    event(new BookingEvent($output, $user));
+                }
+            } catch (\Throwable $th) {
+                Log::error('Error sending BookingEvent: ' . $th->getMessage());
             }
+            $output["idSpaceOwner"] = $idSpaceOwner->id;
             return response()->json([
                 'success' => true,
                 'message' => 'Booking created successfully',
@@ -299,14 +314,13 @@ class BookingController extends Controller
             $now = Carbon::now();
             $statusBooking = 'Completed';
             if ($bookDate >= $now->toDateTimeString()) {
-                $statusBooking ="Pending";
+                $statusBooking = "Pending";
             }
             if ($bookDate >= $returnDate) {
                 $statusBooking = 'Cancelled';
             }
-            if( $bookDate <= $now && $now < $returnDate){
-                $statusBooking="parked";
-
+            if ($bookDate <= $now && $now < $returnDate) {
+                $statusBooking = "parked";
             }
             $address = $bookingsByDate[0]['address'];
             $idSpaceOwner = $bookingsByDate[0]['userId'];

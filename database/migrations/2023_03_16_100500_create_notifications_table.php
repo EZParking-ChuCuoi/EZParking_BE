@@ -16,10 +16,14 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->increments('id')->from(1000000);
             $table->unsignedInteger('userId');
+            $table->string('title')->nullable();
+            $table->string('type')->nullable();
             $table->text('message');
+            $table->string('image');
+            
+            $table->json('data')->nullable();
             $table->boolean('read')->default(false);
             $table->timestamps();
-
             $table->foreign('userId')
                 ->references('id')
                 ->on('users')

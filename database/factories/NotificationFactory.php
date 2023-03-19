@@ -22,7 +22,16 @@ class NotificationFactory extends Factory
 
         return [
             'userId' => $user->id,
+            'title'=>$this->faker->title(),
+            'data' =>json_encode([
+                'reservation_id' => $this->faker->randomNumber(),
+                'table_number' => $this->faker->randomNumber(),
+                'guest_name' => $this->faker->name,
+                'guest_email' => $this->faker->email,
+            ]) ,
             'message' => $this->faker->sentence(),
+            'type' => $this->faker->name,
+            'image'=>'https://res.cloudinary.com/di9pzz9af/image/upload/v1677472834/account/profile/icon-256x256_o1oxjl.pn',
             'read' => false,
         ];
     }
