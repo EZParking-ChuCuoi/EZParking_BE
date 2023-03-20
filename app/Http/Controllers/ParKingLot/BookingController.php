@@ -430,6 +430,7 @@ class BookingController extends Controller
         $bookings = Booking::select(
             'bookings.id as booking_id',
             'bookings.bookDate',
+            'bookings.returnDate',
             'bookings.licensePlate',
             'bookings.payment',
             'parking_slots.slotName',
