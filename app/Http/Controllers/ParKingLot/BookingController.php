@@ -525,7 +525,7 @@ class BookingController extends Controller
         $output= [
            'totalPrice'=> $totalPayment,
            'bookDate'=> $updatedBookings[0]['bookDate'],
-           'returnDate'=> $updatedBookings[0]['returnDate'],
+           'returnDate'=> $now->toDateTimeString(),
            'userName'=> $userInfo->fullName,
           
         ];
