@@ -44,4 +44,71 @@ class CommentController extends Controller
 
         return response()->json($comment, 201);
     }
+    /**
+     * @OA\Patch(
+     *     path="/api/comments/{id}/update",
+     *     summary="Update a comment.",
+     *          tags={"Comments"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the comment to update.",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="content",
+     *         in="query",
+     *         description="New content of the comment.",
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="ranting",
+     *         in="query",
+     *         description="New ranting of the comment (1-5).",
+     *         @OA\Schema(
+     *             type="integer",
+     *             minimum=1,
+     *             maximum=5
+     *         )
+     *     ),
+
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
+    public function editComment(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'content' => 'string',
+            'ranting' => 'integer|min:1|max:5',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $comment = Comment::find($id);
+
+        if (!$comment) {
+            return response()->json(['message' => 'Comment not found'], 404);
+        }
+
+        if ($request->has('content')) {
+            $comment->content = $request->content;
+        }
+
+        if ($request->has('ranting')) {
+            $comment->ranting = $request->ranting;
+        }
+
+        $comment->save();
+
+        return response()->json($comment, 200);
+    }
 }

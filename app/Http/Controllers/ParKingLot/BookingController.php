@@ -519,18 +519,21 @@ class BookingController extends Controller
         foreach ($updatedBookings as $booking) {
             $totalPayment += $booking['payment'];
         }
+        $userInfo= User::find($updatedBookings[0]['userId']);
         $output= [
            'totalPrice'=> $totalPayment,
-           'bookDate'=> $updatedBookings[0],
-           'totalPrice'=> $totalPayment,
-           'totalPrice'=> $totalPayment,
+           'bookDate'=> $updatedBookings[0]['bookDate'],
+           'returnDate'=> $updatedBookings[0]['returnDate'],
+           'bookDate'=> $updatedBookings[0]['bookDate'],
+           'userName'=> $userInfo->fullName,
+          
         ];
        
         
         
         return response()->json([
             'message' => 'Update success!',
-            'updatedBookings' => $updatedBookings,
+            'updatedBookings' => $output,
         ], 200);
     }
 

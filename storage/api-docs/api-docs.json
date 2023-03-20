@@ -801,6 +801,55 @@
                 ]
             }
         },
+        "/api/comments/{id}/update": {
+            "patch": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Update a comment.",
+                "operationId": "3cf5275ea21ad9d6e0344a7482fa9f0a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the comment to update.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "New content of the comment.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ranting",
+                        "in": "query",
+                        "description": "New ranting of the comment (1-5).",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 5,
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/notifications/{userId}": {
             "get": {
                 "tags": [
