@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Notification::factory(800)->create();
 
         //import database comments
-        // \App\Models\Comment::factory(200)->create();
+        \App\Models\Comment::factory(200)->create();
 
 
         // import database block

@@ -232,7 +232,7 @@ class BookingController extends Controller
             $output["idBookings"] = $bookingIds;
 
 
-                $user = User::find($userId);
+            $user = User::find($userId);
             $owner = User::find($idSpaceOwner->id);
             $tempImage = $user->avatar;
             $user->avatar = $owner->avatar;
@@ -478,7 +478,7 @@ class BookingController extends Controller
      **/
     public function completeBooking(Request $request)
     {
-        $validator = validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'bookingIds' => 'required|array',
             'bookingIds.*' => 'required|integer',
         ]);
@@ -488,14 +488,49 @@ class BookingController extends Controller
 
         $dateData = $validator->validated();
         $bookingIds = $dateData['bookingIds'];
-        $now = Carbon::now()->toDateTimeString();
+        $now = Carbon::now();
+        
+        $updatedBookings = [];
         foreach ($bookingIds as &$value) {
             $booking = Booking::findOrFail($value);
+ 
+            if (Carbon::parse($booking->returnDate)->lt($now)) {
+                // The booking has expired
+                return response()->json([
+                    'error' => 'Booking has expired!',
+                ], 400);
+            }
+
+            if (Carbon::parse($booking->bookDate)->gt($now)) {
+                // The booking has not yet started
+                return response()->json([
+                    'error' => 'Booking has not yet started!',
+                ], 400);
+            }
+
+            // Update the booking with the return date
             $booking->returnDate = $now;
             $booking->save();
+
+            // Add the updated booking to the array of updated bookings
+            $updatedBookings[] = $booking;
         }
+        $totalPayment = 0;
+        foreach ($updatedBookings as $booking) {
+            $totalPayment += $booking['payment'];
+        }
+        $output= [
+           'totalPrice'=> $totalPayment,
+           'bookDate'=> $updatedBookings[0],
+           'totalPrice'=> $totalPayment,
+           'totalPrice'=> $totalPayment,
+        ];
+       
+        
+        
         return response()->json([
             'message' => 'Update success!',
+            'updatedBookings' => $updatedBookings,
         ], 200);
     }
 
