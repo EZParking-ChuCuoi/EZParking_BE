@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\ParKingLot;
 
+use App\Events\CommentEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\ParkingLot;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
@@ -34,7 +38,7 @@ class CommentController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-
+        
         $comment = new Comment();
         $comment->userId = $request->userId;
         $comment->parkingId = $request->parkingId;
@@ -42,6 +46,15 @@ class CommentController extends Controller
         $comment->ranting = $request->ranting;
         $comment->save();
 
+        $parkingLotInfo = ParkingLot::findOrFail($comment->parkingId);
+        $user= User::findOrFail($comment->userId);
+        $owner= $parkingLotInfo->user;
+        try {
+
+            event(new CommentEvent($user,$owner,$parkingLotInfo,$comment));
+        } catch (\Throwable $th) {
+            Log::error('Error sending comment event: ' . $th->getMessage());
+        }
         return response()->json($comment, 201);
     }
     /**
@@ -111,4 +124,83 @@ class CommentController extends Controller
 
         return response()->json($comment, 200);
     }
+ /**
+     * @OA\get(
+     *     path="/api/comments/{idUser}/{idParkingLot}",
+     *     summary="get comment with idUser and id parking lot.",
+     *          tags={"Comments"},
+     *     @OA\Parameter(
+     *         name="idUser",
+     *         in="path",
+     *         description="id user.",
+     *         required=true,
+     *         example = 1000000,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="idParkingLot",
+     *         in="query",
+     *         example = 1000000,
+     *         description="id parking lot.",
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *@OA\Response( response=403, description="Forbidden"),
+     * security={ {"passport":{}}}
+     *)
+     **/
+    public function getComment(Request $request,$idUser,$idParkingLot)
+    {
+        // $validator = Validator::make($request->all(),[
+        //     'idUser'=>'required|int',
+        //     'idParkingLot'=>'required|int',
+        // ]);
+
+        // if($validator->fails()){
+        //     return response()->json($validator->errors(),400);
+        // }
+        $idUser = $request->idUser;
+        $idParkingLot = $request->idParkingLot;
+        $commentData= Comment::where('userId',$idUser)
+        ->where("parkingId",$idParkingLot)->get();
+        return response()->json($commentData, 200);
+    }
+
+    /**
+     * Update the user's profile.
+     *
+     * @OA\Delete(
+     *     path="/api/comments/{id}/delete",
+     *     summary="Delete Comment",
+     *     tags={"Comments"},
+     *     operationId="deleteComment",
+     *     @OA\Parameter(
+     *         name="id",
+     *         description="Id of comment",
+     *         in="path",
+     *         example=1000000,
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64",
+     *         )
+     *     ),@OA\Response(
+     *         response=200,
+     *         description="Profile updated successfully"
+     *     ),
+     *      security={ {"passport":{}}}
+     * 
+     * )
+     */
+    public function deleteComment($id)
+    {
+        $comment = Comment::findOrFail($id);
+        $comment->delete();
+        return response()->json(['message' => 'Comment deleted successfully'],204);
+    }
+
 }

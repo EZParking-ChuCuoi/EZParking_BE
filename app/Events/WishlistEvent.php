@@ -67,10 +67,11 @@ class WishlistEvent implements ShouldBroadcastNow
             'updated_at' => now(),
         ]);
         return [
-            'userId' => $userId,
+            'name' => $this->user->fullName,
             'title' => 'New Wishlist',
             'type' => 'wishlist',
             'message' => $message,
+            'data' => null,
             'avatar'=>$this->user->avatar,  
         ];
     }

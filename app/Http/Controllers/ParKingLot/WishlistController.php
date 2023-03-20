@@ -56,6 +56,7 @@ class WishlistController extends Controller
                 ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
                 ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
                 ->whereIn('parking_lots.id', $parkingLotIds)
+                ->where('userId.id',$userId)
                 ->groupBy('parking_lots.id', 'bookings.bookDate', 'bookings.userId')
                 ->get();
 

@@ -850,6 +850,80 @@
                 ]
             }
         },
+        "/api/comments/{idUser}/{idParkingLot}": {
+            "get": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "get comment with idUser and id parking lot.",
+                "operationId": "93c71c5d03dbbc34f76af22f5ad2bbbf",
+                "parameters": [
+                    {
+                        "name": "idUser",
+                        "in": "path",
+                        "description": "id user.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": 1000000
+                    },
+                    {
+                        "name": "idParkingLot",
+                        "in": "query",
+                        "description": "id parking lot.",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/comments/{id}/delete": {
+            "delete": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Delete Comment",
+                "description": "Update the user's profile.",
+                "operationId": "deleteComment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of comment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/notifications/{userId}": {
             "get": {
                 "tags": [

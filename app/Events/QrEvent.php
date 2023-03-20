@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class BookingEvent implements ShouldBroadcast
+class QrEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -23,10 +23,10 @@ class BookingEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($data, $user)
+    public function __construct($user, $data)
     {
-        $this->data = $data;
         $this->user = $user;
+        $this->data = $data;
     }
 
     /**
@@ -36,24 +36,24 @@ class BookingEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('bookings' . '.' . $this->user->id);
+        return new Channel('qr-codes' . '.' . $this->user->id);
     }
 
     public function broadcastAs()
     {
-        return 'booking';
+        return 'qr-code';
     }
 
     public function broadcastWith()
     {
         $userId = $this->user->id;
-        $message = "Booking success!";
+        $message = "you have complete parking lot";
         $data = $this->data;
 
         DB::table('notifications')->insert([
             'userId' => $userId,
-            'title' => 'New booking',
-            'type' => 'booking',
+            'title' => 'Completed parking lot',
+            'type' => 'QRCode',
             'image' => $this->user->avatar,
             'message' => $message,
             'data' => json_encode($data),
@@ -62,8 +62,8 @@ class BookingEvent implements ShouldBroadcast
         ]);
         return [
             'name' => $this->user->fullName,
-            'title' => 'New booking',
-            'type' => 'booking',
+            'title' => 'Completed parking lot',
+            'type' => 'QRCode',
             'message' => $message,
             'avatar' => $this->user->avatar,
             'data' => $this->data,

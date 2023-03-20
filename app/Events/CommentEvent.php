@@ -11,22 +11,29 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class BookingEvent implements ShouldBroadcast
+class CommentEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $data;   
     public $user;
+    public $owner;
+    public $message;
+    public $parkingLot;
+    public $data;
+
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($data, $user)
+    public function __construct($user,$owner,$parkingLot,$comment)
     {
-        $this->data = $data;
         $this->user = $user;
+        $this->owner = $owner;
+        $this->message = "{$user->fullName} comment parkingLot {$parkingLot->nameParkingLot}";
+        $this->parkingLot = $parkingLot;
+        $this->data = $comment;
     }
 
     /**
@@ -36,37 +43,38 @@ class BookingEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('bookings' . '.' . $this->user->id);
+        return new Channel('comments' . '.' . $this->owner->id);
     }
 
     public function broadcastAs()
     {
-        return 'booking';
+        return 'comment';
     }
 
     public function broadcastWith()
     {
-        $userId = $this->user->id;
-        $message = "Booking success!";
-        $data = $this->data;
+         
+          
+        $userId = $this->owner->id;
+        $message = $this->message;
 
         DB::table('notifications')->insert([
             'userId' => $userId,
-            'title' => 'New booking',
-            'type' => 'booking',
+            'title' => 'New comment',
+            'type' => 'comment',
             'image' => $this->user->avatar,
             'message' => $message,
-            'data' => json_encode($data),
+            'data' => json_encode($this->data),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         return [
             'name' => $this->user->fullName,
-            'title' => 'New booking',
-            'type' => 'booking',
+            'title' => 'New Comment',
+            'type' => 'comment',
             'message' => $message,
-            'avatar' => $this->user->avatar,
             'data' => $this->data,
+            'avatar'=>$this->user->avatar,  
         ];
     }
 }

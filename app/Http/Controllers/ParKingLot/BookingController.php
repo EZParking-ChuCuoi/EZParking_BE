@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ParKingLot;
 
 use App\Events\BookingEvent;
 use App\Events\NotificationBooking;
+use App\Events\QrEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\ParkingLot;
@@ -237,6 +238,7 @@ class BookingController extends Controller
             $tempImage = $user->avatar;
             $user->avatar = $owner->avatar;
             $owner->avatar = $tempImage;
+
             $tempName = $user->fullName;
             $user->fullName = $owner->fullName;
             $owner->fullName = $tempName;
@@ -492,11 +494,11 @@ class BookingController extends Controller
         $dateData = $validator->validated();
         $bookingIds = $dateData['bookingIds'];
         $now = Carbon::now();
-        
+
         $updatedBookings = [];
         foreach ($bookingIds as &$value) {
             $booking = Booking::findOrFail($value);
- 
+
             if (Carbon::parse($booking->returnDate)->lt($now)) {
                 // The booking has expired
                 return response()->json([
@@ -522,17 +524,21 @@ class BookingController extends Controller
         foreach ($updatedBookings as $booking) {
             $totalPayment += $booking['payment'];
         }
-        $userInfo= User::find($updatedBookings[0]['userId']);
-        $output= [
-           'totalPrice'=> $totalPayment,
-           'bookDate'=> $updatedBookings[0]['bookDate'],
-           'returnDate'=> $now->toDateTimeString(),
-           'userName'=> $userInfo->fullName,
-          
+        $userInfo = User::find($updatedBookings[0]['userId']);
+        $output = [
+            'totalPrice' => $totalPayment,
+            'bookDate' => $updatedBookings[0]['bookDate'],
+            'returnDate' => $now->toDateTimeString(),
+            'userName' => $userInfo->fullName,
+
         ];
-       
         
-        
+        try {
+            event(new QrEvent($userInfo,$output));
+          
+        } catch (\Throwable $th) {
+            Log::error('Error QRcode event: ' . $th->getMessage());
+        }
         return response()->json([
             'message' => 'Completed this booking!',
             'updatedBookings' => $output,
