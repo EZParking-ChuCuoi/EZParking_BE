@@ -93,12 +93,11 @@ Route::controller(OwnerController::class)->prefix("/owner/")->group(function () 
 });
 
 
-
 Route::controller(BlockController::class)->prefix("/parking-lot/")->group(function () {
     Route::post("block/create", "createBlockSlot");
+    Route::put("block/{id}/update", "updateBlock");
     Route::get("block/{id}", "showDetailBlock");
     Route::get("{idParking}/blocks", "getAllBlock");
-    Route::put("block/{id}/update", "updateBlock");
     Route::delete("block/{id}/delete", "deleteBlock");
 });
 Route::controller(SlotController::class)->prefix("/parking-lot/")->group(function () {
@@ -110,7 +109,6 @@ Route::controller(SlotController::class)->prefix("/parking-lot/")->group(functio
 
    
 });
-
 Route::controller(ManagerController::class)->prefix("/dashboard/")->group(function () {
  
     Route::get("parkingLots/{userId}", "getParkingUserManage");

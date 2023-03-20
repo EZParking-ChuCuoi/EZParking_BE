@@ -60,7 +60,6 @@ class BlockController extends Controller
     {
         $parkingLotId = $request->input("parkingLotId");
         $parkingLot = ParkingLot::findOrFail($parkingLotId);
-
         $validator = Validator::make($request->all(), [
             "parkingLotId" => 'required',
             'nameBlock' => [
@@ -160,17 +159,20 @@ class BlockController extends Controller
     {
         $block = Block::findOrFail($id);
         $parkingLot = $block->parkingLot;
-    
-        $validatedData = $request->validate([
+      
+        $validatedData = Validator::make($request->all(), [
+            "carType" => 'nullable|in:4-16SLOT,16-34SLOT',
             "nameBlock" => [
                 'nullable',
                 'string',
                 new UniqueBlockNameInParkingLot($parkingLot)
             ],
-            "carType" => 'nullable|in:4-16SLOT,16-34SLOT',
             "desc" => 'nullable|string',
             "price" => 'nullable|digits_between:1,99999999999999',
         ]);
+        if ($validatedData->fails()) {
+            return $validatedData->errors()->toArray();
+        }
         if (isset($validatedData["nameBlock"])) {
             $block->nameBlock = $validatedData["nameBlock"];
         }
