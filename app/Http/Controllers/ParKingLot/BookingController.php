@@ -311,6 +311,7 @@ class BookingController extends Controller
             $bookDate = $bookingsByDate[0]['bookDate'];
 
             $returnDate = $bookingsByDate[0]['returnDate'];
+            $idParking = $bookingsByDate[0]['idParkingLot'];
             $now = Carbon::now();
             $statusBooking = 'Completed';
             if ($bookDate >= $now->toDateTimeString()) {
@@ -335,6 +336,7 @@ class BookingController extends Controller
                 'booking_count' => $bookingsByDate->count(),
                 'booking_ids' => $bookingIds,
                 'idSpaceOwner' => $idSpaceOwner ?: null,
+                'idParking' => $idParking,
                 'created_at' => $created_at ?: null,
             ];
         }
@@ -524,7 +526,6 @@ class BookingController extends Controller
            'totalPrice'=> $totalPayment,
            'bookDate'=> $updatedBookings[0]['bookDate'],
            'returnDate'=> $updatedBookings[0]['returnDate'],
-           'bookDate'=> $updatedBookings[0]['bookDate'],
            'userName'=> $userInfo->fullName,
           
         ];
@@ -532,7 +533,7 @@ class BookingController extends Controller
         
         
         return response()->json([
-            'message' => 'Update success!',
+            'message' => 'Completed this booking!',
             'updatedBookings' => $output,
         ], 200);
     }

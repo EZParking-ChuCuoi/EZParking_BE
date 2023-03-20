@@ -1032,10 +1032,6 @@
                         "in": "path",
                         "description": "Id of block parking lot",
                         "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64"
-                        },
                         "example": 1000000
                     }
                 ],

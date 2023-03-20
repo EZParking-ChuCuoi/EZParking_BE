@@ -126,7 +126,7 @@ class BlockController extends Controller
     /**
      * Update the user's profile.
      *
-     * @OA\Put(
+     * @OA\put(
      *     path="/api/parking-lot/block/{id}/update",
      *     summary="Update block",
      *     tags={"Block"},
@@ -137,10 +137,6 @@ class BlockController extends Controller
      *         in="path",
      *         example=1000000,
      *         required=true,
-     *         @OA\Schema(
-     *             type="integer",
-     *             format="int64",
-     *         )
      *     ),
      *     @OA\RequestBody(
      *          required=true,
@@ -163,8 +159,14 @@ class BlockController extends Controller
     public function updateBlock(Request $request, $id)
     {
         $block = Block::findOrFail($id);
+        $parkingLot = $block->parkingLot;
+    
         $validatedData = $request->validate([
-            "nameBlock" => 'nullable|string|max:255',
+            "nameBlock" => [
+                'nullable',
+                'string',
+                new UniqueBlockNameInParkingLot($parkingLot)
+            ],
             "carType" => 'nullable|in:4-16SLOT,16-34SLOT',
             "desc" => 'nullable|string',
             "price" => 'nullable|digits_between:1,99999999999999',
