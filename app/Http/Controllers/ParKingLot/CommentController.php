@@ -168,10 +168,14 @@ class CommentController extends Controller
         //     return response()->json($validator->errors(),400);
         // }
         $comments = Comment::where('userId', $request->idUser)
-            ->where("parkingId", $request->idParkingLot)
-            ->join('users', 'users.id', '=', 'comments.userId')
-            ->select('comments.*', 'users.*')
-            ->get();
+        ->where("parkingId", $request->idParkingLot)
+        ->join('users', 'users.id', '=', 'comments.userId')
+        ->select('comments.id as idComment','comments.*', 'users.*', 'comments.created_at')
+        ->get()
+        ->map(function ($comment) {
+            $comment->time_ago = $comment->created_at->diffForHumans();
+            return $comment;
+        });
 
       
         return response()->json($comments, 200);
@@ -212,8 +216,8 @@ class CommentController extends Controller
 
     public function getBookTimeout()
     {
-        $bookings = Booking::whereBetween('returnDate', ['2023-03-22 00:02:00', '2023-03-22 00:22:00'])
-            ->groupBy('returnDate', 'bookDate')
+        $bookings = Booking::whereBetween('returnDate', ['2023-03-22 00:02:00', '2023-03-22 00:59:00'])
+            ->groupBy('returnDate', 'bookDate','userId')
             ->select('returnDate', 'bookDate','userId')
             ->distinct()
             ->get();
