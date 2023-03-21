@@ -237,8 +237,6 @@ class BookingController extends Controller
             $parkingInfo =ParkingSlot::find($slotIds[0])->block->parkingLot;
             $user = User::find($userId);
             $owner = User::find($idSpaceOwner->id);
-            // return $user.$owner;
-          
             $userNotify = [$user, $owner];
             $idInfo = [ $owner->id,$user->id];
             $outputNotify=$output;

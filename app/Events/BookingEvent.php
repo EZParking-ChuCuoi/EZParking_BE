@@ -50,7 +50,7 @@ class BookingEvent implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        echo($this->user);
+        
         $userId = $this->user->id;
         $message = $this->title;
         $data = $this->data;

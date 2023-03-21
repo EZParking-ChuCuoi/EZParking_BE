@@ -57,7 +57,7 @@ class QrEvent implements ShouldBroadcast
             'nameUserSend' => $this->owner->fullName,
             'title' => 'Completed parking lot',
             'type' => 'QRCode',
-            'image' => $this->user->avatar,
+            'image' => $this->owner->avatar,
             'message' => $message,
             'data' => json_encode($data),
             'created_at' => now(),
