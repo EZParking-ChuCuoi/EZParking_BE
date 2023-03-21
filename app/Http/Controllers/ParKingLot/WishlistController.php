@@ -47,6 +47,24 @@ class WishlistController extends Controller
                     'message' => 'Wishlist not found.'
                 ], 404);
             }
+            $bookingsByDate = ParkingLot::select(
+                'parking_lots.id as parking_lot_id',
+                'parking_lots.nameParkingLot',
+                'parking_lots.address'
+            )
+                ->leftJoin('blocks', 'parking_lots.id', '=', 'blocks.parkingLotId')
+                ->leftJoin('parking_slots', 'blocks.id', '=', 'parking_slots.blockId')
+                ->leftJoin('bookings', function ($join) use ($userId) {
+                    $join->on('parking_slots.id', '=', 'bookings.slotId')
+                        ->where('bookings.userId', '=', $userId);
+                })
+                ->whereIn('parking_lots.id', $parkingLotIds)
+                ->whereNull('bookings.id')
+                ->groupBy('parking_lots.id')
+                ->get();
+            return $bookingsByDate;
+
+
             $bookingsByDate = Booking::select(
                 'parking_lots.id as parking_lot_id',
                 'parking_lots.nameParkingLot',

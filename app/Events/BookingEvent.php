@@ -19,18 +19,20 @@ class BookingEvent implements ShouldBroadcast
     private $user;
     private $title;
     private $id;
+    private $messageSave;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($id,$data, $userNotify,$title)
+    public function __construct($id,$data, $userNotify,$title,$messageSave)
     {
         $this->data = $data;
         $this->id = $id;
         $this->user = $userNotify;
         $this->title = $title;
+        $this->messageSave = $messageSave;
     }
 
     /**
@@ -51,17 +53,17 @@ class BookingEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         
-        $userId = $this->user->id;
+       
         $message = $this->title;
         $data = $this->data;
 
         DB::table('notifications')->insert([
-            'userId' => $userId,
-            'nameUserSend' => $this->user->fullName,
+            'userId' => $this->id,
+            'nameUserSend' => $this->messageSave[0],
             'title' => "New booking",
             'type' => 'booking',
             'image' => $this->user->avatar,
-            'message' => $message,
+            'message' => $this->messageSave[1],
             'data' => json_encode($data),
             'created_at' => now(),
             'updated_at' => now(),
