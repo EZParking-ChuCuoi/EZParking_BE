@@ -29,7 +29,7 @@ class WishlistEvent implements ShouldBroadcastNow
     public function __construct($user, $ownerId,$nameParkingLot)
     {
         $this->user = $user;
-        $this->message = "{$user->fullName} add wishlist parkingLot {$nameParkingLot}";
+        $this->message = " add wishlist parkingLot {$nameParkingLot}";
         $this->ownerId = $ownerId;
     }
 
