@@ -16,10 +16,11 @@ class TimeOutBookingEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
-    public $owner;
     public $message;
-    public $parkingLot;
+    public $owner;
     public $data;
+ 
+ 
 
 
     /**
@@ -27,13 +28,12 @@ class TimeOutBookingEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($user,$owner,$parkingLot,$comment)
+    public function __construct($user,$parkingInfo,$time,$owner)
     {
         $this->user = $user;
         $this->owner = $owner;
-        $this->message = " cancelled a booking for parking lot {$parkingLot->nameParkingLot}";
-        $this->parkingLot = $parkingLot;
-        $this->data = $comment;
+        $this->data = $parkingInfo;
+        $this->message = " {$time}  minutes left until you finish parking  {$parkingInfo->parkingName}";
     }
 
     /**
@@ -43,38 +43,38 @@ class TimeOutBookingEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('cancel-bookings' . '.' . $this->owner->id);
+        return new Channel('time-out' . '.' . $this->user->id);
     }
 
     public function broadcastAs()
     {
-        return 'cancel';
+        return 'time-out';
     }
 
     public function broadcastWith()
     {
          
           
-        $userId = $this->owner->id;
+        $userId = $this->user->id;
         $message = $this->message;
 
         DB::table('notifications')->insert([
-            'nameUserSend' => $this->user->fullName,
+            'nameUserSend' => $this->owner->fullName,
             'userId' => $userId,
-            'title' => 'Cancel Booking',
-            'type' => 'cancelBooking',
-            'image' => $this->user->avatar,
+            'title' => 'Time Out Booking',
+            'type' => 'timeOutBooking',
+            'image' => $this->owner->avatar,
             'message' => $message,
             'data' => json_encode($this->data),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         return [
-            'name' => $this->user->fullName,
+            'name' => $this->owner->fullName,
             'title' => 'Time Out Booking',
             'type' => 'timeOutBooking',
             'message' => $message,
-            'avatar'=>$this->user->avatar,  
+            'avatar'=>$this->owner->avatar,  
             'data' => $this->data,
         ];
     }

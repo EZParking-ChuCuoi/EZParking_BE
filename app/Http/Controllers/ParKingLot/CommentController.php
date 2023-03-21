@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\ParKingLot;
 
 use App\Events\CommentEvent;
+use App\Events\TimeOutBookingEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\ParkingLot;
+use App\Models\ParkingSlot;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -168,16 +171,16 @@ class CommentController extends Controller
         //     return response()->json($validator->errors(),400);
         // }
         $comments = Comment::where('userId', $request->idUser)
-        ->where("parkingId", $request->idParkingLot)
-        ->join('users', 'users.id', '=', 'comments.userId')
-        ->select('comments.id as idComment','comments.*', 'users.*', 'comments.created_at')
-        ->get()
-        ->map(function ($comment) {
-            $comment->time_ago = $comment->created_at->diffForHumans();
-            return $comment;
-        });
+            ->where("parkingId", $request->idParkingLot)
+            ->join('users', 'users.id', '=', 'comments.userId')
+            ->select('comments.id as idComment','comments.created_at','comments.updated_at', 'comments.*', 'users.*', 'comments.created_at')
+            ->get()
+            ->map(function ($comment) {
+                $comment->time_ago = $comment->created_at->diffForHumans();
+                return $comment;
+            });
 
-      
+
         return response()->json($comments, 200);
     }
 
@@ -215,12 +218,36 @@ class CommentController extends Controller
     }
 
     public function getBookTimeout()
-    {
-        $bookings = Booking::whereBetween('returnDate', ['2023-03-22 00:02:00', '2023-03-22 00:59:00'])
-            ->groupBy('returnDate', 'bookDate','userId')
-            ->select('returnDate', 'bookDate','userId')
+    {  // Define the time max
+        define('MAX_BOOKING_MiNUTE', 60);
+        $now = Carbon::now();
+        // Calculate the end time for the time frame
+        $end_time = $now->copy()->addMinutes(MAX_BOOKING_MiNUTE);
+        $bookings = Booking::whereBetween('returnDate', [$now, $end_time])
+            ->groupBy('returnDate', 'bookDate', 'userId')
+            ->select('returnDate', 'bookDate', 'userId')
             ->distinct()
             ->get();
+
+
+        foreach ($bookings as $booking) {
+            // Calculate the time difference between the current time and the returnDateTime for the booking
+            $time_diff = $now->diffInMinutes($booking->returnDate);
+            $user = User::findOrFail($booking->userId);
+            $slotId = Booking::where('returnDate', $booking->returnDate)
+                ->where('bookDate', $booking->bookDate)->where('userId', $booking->userId)->first()->slotId;
+            $parkingInfo = ParkingSlot::find($slotId)->block->parkingLot;
+            $owner = $parkingInfo->user;
+            // Check if the booking is almost time out
+            if ($time_diff <= MAX_BOOKING_MiNUTE) {
+
+                try {
+                    event(new TimeOutBookingEvent($user, $parkingInfo, $time_diff, $owner));
+                } catch (\Throwable $th) {
+                    Log::error('Error QRcode event: ' . $th->getMessage());
+                }
+            }
+        }
         return $bookings;
     }
 }

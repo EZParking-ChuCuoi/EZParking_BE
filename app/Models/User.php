@@ -35,11 +35,10 @@ class User extends Model  implements Authenticatable
     {
         return $this->hasMany(Wishlist::class, 'userId');
     }
-
-
+    
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'created_at', 'updated_at','deleted_at',
     ];
     // Define the user's notifications relationship
     public function notifications()
