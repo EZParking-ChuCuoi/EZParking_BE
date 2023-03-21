@@ -31,7 +31,7 @@ class CommentEvent implements ShouldBroadcast
     {
         $this->user = $user;
         $this->owner = $owner;
-        $this->message = "{$user->fullName} comment parkingLot {$parkingLot->nameParkingLot}";
+        $this->message = " comment parkingLot {$parkingLot->nameParkingLot}";
         $this->parkingLot = $parkingLot;
         $this->data = $comment;
     }
