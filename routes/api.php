@@ -133,6 +133,7 @@ Route::controller(NotificationController::class)->prefix("/notifications/")->gro
 });
 Route::controller(CommentController::class)->prefix("/comments/")->group(function () {
     Route::post("", "store");
+    Route::patch("{id}/read","markAsRead");
     Route::patch("{id}/update","editComment");
     Route::delete("{id}/delete","deleteComment");
     Route::get("{idUser}/{idParkingLot}","getComment");

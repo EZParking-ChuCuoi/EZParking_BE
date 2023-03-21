@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ParKingLot;
 use App\Events\CommentEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\Notification;
 use App\Models\ParkingLot;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -202,5 +203,43 @@ class CommentController extends Controller
         $comment->delete();
         return response()->json(['message' => 'Comment deleted successfully'],204);
     }
+
+      /**
+     * 
+     *
+     * @OA\patch(
+     *     path="/api/comments/{id}/read",
+     *     summary="update read",
+     *     tags={"Comments"},
+     *     operationId="markAsRead",
+     *     @OA\Parameter(
+     *         name="id",
+     *         description="Id of comment",
+     *         in="path",
+     *         example=1000000,
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64",
+     *         )
+     *     ),@OA\Response(
+     *         response=200,
+     *         description="comment updated successfully"
+     *     ),
+     *      security={ {"passport":{}}}
+     * 
+     * )
+     */
+    public function markAsRead(Request $request, $id)
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->read = $request->input('read', true);
+        $notification->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Notification marked as read',
+        ]);
+    }    
 
 }

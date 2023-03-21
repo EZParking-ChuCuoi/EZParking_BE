@@ -924,6 +924,38 @@
                 ]
             }
         },
+        "/api/comments/{id}/read": {
+            "patch": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "update read",
+                "operationId": "markAsRead",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id of comment",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": 1000000
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "comment updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/notifications/{userId}": {
             "get": {
                 "tags": [
