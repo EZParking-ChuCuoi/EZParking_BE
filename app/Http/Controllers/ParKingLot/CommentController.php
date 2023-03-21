@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ParKingLot;
 
 use App\Events\CommentEvent;
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\ParkingLot;
@@ -20,7 +21,7 @@ class CommentController extends Controller
      *  summary="create comment", operationId="storeComment",
      *  @OA\Parameter(name="userId",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
      *  @OA\Parameter(name="parkingId",in="query",required=true,example=1000000, @OA\Schema( type="integer" )),
-     *  @OA\Parameter(name="content",in="query",required=true,example="good", @OA\Schema( type="string" )),
+     *  @OA\Parameter(name="content",in="query",required=false,example="good", @OA\Schema( type="string" )),
      *  @OA\Parameter(name="ranting",in="query",required=true,example=2, @OA\Schema( type="integer" )),
 
      *@OA\Response( response=403, description="Forbidden"),
@@ -32,27 +33,29 @@ class CommentController extends Controller
         $validator = Validator::make($request->all(), [
             'userId' => 'required|integer|exists:users,id',
             'parkingId' => 'required|integer|exists:parking_lots,id',
-            'content' => 'required|string',
+            'content' => 'nullable|string',
             'ranting' => 'required|integer|min:1|max:5',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        
+
         $comment = new Comment();
         $comment->userId = $request->userId;
         $comment->parkingId = $request->parkingId;
-        $comment->content = $request->content;
+        if (isset($request->content)) {
+            $comment->content = $request->content;
+        }
         $comment->ranting = $request->ranting;
         $comment->save();
 
         $parkingLotInfo = ParkingLot::findOrFail($comment->parkingId);
-        $user= User::findOrFail($comment->userId);
-        $owner= $parkingLotInfo->user;
+        $user = User::findOrFail($comment->userId);
+        $owner = $parkingLotInfo->user;
         try {
 
-            event(new CommentEvent($user,$owner,$parkingLotInfo,$comment));
+            event(new CommentEvent($user, $owner, $parkingLotInfo, $comment));
         } catch (\Throwable $th) {
             Log::error('Error sending comment event: ' . $th->getMessage());
         }
@@ -125,7 +128,7 @@ class CommentController extends Controller
 
         return response()->json($comment, 200);
     }
- /**
+    /**
      * @OA\get(
      *     path="/api/comments/{idUser}/{idParkingLot}",
      *     summary="get comment with idUser and id parking lot.",
@@ -154,7 +157,7 @@ class CommentController extends Controller
      * security={ {"passport":{}}}
      *)
      **/
-    public function getComment(Request $request,$idUser,$idParkingLot)
+    public function getComment(Request $request, $idUser, $idParkingLot)
     {
         // $validator = Validator::make($request->all(),[
         //     'idUser'=>'required|int',
@@ -164,11 +167,14 @@ class CommentController extends Controller
         // if($validator->fails()){
         //     return response()->json($validator->errors(),400);
         // }
-        $idUser = $request->idUser;
-        $idParkingLot = $request->idParkingLot;
-        $commentData= Comment::where('userId',$idUser)
-        ->where("parkingId",$idParkingLot)->get();
-        return response()->json($commentData, 200);
+        $comments = Comment::where('userId', $request->idUser)
+            ->where("parkingId", $request->idParkingLot)
+            ->join('users', 'users.id', '=', 'comments.userId')
+            ->select('comments.*', 'users.*')
+            ->get();
+
+      
+        return response()->json($comments, 200);
     }
 
     /**
@@ -201,9 +207,16 @@ class CommentController extends Controller
     {
         $comment = Comment::findOrFail($id);
         $comment->delete();
-        return response()->json(['message' => 'Comment deleted successfully'],204);
+        return response()->json(['message' => 'Comment deleted successfully'], 204);
     }
 
-    
-
+    public function getBookTimeout()
+    {
+        $bookings = Booking::whereBetween('returnDate', ['2023-03-22 00:02:00', '2023-03-22 00:22:00'])
+            ->groupBy('returnDate', 'bookDate')
+            ->select('returnDate', 'bookDate','userId')
+            ->distinct()
+            ->get();
+        return $bookings;
+    }
 }

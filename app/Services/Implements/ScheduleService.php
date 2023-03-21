@@ -22,8 +22,10 @@ class ScheduleService
         Log::debug('------------Now-------------'.$now);
         Log::debug($end_time);
         // query for get booking out time
-        $bookings = Booking::whereBetween('returnDate', [$now, $end_time])->get();
-            
+        $bookings = Booking::whereBetween('returnDate', [$now, $end_time])
+        ->get();
+        // ->groupBy('bookDate');
+        Log::debug($bookings);
         // return $bookings;
         foreach ($bookings as $booking) {
             // Calculate the time difference between the current time and the returnDateTime for the booking

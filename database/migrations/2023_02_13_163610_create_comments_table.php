@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id')->from(1000000);
             $table->unsignedInteger("userId");
             $table->unsignedInteger("parkingId");
-            $table->string("content");
+            $table->string("content")->nullable();
             $table->integer('ranting');
             $table->timestamps();
             $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
