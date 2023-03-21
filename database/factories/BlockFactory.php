@@ -26,7 +26,6 @@ class BlockFactory extends Factory
             'price'=>$this->faker->numberBetween($min = 1500, $max = 6000),
             'nameBlock'=>$this->faker->name(),
             'desc'=>$this->faker->sentence($nbWords = 6, $variableNbWords = true),
-
         ];
     }
 }

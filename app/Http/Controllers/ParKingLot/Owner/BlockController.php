@@ -233,6 +233,6 @@ class BlockController extends Controller
     
         $block->slots()->delete();
         $block->delete();
-        return response()->json(['message' => 'Block and all slots deleted successfully']);
+        return response()->json(['message' => 'Block and all slots deleted successfully'],204);
     }
 }

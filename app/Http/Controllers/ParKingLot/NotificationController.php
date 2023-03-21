@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ParKingLot;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -35,5 +36,41 @@ class NotificationController extends Controller
         return response()->json($notifications);
     }
 
-    
+      /**
+     * 
+     *
+     * @OA\patch(
+     *     path="/api/notifications/{id}/read",
+     *     summary="update read",
+     *     tags={"Notification"},
+     *     operationId="markAsRead",
+     *     @OA\Parameter(
+     *         name="id",
+     *         description="Id of comment",
+     *         in="path",
+     *         example=1000000,
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64",
+     *         )
+     *     ),@OA\Response(
+     *         response=200,
+     *         description="comment updated successfully"
+     *     ),
+     *      security={ {"passport":{}}}
+     * 
+     * )
+     */
+    public function markAsRead(Request $request, $id)
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->read = $request->input('read', true);
+        $notification->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Notification marked as read',
+        ]);
+    }    
 }
