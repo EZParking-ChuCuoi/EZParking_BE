@@ -241,8 +241,7 @@ class BookingController extends Controller
             $idInfo = [ $owner->id,$user->id];
             $outputNotify=$output;
             $outputNotify['inFoParking']=$parkingInfo;
-            $title = [ " book your parking lot","You booked successfully!"];
-        
+            $title = [ " booked parking lot {$parkingInfo->nameParkingLot}","You booked successfully!"];
             try {
                 for ($i=0; $i < sizeof($userNotify); $i++) { 
                     event(new BookingEvent($idInfo[$i],$outputNotify, $userNotify[$i],$title[$i]));
