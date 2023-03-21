@@ -527,16 +527,19 @@ class BookingController extends Controller
             $totalPayment += $booking['payment'];
         }
         $userInfo = User::find($updatedBookings[0]['userId']);
+        $parkingInfo = $parkingInfo =ParkingSlot::find($updatedBookings[0]['slotId'])->block->parkingLot;
+        $owner=$parkingInfo->user;
         $output = [
             'totalPrice' => $totalPayment,
             'bookDate' => $updatedBookings[0]['bookDate'],
             'returnDate' => $now->toDateTimeString(),
             'userName' => $userInfo->fullName,
+            'parkingInfo' => $parkingInfo,
 
         ];
         
         try {
-            event(new QrEvent($userInfo,$output));
+            event(new QrEvent($userInfo,$output,$owner));
           
         } catch (\Throwable $th) {
             Log::error('Error QRcode event: ' . $th->getMessage());

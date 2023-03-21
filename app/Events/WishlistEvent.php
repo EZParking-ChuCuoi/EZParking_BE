@@ -57,6 +57,7 @@ class WishlistEvent implements ShouldBroadcastNow
         $data = ['parking_lot_name' => $this->parkingLotName];
 
         DB::table('notifications')->insert([
+            'nameUserSend' => $this->user->fullName,
             'userId' => $userId,
             'title' => 'New Wishlist',
             'type' => 'wishlist',

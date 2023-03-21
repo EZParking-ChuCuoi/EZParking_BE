@@ -59,6 +59,7 @@ class CommentEvent implements ShouldBroadcast
         $message = $this->message;
 
         DB::table('notifications')->insert([
+            'nameUserSend' => $this->user->fullName,
             'userId' => $userId,
             'title' => 'New comment',
             'type' => 'comment',

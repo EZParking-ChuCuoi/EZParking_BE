@@ -17,16 +17,18 @@ class QrEvent implements ShouldBroadcast
 
     public $data;   
     public $user;
+    public $owner;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($user, $data)
+    public function __construct($user, $data,$owner)
     {
         $this->user = $user;
         $this->data = $data;
+        $this->owner = $owner;
     }
 
     /**
@@ -52,6 +54,7 @@ class QrEvent implements ShouldBroadcast
 
         DB::table('notifications')->insert([
             'userId' => $userId,
+            'nameUserSend' => $this->owner->fullName,
             'title' => 'Completed parking lot',
             'type' => 'QRCode',
             'image' => $this->user->avatar,
@@ -61,11 +64,11 @@ class QrEvent implements ShouldBroadcast
             'updated_at' => now(),
         ]);
         return [
-            'name' => $this->user->fullName,
+            'name' => $this->owner->fullName,
             'title' => 'Completed parking lot',
             'type' => 'QRCode',
             'message' => $message,
-            'avatar' => $this->user->avatar,
+            'avatar' => $this->owner->avatar,
             'data' => $this->data,
         ];
     }
