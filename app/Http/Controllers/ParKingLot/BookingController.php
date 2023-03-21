@@ -197,7 +197,7 @@ class BookingController extends Controller
                 $discount = 0;
                 switch (true) {
                     case ($durationHours < 24):
-                        $discount = 5;
+                        $discount = 0;
                         break;
                     case ($durationHours >= 24 && $durationHours < 24 * 7):
                         $discount = 10;
