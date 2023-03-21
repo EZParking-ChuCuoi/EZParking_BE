@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // import database user
-        $users =\App\Models\User::factory(50)->create();
+        $users =\App\Models\User::factory(51)->create();
         // import database role
         // \App\Models\Role::factory(3)->create();
 

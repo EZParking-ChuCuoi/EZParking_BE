@@ -5,7 +5,7 @@ POST http://localhost/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "cong@gmail.com",
+    "email": "cacongkplpe@gmail.com",
     "password":12345
 }
 ### sign up
@@ -320,3 +320,5 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjEwMDAwMDAsI
 
 revenue, 
 get notificaotn, get comment (iduser,idparkiglot),
+
+complete ten bai do

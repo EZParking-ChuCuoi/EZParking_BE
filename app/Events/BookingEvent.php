@@ -15,18 +15,22 @@ class BookingEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $data;   
-    public $user;
+    private $data;   
+    private $user;
+    private $title;
+    private $id;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($data, $user)
+    public function __construct($id,$data, $userNotify,$title)
     {
         $this->data = $data;
-        $this->user = $user;
+        $this->id = $id;
+        $this->user = $userNotify;
+        $this->title = $title;
     }
 
     /**
@@ -36,7 +40,7 @@ class BookingEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('bookings' . '.' . $this->user->id);
+        return new Channel('bookings' . '.' . $this->id);
     }
 
     public function broadcastAs()
@@ -46,13 +50,15 @@ class BookingEvent implements ShouldBroadcast
 
     public function broadcastWith()
     {
+        echo($this->user);
         $userId = $this->user->id;
-        $message = "Booking success!";
+        $message = $this->title;
         $data = $this->data;
 
         DB::table('notifications')->insert([
             'userId' => $userId,
-            'title' => 'New booking',
+            'nameUserSend' => $this->user->fullName,
+            'title' => "New booking",
             'type' => 'booking',
             'image' => $this->user->avatar,
             'message' => $message,
@@ -62,7 +68,7 @@ class BookingEvent implements ShouldBroadcast
         ]);
         return [
             'name' => $this->user->fullName,
-            'title' => 'New booking',
+            'title' => "New booking",
             'type' => 'booking',
             'message' => $message,
             'avatar' => $this->user->avatar,

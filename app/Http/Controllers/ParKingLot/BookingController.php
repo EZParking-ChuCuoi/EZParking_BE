@@ -159,6 +159,8 @@ class BookingController extends Controller
         }
         $dateData = $validator->validated();
         $slotIds = $dateData['slot_ids'];
+
+
         $idSpaceOwner = ParkingSlot::find($slotIds[0])->block->parkingLot->user ?: null;
         $userId = $dateData['user_id'];
         $licensePlate = $dateData['licensePlate'];
@@ -232,22 +234,22 @@ class BookingController extends Controller
             $output["total"] = $total;
             $output["idBookings"] = $bookingIds;
 
-
+            $parkingInfo =ParkingSlot::find($slotIds[0])->block->parkingLot;
             $user = User::find($userId);
             $owner = User::find($idSpaceOwner->id);
-            $tempImage = $user->avatar;
-            $user->avatar = $owner->avatar;
-            $owner->avatar = $tempImage;
-
-            $tempName = $user->fullName;
-            $user->fullName = $owner->fullName;
-            $owner->fullName = $tempName;
+            // return $user.$owner;
+          
             $userNotify = [$user, $owner];
-
+            $idInfo = [ $owner->id,$user->id];
+            $outputNotify=$output;
+            $outputNotify['inFoParking']=$parkingInfo;
+            $title = [ "{$user->fullName} book your parking lot","You booked successfully!"];
+        
             try {
-                foreach ($userNotify as $user) {
-                    event(new BookingEvent($output, $user));
+                for ($i=0; $i < sizeof($userNotify); $i++) { 
+                    event(new BookingEvent($idInfo[$i],$outputNotify, $userNotify[$i],$title[$i]));
                 }
+               
             } catch (\Throwable $th) {
                 Log::error('Error sending BookingEvent: ' . $th->getMessage());
             }

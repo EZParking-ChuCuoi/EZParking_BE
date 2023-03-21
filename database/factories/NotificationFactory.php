@@ -23,6 +23,7 @@ class NotificationFactory extends Factory
         return [
             'userId' => $user->id,
             'title'=>$this->faker->title(),
+            'nameUserSend'=>$this->faker->name(),
             'data' =>json_encode([
                 'reservation_id' => $this->faker->randomNumber(),
                 'table_number' => $this->faker->randomNumber(),

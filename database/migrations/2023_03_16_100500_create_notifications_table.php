@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->increments('id')->from(1000000);
             $table->unsignedInteger('userId');
+            $table->string('nameUserSend');
             $table->string('title')->nullable();
             $table->string('type')->nullable();
             $table->text('message');
