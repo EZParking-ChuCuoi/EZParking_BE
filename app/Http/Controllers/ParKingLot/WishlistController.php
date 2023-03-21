@@ -36,63 +36,29 @@ class WishlistController extends Controller
 
         try {
             // Get user by ID
-            $user = User::findOrFail($userId);
-
-            // Get user's wishlist with parking lot details
-            $parkingLotIds = $user->wishlists->pluck('parkingLotId')->toArray();
-            // echo $parkingLotId;
-            $wishlist = ParkingLot::whereIn('id', $parkingLotIds)->get();
-            if (!$wishlist) {
-                return response()->json([
-                    'message' => 'Wishlist not found.'
-                ], 404);
-            }
-            $bookingsByDate = ParkingLot::select(
-                'parking_lots.id as parking_lot_id',
-                'parking_lots.nameParkingLot',
-                'parking_lots.address'
+            $parkingLotIds = Wishlist::select('parkingLotId')
+                ->where('userId', $userId)
+                ->get()
+                ->pluck('parkingLotId');
+            $bookingsByParkingLot = ParkingLot::select(
+                'parking_lots.id as parkingLotId',
+                'parking_lots.nameParkingLot as parking_lot_name',
+                'parking_lots.address',
+                DB::raw('count(distinct concat(bookings.bookDate, bookings.returnDate)) as booking_count')
             )
-                ->leftJoin('blocks', 'parking_lots.id', '=', 'blocks.parkingLotId')
-                ->leftJoin('parking_slots', 'blocks.id', '=', 'parking_slots.blockId')
+                ->leftJoin('blocks', 'blocks.parkingLotId', '=', 'parking_lots.id')
+                ->leftJoin('parking_slots', 'parking_slots.blockId', '=', 'blocks.id')
                 ->leftJoin('bookings', function ($join) use ($userId) {
-                    $join->on('parking_slots.id', '=', 'bookings.slotId')
+                    $join->on('bookings.slotId', '=', 'parking_slots.id')
                         ->where('bookings.userId', '=', $userId);
                 })
                 ->whereIn('parking_lots.id', $parkingLotIds)
-                ->whereNull('bookings.id')
                 ->groupBy('parking_lots.id')
+                ->orderBy('booking_count', 'desc') 
                 ->get();
-            return $bookingsByDate;
-
-
-            $bookingsByDate = Booking::select(
-                'parking_lots.id as parking_lot_id',
-                'parking_lots.nameParkingLot',
-                'parking_lots.address',
-            )
-                ->leftJoin('parking_slots', 'bookings.slotId', '=', 'parking_slots.id')
-                ->leftJoin('blocks', 'parking_slots.blockId', '=', 'blocks.id')
-                ->leftJoin('parking_lots', 'blocks.parkingLotId', '=', 'parking_lots.id')
-                ->whereIn('parking_lots.id', $parkingLotIds)
-                ->where('userId.id',$userId)
-                ->groupBy('parking_lots.id', 'bookings.bookDate', 'bookings.userId')
-                ->get();
-
-            $bookingsCountByParkingLot = $bookingsByDate->groupBy('parking_lot_id')
-                ->map(function ($item) {
-                    $output = [           // Return the wishlist data
-                        'parking_lot_id' => $item[0]->parking_lot_id,
-                        'nameParkingLot' => $item[0]->nameParkingLot,
-                        'address' => $item[0]->address,
-                        'count' => count($item) ?? 0
-                    ];
-                    return $output;
-                })
-                ->values()
-                ->toArray();
-            // Return the wishlist data
-            return response()->json($bookingsCountByParkingLot, 200);
+            return response()->json($bookingsByParkingLot, 200);
         } catch (\Throwable $th) {
+            return $th->getMessage();
         }
     }
 
