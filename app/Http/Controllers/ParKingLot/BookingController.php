@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ParKingLot;
 
 use App\Events\BookingEvent;
+use App\Events\CancelBookingEvent;
 use App\Events\NotificationBooking;
 use App\Events\QrEvent;
 use App\Http\Controllers\Controller;
@@ -537,7 +538,7 @@ class BookingController extends Controller
         ];
         
         try {
-            event(new QrEvent($userInfo,$output,$owner));
+            event(new QrEvent($userInfo,$output,$owner,$parkingInfo->nameParkingLot));
           
         } catch (\Throwable $th) {
             Log::error('Error QRcode event: ' . $th->getMessage());
@@ -578,6 +579,7 @@ class BookingController extends Controller
         DB::beginTransaction();
 
         try {
+            $output=[];
             foreach ($bookingIds as $bookingId) {
                 $booking = Booking::find($bookingId);
 
@@ -588,13 +590,22 @@ class BookingController extends Controller
                 if ($booking->bookDate <= Carbon::now()->toDateString()) {
                     throw new Exception("Cannot cancel booking with ID $bookingId as it has already started");
                 }
-
+                $output[]=$booking;
                 $booking->returnDate = Carbon::now()->toDateString();
                 $booking->save();
             }
 
             DB::commit();
+            try {
+                $booking = Booking::find($bookingIds[0]);
+                $parkingLotInfo = ParkingSlot::findOrFail($booking->slotId)->block->parkingLot;
+                $user= User::findOrFail($booking->userId);
+                $owner= $parkingLotInfo->user;
 
+                event(new CancelBookingEvent($user,$owner,$parkingLotInfo,$output));
+            } catch (\Throwable $th) {
+                Log::error('Error sending comment event: ' . $th->getMessage());
+            }
             return response()->json(['message' => 'Bookings cancelled successfully']);
         } catch (Exception $e) {
             DB::rollBack();

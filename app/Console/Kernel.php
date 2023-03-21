@@ -17,15 +17,15 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     
-    // protected function schedule(Schedule $schedule)
-    // {
-    //     $schedule->call(function () {
-    //         Log::debug("message");
-    //        $schedule = new ScheduleService();
-    //        $schedule->setScheduleExpiredTime();
-    //     })->everyMinute();
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->call(function () {
+            Log::debug("mess-------------------------------------------------age");
+           $schedule = new ScheduleService();
+           $schedule->setScheduleExpiredTime();
+        })->everyMinute();
 
-    // }
+    }
 
     /**
      * Register the commands for the application.

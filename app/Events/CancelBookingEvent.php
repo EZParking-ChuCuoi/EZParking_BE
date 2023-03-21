@@ -11,26 +11,29 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class QrEvent implements ShouldBroadcast
+class CancelBookingEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $data;   
     public $user;
     public $owner;
-    public $nameParking;
+    public $message;
+    public $parkingLot;
+    public $data;
+
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($user, $data,$owner,$nameParking)
+    public function __construct($user,$owner,$parkingLot,$comment)
     {
         $this->user = $user;
-        $this->data = $data;
         $this->owner = $owner;
-        $this->nameParking = $nameParking;
+        $this->message = " cancelled a booking for parking lot {$parkingLot->nameParkingLot}";
+        $this->parkingLot = $parkingLot;
+        $this->data = $comment;
     }
 
     /**
@@ -40,37 +43,38 @@ class QrEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('qr-codes' . '.' . $this->user->id);
+        return new Channel('cancel-bookings' . '.' . $this->owner->id);
     }
 
     public function broadcastAs()
     {
-        return 'qr-code';
+        return 'cancel';
     }
 
     public function broadcastWith()
     {
-        $userId = $this->user->id;
-        $message = " have completely finished parking lot {$this->nameParking}";
-        $data = $this->data;
+         
+          
+        $userId = $this->owner->id;
+        $message = $this->message;
 
         DB::table('notifications')->insert([
+            'nameUserSend' => $this->user->fullName,
             'userId' => $userId,
-            'nameUserSend' => $this->owner->fullName,
-            'title' => 'Completed parking lot',
-            'type' => 'QRCode',
-            'image' => $this->owner->avatar,
+            'title' => 'Cancel Booking',
+            'type' => 'cancelBooking',
+            'image' => $this->user->avatar,
             'message' => $message,
-            'data' => json_encode($data),
+            'data' => json_encode($this->data),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         return [
-            'name' => $this->owner->fullName,
-            'title' => 'Completed parking lot',
-            'type' => 'QRCode',
+            'name' => $this->user->fullName,
+            'title' => 'Cancel Booking',
+            'type' => 'cancelBooking',
             'message' => $message,
-            'avatar' => $this->owner->avatar,
+            'avatar'=>$this->user->avatar,  
             'data' => $this->data,
         ];
     }
