@@ -241,7 +241,7 @@ class BookingController extends Controller
             $idInfo = [ $owner->id,$user->id];
             $outputNotify=$output;
             $outputNotify['inFoParking']=$parkingInfo;
-            $title = [ "{$user->fullName} book your parking lot","You booked successfully!"];
+            $title = [ " book your parking lot","You booked successfully!"];
         
             try {
                 for ($i=0; $i < sizeof($userNotify); $i++) { 

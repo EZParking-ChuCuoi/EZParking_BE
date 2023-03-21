@@ -49,7 +49,7 @@ class QrEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         $userId = $this->user->id;
-        $message = "you have complete parking lot";
+        $message = "You have complete parking lot";
         $data = $this->data;
 
         DB::table('notifications')->insert([
