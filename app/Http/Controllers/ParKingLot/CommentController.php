@@ -173,7 +173,7 @@ class CommentController extends Controller
         $comments = Comment::where('userId', $request->idUser)
             ->where("parkingId", $request->idParkingLot)
             ->join('users', 'users.id', '=', 'comments.userId')
-            ->select('comments.id as idComment','comments.created_at','comments.updated_at', 'comments.*', 'users.*', 'comments.created_at')
+            ->select('comments.id as idComment','comments.created_at','comments.updated_at', 'comments.content', 'comments.parkingId', 'comments.ranting', 'users.*', 'comments.created_at')
             ->get()
             ->map(function ($comment) {
                 $comment->time_ago = $comment->created_at->diffForHumans();
@@ -237,12 +237,11 @@ class CommentController extends Controller
             $slotId = Booking::where('returnDate', $booking->returnDate)
                 ->where('bookDate', $booking->bookDate)->where('userId', $booking->userId)->first()->slotId;
             $parkingInfo = ParkingSlot::find($slotId)->block->parkingLot;
-            $owner = $parkingInfo->user;
             // Check if the booking is almost time out
             if ($time_diff <= MAX_BOOKING_MiNUTE) {
 
                 try {
-                    event(new TimeOutBookingEvent($user, $parkingInfo, $time_diff, $owner));
+                    event(new TimeOutBookingEvent($user, $parkingInfo, $time_diff));
                 } catch (\Throwable $th) {
                     Log::error('Error QRcode event: ' . $th->getMessage());
                 }
