@@ -20,10 +20,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            Log::debug("mess-------------------------------------------------age");
+             
            $schedule = new ScheduleService();
            $schedule->setScheduleExpiredTime();
-        })->everyMinute();
+        })->everyTenMinutes();
 
     }
 
