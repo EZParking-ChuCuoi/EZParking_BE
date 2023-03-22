@@ -10,6 +10,7 @@ services:
     image: php
     depends_on:
       - db
+      - redis
     container_name: php
     restart: unless-stopped
     ports:
@@ -18,6 +19,7 @@ services:
       - ./:/var/www
     networks:
       - laravel-net
+
   nginx:
     image: nginx:latest
     container_name: nginx
@@ -31,6 +33,7 @@ services:
       - "80:80"
     networks:
       - laravel-net
+
   db:
     image: mysql:latest
     container_name: db
@@ -45,6 +48,7 @@ services:
       - mysql:/var/lib/mysql
     networks:
       - laravel-net
+
   redis:
     image: redis:latest
     container_name: redis
@@ -60,6 +64,7 @@ services:
       - laravel-net
     volumes:
       - cache:/data
+
   phpmyadmin:
     image: phpmyadmin
     restart: always
@@ -71,9 +76,24 @@ services:
       PMA_HOST: db
     networks:
       - laravel-net
+
+  scheduler:
+    image: php
+    container_name: scheduler
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www
+    networks:
+      - laravel-net
+    command: php artisan schedule:work
+
 networks:
   laravel-net:
     driver: bridge
+
 volumes:
   cache:
     driver: local

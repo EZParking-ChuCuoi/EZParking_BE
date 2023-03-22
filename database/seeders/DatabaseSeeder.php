@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         }
 
         foreach ($parkingLots as $parkingLot) {
-            $blocks = Block::factory(1)->create(['parkingLotId' => $parkingLot->id])->each(function ($block, $index) {
+            $blocks = Block::factory(5)->create(['parkingLotId' => $parkingLot->id])->each(function ($block, $index) {
                 $blockNames = ['Khu A', 'Khu B', 'Khu C', 'Khu D', 'Khu E', 'Khu F', 'Khu G', 'Khu H', 'Khu I', 'Khu J'];
                 $block->nameBlock = $blockNames[$index];
                 $block->save();
@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
             foreach ($blocks as $block) {
                 $slotCount = 1;
 
-                $slots = ParkingSlot::factory(10)->create(['blockId' => $block->id])->each(function ($slot) use ($block, &$slotCount) {
+                $slots = ParkingSlot::factory(20)->create(['blockId' => $block->id])->each(function ($slot) use ($block, &$slotCount) {
                     $lastLetter = substr($block->nameBlock, -1);
                     $slot->slotName = strtoupper($lastLetter) . $slotCount++;
                     $slot->save();
@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
         }
         // import database UserParkingLot
 
-        \App\Models\Notification::factory(800)->create();
+        // \App\Models\Notification::factory(800)->create();
 
         //import database comments
         \App\Models\Comment::factory(200)->create();
