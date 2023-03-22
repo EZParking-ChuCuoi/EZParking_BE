@@ -23,7 +23,7 @@ class BlockFactory extends Factory
         return [
             'parkingLotId'=>rand(1000000,1000002),
             'carType'=>$arr[rand(0,1)],
-            'price'=>$this->faker->numberBetween($min = 1500, $max = 6000),
+            'price'=>$this->faker->numberBetween($min = 150000, $max = 6000000),
             'nameBlock'=>$this->faker->name(),
             'desc'=>$this->faker->sentence($nbWords = 6, $variableNbWords = true),
         ];

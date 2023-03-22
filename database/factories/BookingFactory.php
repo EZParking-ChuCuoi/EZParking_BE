@@ -38,7 +38,7 @@ class BookingFactory extends Factory
             'licensePlate' => $this->faker->regexify('[0-9]{2}[A-Z]{1}-[0-9]{3}\.[0-9]{2}'),
             'bookDate' => $startDateTime->format("Y-m-d H:i:s"),
             'returnDate' => $endDateTime->format("Y-m-d H:i:s"),
-            'payment' => $this->faker->numberBetween($min = 1500.000, $max = 6000.000),
+            'payment' => $this->faker->numberBetween($min = 500000, $max = 600000),
         ];
     }
 }

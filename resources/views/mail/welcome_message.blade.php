@@ -53,13 +53,7 @@
                                                 <tbody class="">
                                                 <tr class="">
                                                     <td class="" style="color:#444; font-weight: 400;"><br><br>
-                                                        The Chat feature allows you to participate in a live
-                                                        chatroom as well as private chats with <br><br> other members of your Ning Network.
-                                                        The Chat feature is a quick indicator of how active your Ning Network is,
-                                                        and the real-time communication is a fun and easy way for members
-                                                        to participate in the Ning Network.
-                                                        You have successfully been registered to use KVLC as a
-                                                        <br>
+                                                      
                                                         Your login credentials are provided below:
                                                         <br>
                                                         <span style="font-weight:bold;">Email: &nbsp;</span><span
