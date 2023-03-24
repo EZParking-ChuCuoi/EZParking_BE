@@ -20,7 +20,7 @@ class AccountService implements  IAccountService {
           $data['password'] = Hash::make($data['password']);
           $data['status'] = 1;
           $data['role'] = 'user';
-          $data['avatar'] = 'https://res.cloudinary.com/di9pzz9af/image/upload/v1677472834/account/profile/icon-256x256_o1oxjl.png';
+          $data['avatar'] = 'https://res.cloudinary.com/di9pzz9af/image/upload/v1679615631/account/profile/icon-256x256_se6rre.png';
           $this->userRepository->create($data);
           return ["fullName" => $data["fullName"], "email" => $data["email"]];
       }
